@@ -1,0 +1,225 @@
+root:
+  get:
+    operationId: retrieveTeam
+    summary: Retrieve the current team
+    description: Returns the team associated with the current API key.
+    tags:
+    - Teams
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    responses:
+      '200':
+        description: The current team.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/team.yaml#/TeamResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createTeam
+    summary: Create a child team
+    description: Creates a new child team under the current team.
+    tags:
+    - Teams
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/team.yaml#/TeamCreateRequest
+    responses:
+      '200':
+        description: The newly created child team.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/team.yaml#/TeamResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+encryption_key:
+  post:
+    operationId: createTeamEncryptionKey
+    summary: Set default encryption key
+    description: Sets the default encryption key for the team. Used for encrypting sensitive data in API responses.
+    tags:
+    - Teams
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/team.yaml#/TeamEncryptionKeyRequest
+    responses:
+      '200':
+        description: The updated team with the encryption key set.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/team.yaml#/TeamResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+public_keys_collection:
+  get:
+    operationId: listTeamPublicKeys
+    summary: List MLE public keys
+    description: Returns all Message-Level Encryption (MLE) public keys registered for the team.
+    tags:
+    - Teams
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    responses:
+      '200':
+        description: A list of MLE public keys.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/team.yaml#/MLEPublicKeyListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createTeamPublicKey
+    summary: Create an MLE public key
+    description: Registers a new Message-Level Encryption (MLE) public key for the team.
+    tags:
+    - Teams
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/team.yaml#/MLEPublicKeyCreateRequest
+    responses:
+      '200':
+        description: The newly created MLE public key.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/team.yaml#/MLEPublicKeyResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+public_keys_individual:
+  get:
+    operationId: retrieveTeamPublicKey
+    summary: Retrieve an MLE public key
+    description: Returns a single MLE public key by its identifier.
+    tags:
+    - Teams
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: id
+      in: path
+      required: true
+      description: Unique identifier for the MLE public key.
+      schema:
+        type: string
+    responses:
+      '200':
+        description: The requested MLE public key.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/team.yaml#/MLEPublicKeyResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deleteTeamPublicKey
+    summary: Delete an MLE public key
+    description: Deletes an MLE public key by its identifier. This action is irreversible.
+    tags:
+    - Teams
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - name: id
+      in: path
+      required: true
+      description: Unique identifier for the MLE public key.
+      schema:
+        type: string
+    responses:
+      '200':
+        description: The deleted MLE public key.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/team.yaml#/MLEPublicKeyResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

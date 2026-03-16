@@ -1,0 +1,18 @@
+name: expand
+in: query
+required: false
+description: |
+  Expand payment source or destination accounts inline. Nested account expansion
+  is supported for latest verification sessions on the source or destination.
+style: form
+explode: true
+schema:
+  type: array
+  items:
+    type: string
+    enum:
+      - source
+      - destination
+      - source.latest_verification_session
+      - destination.latest_verification_session
+

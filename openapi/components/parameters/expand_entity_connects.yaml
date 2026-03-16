@@ -1,0 +1,24 @@
+name: expand
+in: query
+required: false
+description: |
+  Expand connected accounts inline on entity connect resources.
+  Supports expanding the account list itself or one level of account fields.
+style: form
+explode: true
+schema:
+  type: array
+  items:
+    type: string
+    enum:
+      - accounts
+      - accounts.sensitive
+      - accounts.balance
+      - accounts.card_brand
+      - accounts.attribute
+      - accounts.payoff
+      - accounts.transaction
+      - accounts.update
+      - accounts.payment_instrument
+      - accounts.latest_verification_session
+      - accounts.liability.mch_id

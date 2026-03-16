@@ -1,0 +1,42 @@
+get:
+  operationId: retrievePublicJwk
+  summary: Retrieve a public JWK
+  description: Returns a single Method public key by identifier for Message-Level Encryption.
+  tags:
+    - Public Keys
+  security: []
+  parameters:
+    - $ref: '../components/parameters/path_ids.yaml#/MethodJwkIdParam'
+  responses:
+    '200':
+      description: The requested public JWK.
+      headers:
+        Cache-Control:
+          description: Caching directive for the public JWK.
+          schema:
+            type: string
+            example: public, max-age=3600
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/public_key.yaml#/MethodPublicKeyResponse'
+          example:
+            success: true
+            data:
+              id: mthd_jwk_abc123
+              jwk:
+                kid: mthd_jwk_abc123
+                kty: RSA
+                alg: RSA-OAEP-256
+                use: enc
+                n: sXchf3Hj7G6m1mQF2k38QeY7s9lQfV4sLzM0YJr7Q7B6U2CjQX8m5w
+                e: AQAB
+              jwk_thumbprint: qn0x2fG8X0F9S9RzM1Tq8vQw8ap8T7iWmS0o9C9y4Lw
+              status: active
+              created_at: '2026-01-15T18:30:00.000Z'
+              updated_at: '2026-01-15T18:30:00.000Z'
+            message: null
+    '404':
+      $ref: '../components/responses/error.yaml#/NotFound'
+    '500':
+      $ref: '../components/responses/error.yaml#/InternalError'

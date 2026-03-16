@@ -1,0 +1,377 @@
+collection:
+  get:
+    operationId: listEntityConnects
+    summary: List all entity connect sessions
+    description: Returns a list of connect sessions for the specified entity.
+    tags:
+    - Entity Connects
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    - $ref: ../components/parameters/pagination.yaml#/FromDateParam
+    - $ref: ../components/parameters/pagination.yaml#/ToDateParam
+    - $ref: ../components/parameters/expand_entity_connects.yaml
+    responses:
+      '200':
+        description: A list of entity connect sessions.
+        headers:
+          $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityConnectListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createEntityConnect
+    summary: Create an entity connect session
+    description: Creates a new connect session for the specified entity.
+    tags:
+    - Entity Connects
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/expand_entity_connects.yaml
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                description: Products to request during the connect session.
+                items:
+                  type: string
+              subscriptions:
+                type: array
+                description: Subscriptions to request during the connect session.
+                items:
+                  type: string
+    responses:
+      '200':
+        description: The created entity connect session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityConnectResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveEntityConnect
+    summary: Retrieve an entity connect session
+    description: Returns a single entity connect session by its identifier.
+    tags:
+    - Entity Connects
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntityConnectIdParam
+    - $ref: ../components/parameters/expand_entity_connects.yaml
+    responses:
+      '200':
+        description: The requested entity connect session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityConnectResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+manual_connect_create:
+  post:
+    operationId: createEntityManualConnect
+    summary: Create an entity manual connect session
+    description: Creates a new manual connect session for the specified entity.
+    tags:
+    - Entity Connects
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - bureau
+            - tradelines
+            properties:
+              bureau:
+                type: string
+                description: The credit bureau source for the manual connect session.
+                enum:
+                - equifax
+                - transunion
+              tradelines:
+                type: array
+                description: List of tradeline objects to manually connect.
+                items:
+                  type: object
+                  required:
+                  - type_code
+                  - portfolio_type_code
+                  - designator_code
+                  - number
+                  - creditor_name
+                  - creditor_code
+                  - balance
+                  - highest_balance
+                  - credit_limit
+                  - term
+                  - next_payment_minimum_amount
+                  - last_payment_amount
+                  - payment_history
+                  - past_due_amount
+                  - delinquency_charge_off_amount
+                  - opened_at
+                  - closed_at
+                  - last_activity_date
+                  - reported_date
+                  - next_payment_due_date
+                  - last_payment_date
+                  - delinquency_first_start_date
+                  - narrative_codes
+                  properties:
+                    type_code:
+                      type:
+                      - string
+                      - 'null'
+                      description: The type code of the tradeline.
+                    portfolio_type_code:
+                      type:
+                      - string
+                      - 'null'
+                      description: The portfolio type code of the tradeline.
+                    designator_code:
+                      type:
+                      - string
+                      - 'null'
+                      description: The designator code of the tradeline.
+                    number:
+                      type:
+                      - string
+                      - 'null'
+                      description: The account number of the tradeline.
+                    creditor_name:
+                      type:
+                      - string
+                      - 'null'
+                      description: The name of the creditor.
+                    creditor_code:
+                      type:
+                      - string
+                      - 'null'
+                      description: The code of the creditor.
+                    balance:
+                      type:
+                      - number
+                      - 'null'
+                      description: The current balance of the tradeline.
+                    highest_balance:
+                      type:
+                      - number
+                      - 'null'
+                      description: The highest balance of the tradeline.
+                    credit_limit:
+                      type:
+                      - number
+                      - 'null'
+                      description: The credit limit of the tradeline.
+                    term:
+                      type:
+                      - number
+                      - 'null'
+                      description: The term of the tradeline in months.
+                    next_payment_minimum_amount:
+                      type:
+                      - number
+                      - 'null'
+                      description: The minimum amount due for the next payment.
+                    last_payment_amount:
+                      type:
+                      - number
+                      - 'null'
+                      description: The amount of the last payment.
+                    payment_history:
+                      type:
+                      - array
+                      - 'null'
+                      description: The payment history of the tradeline.
+                      items:
+                        type: string
+                    past_due_amount:
+                      type:
+                      - number
+                      - 'null'
+                      description: The past due amount of the tradeline.
+                    delinquency_charge_off_amount:
+                      type:
+                      - number
+                      - 'null'
+                      description: The delinquency charge-off amount.
+                    opened_at:
+                      type:
+                      - string
+                      - 'null'
+                      description: The date the tradeline was opened (YYYY-MM-DD).
+                      format: date
+                    closed_at:
+                      type:
+                      - string
+                      - 'null'
+                      description: The date the tradeline was closed (YYYY-MM-DD).
+                      format: date
+                    last_activity_date:
+                      type:
+                      - string
+                      - 'null'
+                      description: The date of the last activity (YYYY-MM-DD).
+                      format: date
+                    reported_date:
+                      type:
+                      - string
+                      - 'null'
+                      description: The date the tradeline was reported (YYYY-MM-DD).
+                      format: date
+                    next_payment_due_date:
+                      type:
+                      - string
+                      - 'null'
+                      description: The date the next payment is due (YYYY-MM-DD).
+                      format: date
+                    last_payment_date:
+                      type:
+                      - string
+                      - 'null'
+                      description: The date of the last payment (YYYY-MM-DD).
+                      format: date
+                    delinquency_first_start_date:
+                      type:
+                      - string
+                      - 'null'
+                      description: The date of the first delinquency (YYYY-MM-DD).
+                      format: date
+                    narrative_codes:
+                      type:
+                      - array
+                      - 'null'
+                      description: Narrative codes associated with the tradeline.
+                      items:
+                        type: object
+                        properties:
+                          code:
+                            type:
+                            - string
+                            - 'null'
+                            description: The narrative code.
+                          description:
+                            type:
+                            - string
+                            - 'null'
+                            description: The description of the narrative code.
+                    external_id:
+                      type:
+                      - string
+                      - 'null'
+                      description: An external identifier for the tradeline.
+    responses:
+      '200':
+        description: The created entity manual connect session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityConnectResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+manual_connect_individual:
+  get:
+    operationId: retrieveEntityManualConnect
+    summary: Retrieve an entity manual connect session
+    description: Returns a single entity manual connect session by its identifier.
+    tags:
+    - Entity Connects
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntityManualConnectIdParam
+    responses:
+      '200':
+        description: The requested entity manual connect session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityConnectResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

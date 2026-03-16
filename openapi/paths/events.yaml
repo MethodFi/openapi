@@ -1,0 +1,109 @@
+collection:
+  get:
+    operationId: listEvents
+    summary: List all events
+    description: Returns a paginated list of webhook event records.
+    tags:
+      - Events
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/pagination.yaml#/PageParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageLimitParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageCursorParam'
+      - $ref: '../components/parameters/pagination.yaml#/FromDateParam'
+      - $ref: '../components/parameters/pagination.yaml#/ToDateParam'
+      - name: type
+        in: query
+        required: false
+        description: Filter events by event type.
+        schema:
+          type: string
+    responses:
+      '200':
+        description: A list of events.
+        headers:
+          $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders'
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/event.yaml#/EventListResponse'
+            example:
+              success: true
+              data:
+                - id: evt_HnEJMFWS8rJbh
+                  type: payment.create
+                  resource_id: pmt_rPrDPEwyCVUcm
+                  resource_type: payment
+                  related_ids:
+                    - acc_b9q2XVAnNFbp3
+                    - acc_Y8u3qL9mNa1Bz
+                  data:
+                    id: pmt_rPrDPEwyCVUcm
+                    status: pending
+                    amount: 5000
+                  diff: {}
+                  created_at: '2026-01-15T18:30:00.000Z'
+                  updated_at: '2026-01-15T18:30:00.000Z'
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+individual:
+  get:
+    operationId: retrieveEvent
+    summary: Retrieve an event
+    description: Returns a single event by its identifier.
+    tags:
+      - Events
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/EventIdParam'
+    responses:
+      '200':
+        description: The requested event.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/event.yaml#/EventResponse'
+            example:
+              success: true
+              data:
+                id: evt_HnEJMFWS8rJbh
+                type: payment.create
+                resource_id: pmt_rPrDPEwyCVUcm
+                resource_type: payment
+                related_ids:
+                  - acc_b9q2XVAnNFbp3
+                  - acc_Y8u3qL9mNa1Bz
+                data:
+                  id: pmt_rPrDPEwyCVUcm
+                  status: pending
+                  amount: 5000
+                diff: {}
+                created_at: '2026-01-15T18:30:00.000Z'
+                updated_at: '2026-01-15T18:30:00.000Z'
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'

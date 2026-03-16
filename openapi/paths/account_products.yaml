@@ -1,0 +1,59 @@
+collection:
+  get:
+    operationId: listAccountProducts
+    summary: List all account products
+    description: Returns a list of products for the specified account.
+    tags:
+    - Account Products
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    responses:
+      '200':
+        description: A list of account products.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountProductListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveAccountProduct
+    summary: Retrieve an account product
+    description: Retrieves an account product by its unique identifier.
+    tags:
+    - Account Products
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountProductIdParam
+    responses:
+      '200':
+        description: The requested account product.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountProductResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

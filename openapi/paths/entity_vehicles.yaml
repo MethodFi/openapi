@@ -1,0 +1,102 @@
+collection:
+  get:
+    operationId: listEntityVehicles
+    summary: List all entity vehicles
+    description: Returns a list of vehicles for the specified entity.
+    tags:
+    - Entity Vehicles
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    responses:
+      '200':
+        description: A list of entity vehicles.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityVehicleListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: searchEntityVehicles
+    summary: Search entity vehicles
+    description: Searches for vehicles associated with the specified entity.
+    tags:
+    - Entity Vehicles
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/entity.yaml#/SearchEntityVehiclesRequest
+    responses:
+      '200':
+        description: The created entity vehicle record.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityVehicleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveEntityVehicle
+    summary: Retrieve an entity vehicle
+    description: Returns a single entity vehicle by its identifier.
+    tags:
+    - Entity Vehicles
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntityVehicleIdParam
+    responses:
+      '200':
+        description: The requested entity vehicle.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityVehicleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

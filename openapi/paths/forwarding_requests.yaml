@@ -1,0 +1,82 @@
+create:
+  post:
+    operationId: createForwardingRequest
+    summary: Create a forwarding request
+    description: |
+      Creates a new forwarding request that proxies an HTTP request to a third-party endpoint with sensitive data injection.
+
+      Forwarding-specific validation and execution failures are returned in the standard error envelope.
+      Common forwarding `sub_type` values include `URL_NOT_ALLOWED`, `INVALID_METHOD`,
+      `BODY_JSON_INVALID`, `BINDING_NOT_FOUND`, `FORWARDED_REQUEST_NETWORK_ERROR`,
+      and `FORWARDED_REQUEST_TIMEOUT`.
+    tags:
+    - Forwarding Requests
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/forwarding_request.yaml#/ForwardingRequestCreateRequest
+    responses:
+      '200':
+        description: The created forwarding request with response data.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/forwarding_request.yaml#/ForwardingRequestResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+      '504':
+        $ref: ../components/responses/error.yaml#/GatewayTimeout
+individual:
+  get:
+    operationId: retrieveForwardingRequest
+    summary: Retrieve a forwarding request
+    description: Returns a single forwarding request by its identifier.
+    tags:
+    - Forwarding Requests
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: id
+      in: path
+      required: true
+      description: Unique identifier for the forwarding request.
+      schema:
+        type: string
+        pattern: ^freq_\w+$
+    responses:
+      '200':
+        description: The requested forwarding request.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/forwarding_request.yaml#/ForwardingRequestResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

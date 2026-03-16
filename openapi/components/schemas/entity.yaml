@@ -1,0 +1,1561 @@
+Entity:
+  description: An Entity represents an individual or business profile within Method.
+  oneOf:
+  - $ref: '#/EntityIndividualResource'
+  - $ref: '#/EntityCorporationResource'
+  - $ref: '#/EntityReceiveOnlyResource'
+  discriminator:
+    propertyName: type
+    mapping:
+      individual: '#/EntityIndividualResource'
+      corporation: '#/EntityCorporationResource'
+      c_corporation: '#/EntityCorporationResource'
+      s_corporation: '#/EntityCorporationResource'
+      llc: '#/EntityCorporationResource'
+      partnership: '#/EntityCorporationResource'
+      sole_proprietorship: '#/EntityCorporationResource'
+      receive_only: '#/EntityReceiveOnlyResource'
+EntityBase:
+  type: object
+  required:
+  - id
+  - type
+  - individual
+  - corporation
+  - receive_only
+  - address
+  - capabilities
+  - available_capabilities
+  - pending_capabilities
+  - status
+  - verification
+  - error
+  - metadata
+  - products
+  - restricted_products
+  - subscriptions
+  - available_subscriptions
+  - restricted_subscriptions
+  - connect
+  - credit_score
+  - attribute
+  - vehicle
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the entity.
+      pattern: ^ent_\w+$
+      example: ent_au22b1fbFJbp8
+    type:
+      type: string
+      description: The type of entity.
+      enum:
+      - individual
+      - c_corporation
+      - s_corporation
+      - llc
+      - partnership
+      - sole_proprietorship
+      - receive_only
+      - corporation
+    individual:
+      $ref: '#/EntityIndividual'
+    corporation:
+      $ref: '#/EntityCorporation'
+    receive_only:
+      $ref: '#/EntityReceiveOnly'
+    address:
+      type:
+      - object
+      - 'null'
+      description: The entity's address.
+      allOf:
+      - $ref: common.yaml#/Address
+    capabilities:
+      type: array
+      items:
+        $ref: '#/EntityCapability'
+      description: Capabilities currently enabled for this entity.
+    available_capabilities:
+      type: array
+      items:
+        $ref: '#/EntityCapability'
+      description: Capabilities available to be enabled for this entity.
+    pending_capabilities:
+      type: array
+      items:
+        $ref: '#/EntityCapability'
+      description: Capabilities pending activation for this entity.
+    status:
+      type: string
+      description: Current status of the entity.
+      enum:
+      - active
+      - incomplete
+      - disabled
+    verification:
+      $ref: '#/EntityVerification'
+    error:
+      type:
+      - object
+      - 'null'
+      description: Error details if the entity encountered an error.
+      allOf:
+      - $ref: errors/entity_errors.yaml#/EntityResourceError
+    metadata:
+      $ref: common.yaml#/Metadata
+    products:
+      type: array
+      items:
+        type: string
+      description: Products currently active for this entity.
+    restricted_products:
+      type: array
+      items:
+        type: string
+      description: Products restricted for this entity.
+    subscriptions:
+      type: array
+      items:
+        type: string
+      description: Active subscriptions for this entity.
+    available_subscriptions:
+      type: array
+      items:
+        type: string
+      description: Subscriptions available for this entity.
+    restricted_subscriptions:
+      type: array
+      items:
+        type: string
+      description: Subscriptions restricted for this entity.
+    connect:
+      description: Expandable. The entity connect session ID or expanded connect object.
+      example: cxn_iENwGBMDnr7sJ
+      oneOf:
+      - type: string
+        pattern: ^cxn_\w+$
+      - type: 'null'
+      - $ref: '#/EntityConnect'
+    credit_score:
+      description: Expandable. The entity credit score ID or expanded credit score object.
+      example: crs_pn4ca33GRnrJm
+      oneOf:
+      - type: string
+        pattern: ^crs_\w+$
+      - type: 'null'
+      - $ref: '#/EntityCreditScore'
+    attribute:
+      description: Expandable. The entity attribute ID or expanded attribute object.
+      example: attr_QwMjMDEwMTY1
+      oneOf:
+      - type: string
+        pattern: ^attr_\w+$
+      - type: 'null'
+      - $ref: '#/EntityAttribute'
+    vehicle:
+      description: Expandable. The entity vehicle ID or expanded vehicle object.
+      example: vhl_JMDEwMTY1Qw4c
+      oneOf:
+      - type: string
+        pattern: ^vhl_\w+$
+      - type: 'null'
+      - $ref: '#/EntityVehicle'
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the entity was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the entity was last updated.
+EntityIndividualResource:
+  allOf:
+  - $ref: '#/EntityBase'
+  - type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - individual
+EntityCorporationResource:
+  allOf:
+  - $ref: '#/EntityBase'
+  - type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - corporation
+        - c_corporation
+        - s_corporation
+        - llc
+        - partnership
+        - sole_proprietorship
+EntityReceiveOnlyResource:
+  allOf:
+  - $ref: '#/EntityBase'
+  - type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - receive_only
+EntityIndividual:
+  type:
+  - object
+  - 'null'
+  properties:
+    first_name:
+      type:
+      - string
+      - 'null'
+      description: First name of the individual.
+    last_name:
+      type:
+      - string
+      - 'null'
+      description: Last name of the individual.
+    phone:
+      type:
+      - string
+      - 'null'
+      description: Phone number of the individual.
+      pattern: '^\+\d{10,15}$'
+      example: '+15121231111'
+    email:
+      type:
+      - string
+      - 'null'
+      description: Email address of the individual.
+      format: email
+    dob:
+      type:
+      - string
+      - 'null'
+      format: date
+      description: Date of birth of the individual (YYYY-MM-DD).
+    ssn:
+      type:
+      - string
+      - 'null'
+      description: Social security number (masked).
+    ssn_4:
+      type:
+      - string
+      - 'null'
+      description: Last 4 digits of SSN (masked).
+EntityCorporation:
+  type:
+  - object
+  - 'null'
+  properties:
+    name:
+      type:
+      - string
+      - 'null'
+      description: Legal name of the corporation.
+    dba:
+      type:
+      - string
+      - 'null'
+      description: Doing business as name.
+    ein:
+      type:
+      - string
+      - 'null'
+      description: Employer Identification Number.
+    owners:
+      type:
+      - array
+      - 'null'
+      items:
+        $ref: '#/EntityCorporationOwner'
+      description: List of beneficial owners.
+EntityCorporationOwner:
+  type: object
+  properties:
+    first_name:
+      type: string
+      description: First name of the owner.
+    last_name:
+      type: string
+      description: Last name of the owner.
+    phone:
+      type: string
+      description: Phone number of the owner.
+      pattern: '^\+\d{10,15}$'
+    email:
+      type: string
+      description: Email address of the owner.
+      format: email
+    dob:
+      type: string
+      format: date
+      description: Date of birth of the owner (YYYY-MM-DD).
+    address:
+      $ref: common.yaml#/Address
+EntityReceiveOnly:
+  type:
+  - object
+  - 'null'
+  properties:
+    name:
+      type: string
+      description: Name of the receive-only entity.
+    phone:
+      type:
+      - string
+      - 'null'
+      description: Phone number of the receive-only entity.
+      pattern: '^\+\d{10,15}$'
+    email:
+      type:
+      - string
+      - 'null'
+      description: Email address of the receive-only entity.
+      format: email
+EntityCapability:
+  type: string
+  enum:
+  - payments:receive
+  - payments:send
+  - data:retrieve
+  - data:sync
+EntityVerification:
+  type:
+  - object
+  - 'null'
+  properties:
+    identity:
+      $ref: '#/EntityVerificationIdentity'
+    phone:
+      $ref: '#/EntityVerificationPhone'
+EntityVerificationIdentity:
+  type: object
+  properties:
+    verified:
+      type: boolean
+      description: Whether the identity has been verified.
+    matched:
+      type: boolean
+      description: Whether the identity information matched.
+    latest_verification_session:
+      description: ID of the latest identity verification session. Expandable via `identity_latest_verification_session`.
+      oneOf:
+      - type: string
+        pattern: ^evf_\w+$
+      - type: 'null'
+      - $ref: '#/EntityVerificationSession'
+    methods:
+      type: array
+      items:
+        type: string
+      description: Available identity verification methods.
+EntityVerificationPhone:
+  type: object
+  properties:
+    verified:
+      type: boolean
+      description: Whether the phone has been verified.
+    latest_verification_session:
+      description: ID of the latest phone verification session. Expandable via `phone_latest_verification_session`.
+      oneOf:
+      - type: string
+        pattern: ^evf_\w+$
+      - type: 'null'
+      - $ref: '#/EntityVerificationSession'
+    methods:
+      type: array
+      items:
+        type: string
+      description: Available phone verification methods.
+CreateEntityRequest:
+  description: Request body for creating an entity.
+  oneOf:
+  - $ref: '#/CreateIndividualEntityRequest'
+  - $ref: '#/CreateCorporationEntityRequest'
+  discriminator:
+    propertyName: type
+    mapping:
+      individual: '#/CreateIndividualEntityRequest'
+      corporation: '#/CreateCorporationEntityRequest'
+CreateIndividualEntityRequest:
+  type: object
+  required:
+  - type
+  - individual
+  properties:
+    type:
+      type: string
+      description: The type of entity to create.
+      enum:
+      - individual
+    individual:
+      $ref: '#/CreateEntityIndividual'
+    address:
+      $ref: common.yaml#/Address
+    metadata:
+      $ref: common.yaml#/Metadata
+CreateCorporationEntityRequest:
+  type: object
+  required:
+  - type
+  - corporation
+  properties:
+    type:
+      type: string
+      description: The type of entity to create.
+      enum:
+      - corporation
+    corporation:
+      $ref: '#/CreateEntityCorporation'
+    address:
+      $ref: common.yaml#/Address
+    metadata:
+      $ref: common.yaml#/Metadata
+CreateEntityIndividual:
+  type: object
+  properties:
+    first_name:
+      type: string
+      description: First name of the individual.
+    last_name:
+      type: string
+      description: Last name of the individual.
+    phone:
+      type: string
+      description: Phone number of the individual.
+      pattern: '^\+\d{10,15}$'
+      example: '+15121231111'
+    email:
+      type: string
+      description: Email address of the individual.
+      format: email
+    dob:
+      type: string
+      format: date
+      description: Date of birth of the individual (YYYY-MM-DD).
+    ssn:
+      type: string
+      pattern: '^\d{9}$'
+      description: Social security number (9 digits). Mutually exclusive with ssn_4.
+    ssn_4:
+      type: string
+      pattern: '^\d{4}$'
+      description: Last 4 digits of SSN. Mutually exclusive with ssn.
+CreateEntityCorporation:
+  type: object
+  properties:
+    name:
+      type: string
+      description: Legal name of the corporation.
+    dba:
+      type: string
+      description: Doing business as name.
+    ein:
+      type: string
+      description: Employer Identification Number.
+    owners:
+      type: array
+      items:
+        $ref: '#/EntityCorporationOwner'
+      description: List of beneficial owners.
+CreateEntityReceiveOnly:
+  type: object
+  required:
+  - name
+  properties:
+    name:
+      type: string
+      description: Name of the receive-only entity (required).
+    phone:
+      type: string
+      description: Phone number of the receive-only entity.
+      pattern: '^\+\d{10,15}$'
+    email:
+      type: string
+      description: Email address of the receive-only entity.
+      format: email
+UpdateEntityRequest:
+  type: object
+  properties:
+    individual:
+      $ref: '#/CreateEntityIndividual'
+    corporation:
+      $ref: '#/CreateEntityCorporation'
+    address:
+      $ref: common.yaml#/Address
+    metadata:
+      $ref: common.yaml#/Metadata
+EntityAttribute:
+  type: object
+  required:
+  - id
+  - entity_id
+  - status
+  - attributes
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the entity attribute.
+      example: attr_QwMjMDEwMTY1
+    entity_id:
+      type: string
+      description: The ID of the entity this attribute belongs to.
+      example: ent_au22b1fbFJbp8
+    status:
+      type: string
+      description: Status of the attribute retrieval.
+      enum:
+      - completed
+      - in_progress
+      - pending
+      - failed
+    attributes:
+      $ref: '#/EntityAttributeData'
+    error:
+      type:
+      - object
+      - 'null'
+      description: Error details if the resource encountered an error.
+      allOf:
+      - $ref: common.yaml#/ResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the attribute was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the attribute was last updated.
+EntityAttributeData:
+  type:
+  - object
+  - 'null'
+  description: Financial health and credit attribute data.
+  properties:
+    credit_health_credit_card_usage:
+      type:
+      - object
+      - 'null'
+      description: Credit card usage health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_derogatory_marks:
+      type:
+      - object
+      - 'null'
+      description: Derogatory marks health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_hard_inquiries:
+      type:
+      - object
+      - 'null'
+      description: Hard inquiries health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_soft_inquiries:
+      type:
+      - object
+      - 'null'
+      description: Soft inquiries health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_total_accounts:
+      type:
+      - object
+      - 'null'
+      description: Total accounts health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_open_accounts:
+      type:
+      - object
+      - 'null'
+      description: Open accounts health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_credit_age:
+      type:
+      - object
+      - 'null'
+      description: Credit age health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_payment_history:
+      type:
+      - object
+      - 'null'
+      description: Payment history health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+    credit_health_entity_delinquent:
+      type:
+      - object
+      - 'null'
+      description: Entity delinquency health indicator.
+      properties:
+        value:
+          type:
+          - number
+          - 'null'
+          description: The attribute value.
+        rating:
+          type: string
+          description: Rating for this attribute.
+        metadata:
+          type:
+          - object
+          - 'null'
+          description: Additional metadata.
+EntityConnect:
+  type: object
+  required:
+  - id
+  - entity_id
+  - status
+  - accounts
+  - requested_products
+  - requested_subscriptions
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the connect session.
+      example: cxn_iENwGBMDnr7sJ
+    entity_id:
+      type: string
+      description: The ID of the entity this connect session belongs to.
+      example: ent_au22b1fbFJbp8
+    status:
+      type: string
+      description: Status of the connect session.
+      enum:
+      - completed
+      - in_progress
+      - pending
+      - failed
+    accounts:
+      type: array
+      items:
+        oneOf:
+        - type: string
+          pattern: ^acc_\w+$
+        - $ref: account.yaml#/Account
+      description: Expandable. List of account IDs connected through this session.
+    requested_products:
+      type:
+      - array
+      - 'null'
+      description: Products requested for this connect session.
+      items:
+        type: string
+    requested_subscriptions:
+      type:
+      - array
+      - 'null'
+      description: Subscriptions requested for this connect session.
+      items:
+        type: string
+    error:
+      type:
+      - object
+      - 'null'
+      description: Error details if the resource encountered an error.
+      allOf:
+      - $ref: errors/entity_errors.yaml#/ConnectResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the connect session was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the connect session was last updated.
+EntityCreditScore:
+  type: object
+  required:
+  - id
+  - entity_id
+  - status
+  - scores
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the credit score.
+      example: crs_pn4ca33GRnrJm
+    entity_id:
+      type: string
+      description: The ID of the entity this credit score belongs to.
+      example: ent_au22b1fbFJbp8
+    status:
+      type: string
+      description: Status of the credit score retrieval.
+      enum:
+      - completed
+      - in_progress
+      - pending
+      - failed
+    scores:
+      type:
+      - array
+      - 'null'
+      description: Array of credit score results.
+      items:
+        type: object
+        required:
+        - score
+        - source
+        - model
+        - factors
+        - created_at
+        properties:
+          score:
+            type:
+            - integer
+            - 'null'
+            description: The credit score value.
+          source:
+            type:
+            - string
+            - 'null'
+            description: The source of the credit score.
+          model:
+            type:
+            - string
+            - 'null'
+            description: The scoring model used.
+          factors:
+            type:
+            - array
+            - 'null'
+            description: Factors affecting the credit score.
+            items:
+              $ref: '#/EntityCreditScoreFactor'
+          created_at:
+            type: string
+            format: date-time
+            description: Timestamp when this score was generated.
+    error:
+      type:
+      - object
+      - 'null'
+      description: Error details if the resource encountered an error.
+      allOf:
+      - $ref: errors/entity_errors.yaml#/CreditScoreResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the credit score was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the credit score was last updated.
+EntityCreditScoreFactor:
+  type: object
+  properties:
+    code:
+      type:
+      - string
+      - 'null'
+      description: Factor code.
+    description:
+      type:
+      - string
+      - 'null'
+      description: Human-readable description of the factor.
+EntityIdentity:
+  type: object
+  required:
+  - id
+  - entity_id
+  - status
+  - identities
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the identity record.
+      example: idn_NhTRUJMEr8kn3
+    entity_id:
+      type: string
+      description: The ID of the entity this identity belongs to.
+      example: ent_au22b1fbFJbp8
+    status:
+      type: string
+      description: Status of the identity retrieval.
+      enum:
+      - completed
+      - in_progress
+      - pending
+      - failed
+    identities:
+      type:
+      - array
+      - 'null'
+      description: Array of identity records found for this entity.
+      items:
+        type: object
+        properties:
+          first_name:
+            type:
+            - string
+            - 'null'
+            description: First name.
+          last_name:
+            type:
+            - string
+            - 'null'
+            description: Last name.
+          phone:
+            type:
+            - string
+            - 'null'
+            description: Phone number.
+          dob:
+            type:
+            - string
+            - 'null'
+            description: Date of birth.
+          address:
+            type:
+            - object
+            - 'null'
+            description: Address information.
+            properties:
+              address:
+                type:
+                - string
+                - 'null'
+                description: Street address.
+              city:
+                type:
+                - string
+                - 'null'
+                description: City.
+              state:
+                type:
+                - string
+                - 'null'
+                description: State.
+              zip:
+                type:
+                - string
+                - 'null'
+                description: ZIP code.
+          ssn:
+            type:
+            - string
+            - 'null'
+            description: Social security number (masked).
+    error:
+      type:
+      - object
+      - 'null'
+      description: Error details if the resource encountered an error.
+      allOf:
+      - $ref: common.yaml#/ResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the identity record was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the identity record was last updated.
+EntityProduct:
+  type: object
+  required:
+  - name
+  - status
+  - created_at
+  - updated_at
+  properties:
+    name:
+      type: string
+      description: Name of the product.
+    status:
+      type: string
+      description: Availability status of the product.
+      enum:
+      - available
+      - restricted
+      - unavailable
+    status_error:
+      type:
+      - object
+      - 'null'
+      description: Error details about the product status.
+    latest_request_id:
+      type:
+      - string
+      - 'null'
+      description: ID of the latest request for this product.
+    latest_successful_request_id:
+      type:
+      - string
+      - 'null'
+      description: ID of the latest successful request for this product.
+    is_subscribable:
+      type: boolean
+      description: Whether this product can be subscribed to.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the product was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the product was last updated.
+EntitySubscription:
+  type: object
+  required:
+  - id
+  - name
+  - status
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the entity subscription.
+      example: sub_JMDEwMTY1QwMj
+    name:
+      type: string
+      description: Name of the subscription.
+    status:
+      type: string
+      description: Current status of the subscription.
+      enum:
+      - active
+      - inactive
+    payload:
+      type:
+      - object
+      - 'null'
+      description: Subscription payload data.
+    latest_request_id:
+      type:
+      - string
+      - 'null'
+      description: ID of the latest request for this subscription.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the subscription was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the subscription was last updated.
+CreateEntitySubscriptionRequest:
+  type: object
+  required:
+  - enroll
+  properties:
+    enroll:
+      type: array
+      description: Array of subscription names to enroll.
+      items:
+        type: string
+        enum:
+        - attribute
+        - connect
+        - credit_score
+      minItems: 1
+EntityVehicle:
+  type: object
+  required:
+  - id
+  - entity_id
+  - status
+  - vehicles
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the vehicle record.
+      example: vhl_JMDEwMTY1Qw4c
+    entity_id:
+      type: string
+      description: The ID of the entity this vehicle belongs to.
+      example: ent_au22b1fbFJbp8
+    status:
+      type: string
+      description: Status of the vehicle data retrieval.
+      enum:
+      - completed
+      - in_progress
+      - pending
+      - failed
+    vehicles:
+      type:
+      - array
+      - 'null'
+      description: Array of vehicles associated with this entity.
+      items:
+        type: object
+        properties:
+          vin:
+            type:
+            - string
+            - 'null'
+            description: Vehicle identification number.
+          year:
+            type:
+            - string
+            - 'null'
+            description: Model year.
+          make:
+            type:
+            - string
+            - 'null'
+            description: Vehicle make.
+          model:
+            type:
+            - string
+            - 'null'
+            description: Vehicle model.
+          series:
+            type:
+            - string
+            - 'null'
+            description: Vehicle series.
+          major_color:
+            type:
+            - string
+            - 'null'
+            description: Primary color of the vehicle.
+          style:
+            type:
+            - string
+            - 'null'
+            description: Body style.
+    error:
+      type:
+      - object
+      - 'null'
+      description: Error details if the resource encountered an error.
+      allOf:
+      - $ref: common.yaml#/ResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the vehicle record was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the vehicle record was last updated.
+SearchEntityVehiclesRequest:
+  type: object
+  description: Request body for searching entity vehicles. Treated as a product execution.
+EntityVerificationSession:
+  type: object
+  required:
+  - id
+  - entity_id
+  - status
+  - type
+  - method
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the verification session.
+      example: evf_TRUJMEr8kn3Nh
+    entity_id:
+      type: string
+      description: The ID of the entity this verification session belongs to.
+      example: ent_au22b1fbFJbp8
+    status:
+      type: string
+      description: Current status of the verification session.
+      enum:
+      - pending
+      - in_progress
+      - verified
+      - failed
+    type:
+      type: string
+      description: The type of verification being performed.
+      enum:
+      - identity
+      - phone
+    method:
+      type:
+      - string
+      - 'null'
+      description: The verification method used.
+      enum:
+      - sms
+      - sna
+      - byo_sms
+      - byo_kyc
+      - kba
+      - element
+      - opal
+      - method_verified
+      - null
+    error:
+      type:
+      - object
+      - 'null'
+      description: Error details if the resource encountered an error.
+      allOf:
+      - $ref: errors/entity_errors.yaml#/VerificationSessionResourceError
+    expired_at:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Timestamp when the verification session expired.
+    sms:
+      type:
+      - object
+      - 'null'
+      description: SMS verification details. Present when method is sms.
+    sna:
+      type:
+      - object
+      - 'null'
+      description: SNA verification details. Present when method is sna.
+    byo_sms:
+      type:
+      - object
+      - 'null'
+      description: BYO SMS verification details. Present when method is byo_sms.
+    byo_kyc:
+      type:
+      - object
+      - 'null'
+      description: BYO KYC verification details. Present when method is byo_kyc.
+    kba:
+      type:
+      - object
+      - 'null'
+      description: KBA verification details. Present when method is kba.
+    element:
+      type:
+      - object
+      - 'null'
+      description: Element verification details. Present when method is element.
+    opal:
+      type:
+      - object
+      - 'null'
+      description: Opal verification details. Present when method is opal.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the verification session was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the verification session was last updated.
+CreateEntityVerificationSessionRequest:
+  type: object
+  required:
+  - type
+  - method
+  properties:
+    type:
+      type: string
+      description: The type of verification to perform.
+      enum:
+      - identity
+      - phone
+    method:
+      type: string
+      description: The verification method to use.
+      enum:
+      - sms
+      - sna
+      - byo_sms
+      - byo_kyc
+      - kba
+      - element
+      - opal
+    sms:
+      type: object
+      description: SMS-specific options. Required when method is sms.
+    sna:
+      type: object
+      description: SNA-specific options. Required when method is sna.
+    byo_sms:
+      type: object
+      description: BYO SMS-specific options. Required when method is byo_sms.
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the SMS verification.
+    byo_kyc:
+      type: object
+      description: BYO KYC-specific options. Required when method is byo_kyc.
+    kba:
+      type: object
+      description: KBA-specific options. Required when method is kba.
+UpdateEntityVerificationSessionRequest:
+  type: object
+  required:
+  - type
+  - method
+  properties:
+    type:
+      type: string
+      description: The verification session type.
+    method:
+      type: string
+      description: The verification method.
+      enum:
+      - sms
+      - sna
+      - byo_sms
+      - byo_kyc
+      - kba
+      - element
+      - opal
+    sms:
+      type: object
+      description: SMS verification data.
+      properties:
+        sms_code:
+          type: string
+          description: The 6-character SMS verification code.
+          minLength: 6
+          maxLength: 6
+    sna:
+      type: object
+      description: SNA verification data.
+    kba:
+      type: object
+      description: KBA verification data.
+      properties:
+        answers:
+          type: array
+          description: Array of KBA question answers.
+          items:
+            type: object
+            required:
+            - question_id
+            - answer_id
+            properties:
+              question_id:
+                type: string
+                description: The question identifier.
+              answer_id:
+                type: string
+                description: The selected answer identifier.
+UpdateEntityConsentRequest:
+  type: object
+  required:
+  - type
+  properties:
+    type:
+      type: string
+      description: The consent action type.
+      enum:
+      - grant
+      - withdraw
+    reason:
+      type: string
+      description: Optional reason for the consent action.
+EntityResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Entity'
+  example:
+    success: true
+    data:
+      id: ent_au22b1fbFJbp8
+      type: individual
+      individual:
+        first_name: Jane
+        last_name: Doe
+        phone: '+15125550123'
+        email: jane@example.com
+        dob: '1990-05-21'
+      corporation: null
+      receive_only: null
+      address:
+        line1: 123 Main St
+        line2: null
+        city: Austin
+        state: TX
+        zip: '78701'
+      capabilities: []
+      available_capabilities:
+      - payments:send
+      - payments:receive
+      pending_capabilities: []
+      status: active
+      verification: null
+      error: null
+      metadata:
+        customer_reference: ent-001
+      products: []
+      restricted_products: []
+      subscriptions: []
+      available_subscriptions: []
+      restricted_subscriptions: []
+      connect: null
+      credit_score: null
+      attribute: null
+      vehicle: null
+      created_at: '2026-01-15T18:30:00.000Z'
+      updated_at: '2026-01-15T18:30:00.000Z'
+    message: null
+EntityListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/Entity'
+EntityAttributeResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntityAttribute'
+EntityAttributeListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/EntityAttribute'
+EntityConnectResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntityConnect'
+EntityConnectListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/EntityConnect'
+EntityCreditScoreResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntityCreditScore'
+EntityCreditScoreListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/EntityCreditScore'
+EntityIdentityResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntityIdentity'
+EntityIdentityListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/EntityIdentity'
+EntityProductResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntityProduct'
+EntityProductListResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        type: object
+        description: Object keyed by product name with EntityProduct values.
+        additionalProperties:
+          $ref: '#/EntityProduct'
+EntitySubscriptionResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntitySubscription'
+EntitySubscriptionListResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        type: object
+        description: Object keyed by subscription name with EntitySubscription values.
+        additionalProperties:
+          $ref: '#/EntitySubscription'
+EntityVehicleResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntityVehicle'
+EntityVehicleListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/EntityVehicle'
+EntityVerificationSessionResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/EntityVerificationSession'
+EntityVerificationSessionListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/EntityVerificationSession'

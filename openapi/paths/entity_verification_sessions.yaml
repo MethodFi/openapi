@@ -1,0 +1,151 @@
+collection:
+  get:
+    operationId: listEntityVerificationSessions
+    summary: List all entity verification sessions
+    description: Returns a list of verification sessions for the specified entity.
+    tags:
+    - Entity Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    - $ref: ../components/parameters/pagination.yaml#/FromDateParam
+    - $ref: ../components/parameters/pagination.yaml#/ToDateParam
+    responses:
+      '200':
+        description: A list of entity verification sessions.
+        headers:
+          $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityVerificationSessionListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createEntityVerificationSession
+    summary: Create an entity verification session
+    description: Creates a new verification session for the specified entity.
+    tags:
+    - Entity Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/entity.yaml#/CreateEntityVerificationSessionRequest
+    responses:
+      '200':
+        description: The created entity verification session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityVerificationSessionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveEntityVerificationSession
+    summary: Retrieve an entity verification session
+    description: Returns a single entity verification session by its identifier.
+    tags:
+    - Entity Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntityVerificationSessionIdParam
+    responses:
+      '200':
+        description: The requested entity verification session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityVerificationSessionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  put:
+    operationId: updateEntityVerificationSession
+    summary: Update an entity verification session
+    description: 'Updates a verification session, for example by submitting an SMS verification code or KBA answers. The request body shape depends on the verification type and method.
+
+      '
+    tags:
+    - Entity Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntityVerificationSessionIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/entity.yaml#/UpdateEntityVerificationSessionRequest
+    responses:
+      '200':
+        description: The updated entity verification session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityVerificationSessionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

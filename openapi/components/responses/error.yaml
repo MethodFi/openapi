@@ -1,0 +1,98 @@
+BadRequest:
+  description: Bad request - invalid parameters or request body.
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+Unauthorized:
+  description: Unauthorized - missing or invalid authentication token.
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+Forbidden:
+  description: Forbidden - insufficient permissions for this operation.
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+NotFound:
+  description: Not found - the requested resource does not exist.
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+UnprocessableEntity:
+  description: Unprocessable entity - the request was valid JSON but failed business or validation rules.
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+RateLimited:
+  description: Too many requests - rate limit exceeded.
+  headers:
+    Retry-After:
+      description: Number of seconds to wait before retrying.
+      schema:
+        type: integer
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+GatewayTimeout:
+  description: Upstream timeout - the request could not be completed before the upstream deadline.
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+InternalError:
+  description: Internal server error.
+  content:
+    application/json:
+      schema:
+        $ref: '#/ErrorEnvelope'
+ErrorEnvelope:
+  type: object
+  required:
+  - success
+  - data
+  - message
+  properties:
+    success:
+      type: boolean
+      enum:
+      - false
+    data:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/ErrorObject'
+    message:
+      type: string
+ErrorObject:
+  type: object
+  required:
+  - type
+  - code
+  - message
+  properties:
+    type:
+      type: string
+      description: Error type category.
+      enum:
+      - invalid_request
+      - api_error
+      - resource_error
+    code:
+      type: integer
+      description: Numeric error code. Common codes include 400 (bad request), 401 (unauthorized), 403 (forbidden), 404 (not found), 422 (unprocessable entity), 429 (rate limited), and 500 (internal error).
+    sub_type:
+      type:
+      - string
+      - 'null'
+      description: More specific error classification.
+    message:
+      type: string
+      description: Human-readable error description.

@@ -1,0 +1,8 @@
+DownloadResponse:
+  description: File download. The response is a redirect (302) to a pre-signed URL for the file.
+  headers:
+    Location:
+      description: Pre-signed URL for the file download.
+      schema:
+        type: string
+        format: uri

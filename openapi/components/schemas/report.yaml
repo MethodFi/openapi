@@ -1,0 +1,85 @@
+Report:
+  type: object
+  description: A Report is a downloadable file containing aggregated data about payments, entities, or other resources.
+  required:
+  - id
+  - type
+  - url
+  - status
+  - metadata
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the report.
+      pattern: ^rpt_\w+$
+      example: rpt_cj2mkA3hFyHT5
+    type:
+      type: string
+      description: The type of report.
+      enum:
+      - payments.created.current
+      - payments.created.previous
+      - payments.created.previous_day
+      - payments.updated.current
+      - payments.updated.previous
+      - payments.failed.previous_day
+      - ach.pull.upcoming
+      - ach.pull.previous
+      - ach.pull.nightly
+      - ach.reversals.nightly
+      - ach.debit.daily
+      - entities.created.previous_day
+      - reserve_fbo_balance.created.previous_day
+    url:
+      type:
+      - string
+      - 'null'
+      description: Download URL for the completed report. Only available when status is `completed`.
+    status:
+      type: string
+      description: Current processing status of the report.
+      enum:
+      - processing
+      - completed
+    metadata:
+      $ref: common.yaml#/Metadata
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the report was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the report was last updated.
+ReportCreateRequest:
+  type: object
+  description: Request body for creating a report.
+  required:
+  - type
+  properties:
+    type:
+      type: string
+      description: The type of report to generate.
+      enum:
+      - payments.created.current
+      - payments.created.previous
+      - payments.created.previous_day
+      - payments.updated.current
+      - payments.updated.previous
+      - payments.failed.previous_day
+      - ach.pull.upcoming
+      - ach.pull.previous
+      - ach.pull.nightly
+      - ach.reversals.nightly
+      - ach.debit.daily
+      - entities.created.previous_day
+      - reserve_fbo_balance.created.previous_day
+ReportResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Report'

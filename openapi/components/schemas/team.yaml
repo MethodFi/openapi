@@ -1,0 +1,204 @@
+Team:
+  type: object
+  description: A Team represents your organization and its API configuration.
+  required:
+  - id
+  - parent_id
+  - name
+  - legal_name
+  - logo
+  - api_version
+  - status
+  - products
+  - keys
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the team.
+      example: team_PmL8JBBnQNpYZ
+    parent_id:
+      type:
+      - string
+      - 'null'
+      description: Identifier of the parent team, if this is a child team.
+    name:
+      type: string
+      description: Display name of the team.
+      example: My Team
+    legal_name:
+      type: string
+      description: Legal business name of the team.
+      example: My Company Inc.
+    logo:
+      type:
+      - string
+      - 'null'
+      description: URL of the team logo.
+    api_version:
+      type: string
+      description: The API version the team is configured to use.
+      example: '2025-12-01'
+    status:
+      type: string
+      description: Current status of the team.
+      enum:
+      - active
+      - verified
+      - disabled
+      - pending_disablement
+    products:
+      type: array
+      description: List of products enabled for this team.
+      items:
+        $ref: '#/TeamProduct'
+    keys:
+      type: array
+      description: API keys associated with this team.
+      items:
+        $ref: '#/TeamKey'
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the team was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the team was last updated.
+TeamProduct:
+  type: object
+  properties:
+    type:
+      type: string
+      description: The product type.
+    enabled:
+      type: boolean
+      description: Whether this product is enabled for the team.
+TeamKey:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the key.
+    type:
+      type: string
+      description: The key type.
+      enum:
+      - secret
+      - public
+    deleted:
+      type: boolean
+      description: Whether this key has been deleted.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the key was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the key was last updated.
+    last_used_at:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Timestamp when the key was last used, if ever.
+TeamCreateRequest:
+  type: object
+  description: Request body for creating a child team.
+  required:
+  - name
+  properties:
+    name:
+      type: string
+      description: Display name for the new child team.
+TeamEncryptionKeyRequest:
+  type: object
+  description: Request body for setting the default encryption key.
+  required:
+  - key
+  properties:
+    key:
+      type: string
+      description: The encryption key value.
+MLEPublicKey:
+  type: object
+  description: An MLE (Message-Level Encryption) public key for the team.
+  required:
+  - id
+  - jwk
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the public key.
+    jwk:
+      type: object
+      description: JSON Web Key (JWK) representation of the public key.
+      additionalProperties: true
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the public key was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the public key was last updated.
+MLEPublicKeyCreateRequest:
+  type: object
+  description: Request body for creating an MLE public key.
+  required:
+  - jwk
+  properties:
+    jwk:
+      type: object
+      description: JSON Web Key (JWK) to register.
+      additionalProperties: true
+TeamResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Team'
+  example:
+    success: true
+    data:
+      id: team_PmL8JBBnQNpYZ
+      parent_id: null
+      name: My Team
+      legal_name: My Company Inc.
+      logo: null
+      api_version: '2025-12-01'
+      status: active
+      products:
+      - type: payments
+        enabled: true
+      keys:
+      - id: key_123
+        type: secret
+        deleted: false
+        created_at: '2026-01-15T18:30:00.000Z'
+        updated_at: '2026-01-15T18:30:00.000Z'
+        last_used_at: null
+      created_at: '2026-01-15T18:30:00.000Z'
+      updated_at: '2026-01-15T18:30:00.000Z'
+    message: null
+MLEPublicKeyResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/MLEPublicKey'
+MLEPublicKeyListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/MLEPublicKey'

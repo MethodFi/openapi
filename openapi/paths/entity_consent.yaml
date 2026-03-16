@@ -1,0 +1,42 @@
+post:
+  operationId: updateEntityConsent
+  summary: Update entity consent
+  description: Grants or withdraws consent for the specified entity.
+  tags:
+    - Entity Consent
+  security:
+    - SecretKey: []
+  parameters:
+    - $ref: '../components/parameters/method_version.yaml'
+    - $ref: '../components/parameters/path_ids.yaml#/EntityIdParam'
+    - $ref: '../components/parameters/idempotency_key.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/entity.yaml#/UpdateEntityConsentRequest'
+        example:
+          type: withdraw
+          reason: entity_withdrew_consent
+  responses:
+    '200':
+      description: The updated entity.
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/entity.yaml#/EntityResponse'
+    '400':
+      $ref: '../components/responses/error.yaml#/BadRequest'
+    '401':
+      $ref: '../components/responses/error.yaml#/Unauthorized'
+    '403':
+      $ref: '../components/responses/error.yaml#/Forbidden'
+    '404':
+      $ref: '../components/responses/error.yaml#/NotFound'
+    '422':
+      $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+    '429':
+      $ref: '../components/responses/error.yaml#/RateLimited'
+    '500':
+      $ref: '../components/responses/error.yaml#/InternalError'

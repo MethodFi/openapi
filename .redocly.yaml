@@ -1,0 +1,17 @@
+apis:
+  main:
+    root: openapi/openapi.yaml
+
+rules:
+  no-unresolved-refs: error
+  no-unused-components: warn
+  operation-operationId-unique: error
+  operation-operationId: error
+  path-declaration-must-exist: error
+  path-not-include-query: error
+  tag-description: warn
+  no-path-trailing-slash: error
+  no-identical-paths: error
+  no-ambiguous-paths: warn
+  no-enum-type-mismatch: error
+  struct: error

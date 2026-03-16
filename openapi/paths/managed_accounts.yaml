@@ -1,0 +1,114 @@
+collection:
+  get:
+    operationId: listManagedAccounts
+    summary: List all managed accounts
+    description: Returns all managed accounts for the team.
+    tags:
+    - Managed Accounts
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    responses:
+      '200':
+        description: A list of managed accounts.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/managed_account.yaml#/ManagedAccountListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveManagedAccount
+    summary: Retrieve a managed account
+    description: Returns a single managed account by its identifier.
+    tags:
+    - Managed Accounts
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: macc_id
+      in: path
+      required: true
+      description: Unique identifier for the managed account.
+      schema:
+        type: string
+        pattern: ^macc_\w+$
+    responses:
+      '200':
+        description: The requested managed account.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/managed_account.yaml#/ManagedAccountResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+transactions:
+  get:
+    operationId: listManagedAccountTransactions
+    summary: List managed account transactions
+    description: Returns a paginated list of transactions for a specific managed account.
+    tags:
+    - Managed Accounts
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: macc_id
+      in: path
+      required: true
+      description: Unique identifier for the managed account.
+      schema:
+        type: string
+        pattern: ^macc_\w+$
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    - $ref: ../components/parameters/pagination.yaml#/FromDateParam
+    - $ref: ../components/parameters/pagination.yaml#/ToDateParam
+    responses:
+      '200':
+        description: A paginated list of transactions for the managed account.
+        headers:
+          Pagination-Page:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page
+          Pagination-Page-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Count
+          Pagination-Page-Limit:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Limit
+          Pagination-Total-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Total-Count
+          Pagination-Page-Cursor-Prev:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Prev
+          Pagination-Page-Cursor-Next:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Next
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/managed_account.yaml#/ManagedAccountTransactionListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

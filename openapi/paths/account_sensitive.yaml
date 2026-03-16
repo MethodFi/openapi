@@ -1,0 +1,112 @@
+collection:
+  get:
+    operationId: listAccountSensitives
+    summary: List all account sensitive records
+    description: Returns a list of sensitive data records for the specified account.
+    tags:
+    - Account Sensitive
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    responses:
+      '200':
+        description: A paginated list of account sensitive records.
+        headers:
+          Pagination-Page:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page
+          Pagination-Page-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Count
+          Pagination-Page-Limit:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Limit
+          Pagination-Total-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Total-Count
+          Pagination-Page-Cursor-Prev:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Prev
+          Pagination-Page-Cursor-Next:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Next
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountSensitiveListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createAccountSensitive
+    summary: Create an account sensitive record
+    description: Creates a new sensitive data request for the specified account.
+    tags:
+    - Account Sensitive
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml#/AccountSensitiveCreateRequest
+    responses:
+      '200':
+        description: The newly created account sensitive record.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountSensitiveResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveAccountSensitive
+    summary: Retrieve an account sensitive record
+    description: Retrieves an account sensitive record by its unique identifier.
+    tags:
+    - Account Sensitive
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountSensitiveIdParam
+    responses:
+      '200':
+        description: The requested account sensitive record.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountSensitiveResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

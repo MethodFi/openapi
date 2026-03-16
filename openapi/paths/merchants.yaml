@@ -1,0 +1,77 @@
+collection:
+  get:
+    operationId: listMerchants
+    summary: List all merchants
+    description: Returns a list of merchants from the Method merchant directory.
+    tags:
+    - Merchants
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: name
+      in: query
+      required: false
+      description: Search merchants by name.
+      schema:
+        type: string
+    - name: type
+      in: query
+      required: false
+      description: Filter merchants by account type.
+      schema:
+        $ref: ../components/schemas/merchant.yaml#/MerchantType
+    responses:
+      '200':
+        description: A list of merchants.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/merchant.yaml#/MerchantListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveMerchant
+    summary: Retrieve a merchant
+    description: Returns a single merchant by its identifier.
+    tags:
+    - Merchants
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: mchId
+      in: path
+      required: true
+      description: Unique identifier for the merchant.
+      schema:
+        type: string
+        pattern: ^mch_\w+$
+    responses:
+      '200':
+        description: The requested merchant.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/merchant.yaml#/MerchantResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

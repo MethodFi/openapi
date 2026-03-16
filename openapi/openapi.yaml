@@ -1,0 +1,389 @@
+openapi: 3.1.0
+info:
+  title: Method API
+  version: '2025-12-01'
+  license:
+    name: Proprietary
+    url: https://methodfi.com
+  description: "The Method API enables you to retrieve financial data, create payments, and manage\nentities and accounts programmatically. This specification covers the public API\nsurface for version `2025-12-01`.\n\n## Authentication\n\nMost API requests require a Bearer token in the `Authorization` header.\nUse your secret key (`sk_...`) for server-side requests and public key (`pk_...`)\nfor client-side Element requests. Public Message-Level Encryption key discovery\nendpoints are documented separately and do not require authentication.\n\n## Versioning\n\nThe API version is selected via the `Method-Version` header. This spec targets\nversion `2025-12-01`. The SDK sets this header automatically.\n\n## Response Envelope\n\nMost JSON responses are wrapped in a standard envelope:\n\n```json\n{\n  \"success\": true,\n  \"data\": { ... },\n  \"message\": null\n}\n```\n\nThe `/.well-known/jwks.json` endpoint is an exception and returns a bare JWK set.\n\n## Pagination\n\nList endpoints return pagination metadata in response headers:\n`Pagination-Page`, `Pagination-Page-Count`, `Pagination-Page-Limit`,\n`Pagination-Total-Count`, `Pagination-Page-Cursor-Prev`, `Pagination-Page-Cursor-Next`.\n\n##\
+    \ Expandable Fields\n\nCertain resource fields can be expanded from IDs to full objects using the\n`expand` query parameter. Maximum nesting depth is 4 levels.\n"
+  contact:
+    name: Method Financial
+    url: https://methodfi.com
+    email: team@methodfi.com
+servers:
+- url: https://production.methodfi.com
+  description: Production
+- url: https://sandbox.methodfi.com
+  description: Sandbox
+- url: https://dev.methodfi.com
+  description: Development
+security:
+- SecretKey: []
+tags:
+- name: Public Keys
+  description: Public key discovery endpoints for Message-Level Encryption.
+- name: Ping
+  description: Health check endpoint
+- name: Accounts
+  description: Financial accounts (ACH, liability, clearing, debit card)
+- name: Account Attributes
+  description: Attribute data for accounts
+- name: Account Balances
+  description: Balance data for accounts
+- name: Account Card Brands
+  description: Card brand information for accounts
+- name: Account Consent
+  description: Consent management for accounts
+- name: Account Payment Instruments
+  description: Payment instruments for accounts
+- name: Account Payoffs
+  description: Payoff data for accounts
+- name: Account Products
+  description: Products associated with accounts
+- name: Account Sensitive
+  description: Sensitive data for accounts
+- name: Account Subscriptions
+  description: Subscriptions for accounts
+- name: Account Transactions
+  description: Transactions for accounts
+- name: Account Updates
+  description: Update records for accounts
+- name: Account Verification Sessions
+  description: Verification sessions for accounts
+- name: Card Products
+  description: Card product definitions
+- name: Entities
+  description: Individuals, corporations, and receive-only entities
+- name: Entity Attributes
+  description: Attribute data for entities
+- name: Entity Connects
+  description: Account connection sessions for entities
+- name: Entity Consent
+  description: Consent management for entities
+- name: Entity Credit Scores
+  description: Credit score data for entities
+- name: Entity Identities
+  description: Identity verification data for entities
+- name: Entity Products
+  description: Products associated with entities
+- name: Entity Subscriptions
+  description: Subscriptions for entities
+- name: Entity Vehicles
+  description: Vehicle data for entities
+- name: Entity Verification Sessions
+  description: Verification sessions for entities
+- name: Events
+  description: Webhook event log
+- name: Forwarding Requests
+  description: Request forwarding with sensitive data injection
+- name: Managed Accounts
+  description: Method-managed accounts
+- name: Merchants
+  description: Merchant directory
+- name: Payments
+  description: ACH and clearing payments
+- name: Payment Reversals
+  description: Reversals for payments
+- name: Reports
+  description: Downloadable reports
+- name: Secrets
+  description: Secure secret storage
+- name: Teams
+  description: Team and API key management
+- name: Webhooks
+  description: Webhook subscriptions
+- name: Simulate Accounts
+  description: Sandbox account simulation
+- name: Simulate Entities
+  description: Sandbox entity simulation
+- name: Simulate Events
+  description: Sandbox event simulation
+- name: Simulate Payments
+  description: Sandbox payment simulation
+- name: Opal
+  description: Opal client-side session and token management
+- name: Elements
+  description: Client-side Element endpoints
+paths:
+  /.well-known/jwks.json:
+    $ref: paths/well_known.yaml
+  /auth/{jwk_id}:
+    $ref: paths/auth.yaml
+  /ping:
+    $ref: paths/ping.yaml
+  /accounts:
+    $ref: paths/accounts.yaml#/collection
+  /accounts/{accountId}:
+    $ref: paths/accounts.yaml#/individual
+  /accounts/{accountId}/attributes:
+    $ref: paths/account_attributes.yaml#/collection
+  /accounts/{accountId}/attributes/{accAttrId}:
+    $ref: paths/account_attributes.yaml#/individual
+  /accounts/{accountId}/balances:
+    $ref: paths/account_balances.yaml#/collection
+  /accounts/{accountId}/balances/{balId}:
+    $ref: paths/account_balances.yaml#/individual
+  /accounts/{accountId}/card_brands:
+    $ref: paths/account_card_brands.yaml#/collection
+  /accounts/{accountId}/card_brands/{cbrdId}:
+    $ref: paths/account_card_brands.yaml#/individual
+  /accounts/{accountId}/consent:
+    $ref: paths/account_consent.yaml
+  /accounts/{accountId}/payment_instruments:
+    $ref: paths/account_payment_instruments.yaml#/collection
+  /accounts/{accountId}/payment_instruments/{pmtInsId}:
+    $ref: paths/account_payment_instruments.yaml#/individual
+  /accounts/{accountId}/payoffs:
+    $ref: paths/account_payoffs.yaml#/collection
+  /accounts/{accountId}/payoffs/{pyfId}:
+    $ref: paths/account_payoffs.yaml#/individual
+  /accounts/{accountId}/products:
+    $ref: paths/account_products.yaml#/collection
+  /accounts/{accountId}/products/{prdId}:
+    $ref: paths/account_products.yaml#/individual
+  /accounts/{accountId}/sensitive:
+    $ref: paths/account_sensitive.yaml#/collection
+  /accounts/{accountId}/sensitive/{astvId}:
+    $ref: paths/account_sensitive.yaml#/individual
+  /accounts/{accountId}/subscriptions:
+    $ref: paths/account_subscriptions.yaml#/collection
+  /accounts/{accountId}/subscriptions/{subId}:
+    $ref: paths/account_subscriptions.yaml#/individual
+  /accounts/{accountId}/transactions:
+    $ref: paths/account_transactions.yaml#/collection
+  /accounts/{accountId}/transactions/{accTxnId}:
+    $ref: paths/account_transactions.yaml#/individual
+  /accounts/{accountId}/updates:
+    $ref: paths/account_updates.yaml#/collection
+  /accounts/{accountId}/updates/{updateId}:
+    $ref: paths/account_updates.yaml#/individual
+  /accounts/{accountId}/verification_sessions:
+    $ref: paths/account_verification_sessions.yaml#/collection
+  /accounts/{accountId}/verification_sessions/{avfId}:
+    $ref: paths/account_verification_sessions.yaml#/individual
+  /accounts/{accountId}/verification_sessions/{avfId}/amounts:
+    $ref: paths/account_verification_sessions.yaml#/amounts
+  /card_products/{product_id}:
+    $ref: paths/card_products.yaml
+  /entities:
+    $ref: paths/entities.yaml#/collection
+  /entities/{entityId}:
+    $ref: paths/entities.yaml#/individual
+  /entities/{entityId}/attributes:
+    $ref: paths/entity_attributes.yaml#/collection
+  /entities/{entityId}/attributes/{attrId}:
+    $ref: paths/entity_attributes.yaml#/individual
+  /entities/{entityId}/consent:
+    $ref: paths/entity_consent.yaml
+  /entities/{entityId}/connect:
+    $ref: paths/entity_connects.yaml#/collection
+  /entities/{entityId}/connect/{cxnId}:
+    $ref: paths/entity_connects.yaml#/individual
+  /entities/{entityId}/credit_scores:
+    $ref: paths/entity_credit_scores.yaml#/collection
+  /entities/{entityId}/credit_scores/{crsId}:
+    $ref: paths/entity_credit_scores.yaml#/individual
+  /entities/{entityId}/identities:
+    $ref: paths/entity_identities.yaml#/collection
+  /entities/{entityId}/identities/{idnId}:
+    $ref: paths/entity_identities.yaml#/individual
+  /entities/{entityId}/manual_connect:
+    $ref: paths/entity_connects.yaml#/manual_connect_create
+  /entities/{entityId}/manual_connect/{mcxnId}:
+    $ref: paths/entity_connects.yaml#/manual_connect_individual
+  /entities/{entityId}/products:
+    $ref: paths/entity_products.yaml#/collection
+  /entities/{entityId}/products/{prdId}:
+    $ref: paths/entity_products.yaml#/individual
+  /entities/{entityId}/subscriptions:
+    $ref: paths/entity_subscriptions.yaml#/collection
+  /entities/{entityId}/subscriptions/{subId}:
+    $ref: paths/entity_subscriptions.yaml#/individual
+  /entities/{entityId}/vehicles:
+    $ref: paths/entity_vehicles.yaml#/collection
+  /entities/{entityId}/vehicles/{vhlId}:
+    $ref: paths/entity_vehicles.yaml#/individual
+  /entities/{entityId}/verification_sessions:
+    $ref: paths/entity_verification_sessions.yaml#/collection
+  /entities/{entityId}/verification_sessions/{evfId}:
+    $ref: paths/entity_verification_sessions.yaml#/individual
+  /events:
+    $ref: paths/events.yaml#/collection
+  /events/{evtId}:
+    $ref: paths/events.yaml#/individual
+  /forwarding_requests:
+    $ref: paths/forwarding_requests.yaml#/create
+  /forwarding_requests/{id}:
+    $ref: paths/forwarding_requests.yaml#/individual
+  /managed_accounts:
+    $ref: paths/managed_accounts.yaml#/collection
+  /managed_accounts/{macc_id}:
+    $ref: paths/managed_accounts.yaml#/individual
+  /managed_accounts/{macc_id}/transactions:
+    $ref: paths/managed_accounts.yaml#/transactions
+  /merchants:
+    $ref: paths/merchants.yaml#/collection
+  /merchants/{mchId}:
+    $ref: paths/merchants.yaml#/individual
+  /payments:
+    $ref: paths/payments.yaml#/collection
+  /payments/{paymentId}:
+    $ref: paths/payments.yaml#/individual
+  /payments/{paymentId}/reversals:
+    $ref: paths/payment_reversals.yaml#/collection
+  /payments/{paymentId}/reversals/{reversalId}:
+    $ref: paths/payment_reversals.yaml#/individual
+  /reports:
+    $ref: paths/reports.yaml#/create
+  /reports/{reportId}:
+    $ref: paths/reports.yaml#/individual
+  /reports/{reportId}/download:
+    $ref: paths/reports.yaml#/download
+  /secrets:
+    $ref: paths/secrets.yaml#/collection
+  /secrets/{id}:
+    $ref: paths/secrets.yaml#/individual
+  /teams:
+    $ref: paths/teams.yaml#/root
+  /teams/default_encryption_key:
+    $ref: paths/teams.yaml#/encryption_key
+  /teams/mle/public_keys:
+    $ref: paths/teams.yaml#/public_keys_collection
+  /teams/mle/public_keys/{id}:
+    $ref: paths/teams.yaml#/public_keys_individual
+  /webhooks:
+    $ref: paths/webhooks.yaml#/collection
+  /webhooks/{webhookId}:
+    $ref: paths/webhooks.yaml#/individual
+  /opal/token:
+    $ref: paths/opal.yaml#/token
+  /opal/token/{flow_type}/{operation}:
+    $ref: paths/opal.yaml#/token_update
+  /opal/events:
+    $ref: paths/opal.yaml#/events
+  /simulate/accounts/{accountId}/verification_sessions/{avfId}/amounts:
+    $ref: paths/simulate/accounts.yaml#/verification_amounts
+  /simulate/accounts/{accountId}/transactions:
+    $ref: paths/simulate/accounts.yaml#/transactions
+  /simulate/accounts/{accountId}/card_brands:
+    $ref: paths/simulate/accounts.yaml#/card_brands
+  /simulate/entities/{entity_id}/credit_scores/{crs_id}:
+    $ref: paths/simulate/entities.yaml#/credit_scores
+  /simulate/entities/{entity_id}/connect:
+    $ref: paths/simulate/entities.yaml#/connect
+  /simulate/entities/{entity_id}/attributes:
+    $ref: paths/simulate/entities.yaml#/attributes
+  /simulate/events:
+    $ref: paths/simulate/events.yaml
+  /simulate/payments/{paymentId}:
+    $ref: paths/simulate/payments.yaml#/update_status
+  /simulate/payments/payment_instruments/{pmt_inst_id}:
+    $ref: paths/simulate/payments.yaml#/payment_instrument
+  /elements/token:
+    $ref: paths/elements/sk.yaml#/create_token
+  /elements/token/{pk_elem_id}/results:
+    $ref: paths/elements/sk.yaml#/session_results
+  /elements/sessions/{session_id}:
+    $ref: paths/elements/sk.yaml#/sessions
+  /elements/accounts/exchange:
+    $ref: paths/elements/sk.yaml#/exchange_account
+  /elements/config:
+    $ref: paths/elements/pk.yaml#/config
+  /elements/config/{pk_elem_id}:
+    $ref: paths/elements/pk.yaml#/config_by_id
+  /elements/entities/me:
+    $ref: paths/elements/pk.yaml#/entity_me
+  /elements/entities/me/init_mno_verification:
+    $ref: paths/elements/pk.yaml#/init_mno_verification
+  /elements/accounts:
+    $ref: paths/elements/pk.yaml#/accounts
+  /elements/accounts/{accountId}:
+    $ref: paths/elements/pk.yaml#/account_by_id
+  /elements/accounts/{accountId}/details:
+    $ref: paths/elements/pk.yaml#/account_details
+  /elements/accounts/{accountId}/transaction_stream:
+    $ref: paths/elements/pk.yaml#/transaction_stream
+  /elements/account_verification/accounts/{accountId}/avf_sessions/{avfId}:
+    $ref: paths/elements/pk.yaml#/avf_session_update
+  /elements/account_verification/avf_sessions/bulk_generate:
+    $ref: paths/elements/pk.yaml#/avf_bulk_generate
+  /elements/auth/accounts:
+    $ref: paths/elements/pk.yaml#/auth_accounts
+  /elements/auth/accounts/consent:
+    $ref: paths/elements/pk.yaml#/auth_accounts_consent
+  /elements/auth/accounts_with_updatable_numbers:
+    $ref: paths/elements/pk.yaml#/auth_updatable_numbers
+  /elements/auth/accounts_with_updatable_numbers/{accountId}:
+    $ref: paths/elements/pk.yaml#/auth_updatable_number_update
+  /elements/auth/entities:
+    $ref: paths/elements/pk.yaml#/auth_entities
+  /elements/auth/entities/phone_verification:
+    $ref: paths/elements/pk.yaml#/auth_phone_verification
+  /elements/auth/entities/session:
+    $ref: paths/elements/pk.yaml#/auth_entity_session
+  /elements/auth/mortgages_with_missing_address:
+    $ref: paths/elements/pk.yaml#/auth_mortgages
+  /elements/auth/mortgages_with_missing_address/{accountId}:
+    $ref: paths/elements/pk.yaml#/auth_mortgage_update
+  /elements/balance_transfer/accounts:
+    $ref: paths/elements/pk.yaml#/balance_transfer_accounts
+  /elements/balance_transfer/auth_token:
+    $ref: paths/elements/pk.yaml#/balance_transfer_auth_token
+  /elements/balance_transfer/session:
+    $ref: paths/elements/pk.yaml#/balance_transfer_session
+  /elements/connect/generate_next_step_token:
+    $ref: paths/elements/pk.yaml#/connect_next_step_token
+  /elements/connect/set_element_complete:
+    $ref: paths/elements/pk.yaml#/connect_set_complete
+  /elements/events:
+    $ref: paths/elements/pk.yaml#/events
+  /elements/link/credentials:
+    $ref: paths/elements/pk.yaml#/link_credentials
+  /elements/merchants:
+    $ref: paths/elements/pk.yaml#/merchants
+  /elements/merchants/{mchId}:
+    $ref: paths/elements/pk.yaml#/merchant_by_id
+  /elements/merchants_parents:
+    $ref: paths/elements/pk.yaml#/merchants_parents
+  /elements/transfer:
+    $ref: paths/elements/pk.yaml#/transfer
+  /elements/transfer/accounts/exchange:
+    $ref: paths/elements/pk.yaml#/transfer_exchange
+  /elements/token/revoke:
+    $ref: paths/elements/pk.yaml#/token_revoke
+components:
+  securitySchemes:
+    $ref: components/security_schemes.yaml
+  parameters:
+    MethodVersion:
+      $ref: components/parameters/method_version.yaml
+    PageParam:
+      $ref: components/parameters/pagination.yaml#/PageParam
+    PageLimitParam:
+      $ref: components/parameters/pagination.yaml#/PageLimitParam
+    PageCursorParam:
+      $ref: components/parameters/pagination.yaml#/PageCursorParam
+    FromDateParam:
+      $ref: components/parameters/pagination.yaml#/FromDateParam
+    ToDateParam:
+      $ref: components/parameters/pagination.yaml#/ToDateParam
+    AccountIdParam:
+      $ref: components/parameters/path_ids.yaml#/AccountIdParam
+    EntityIdParam:
+      $ref: components/parameters/path_ids.yaml#/EntityIdParam
+    PaymentIdParam:
+      $ref: components/parameters/path_ids.yaml#/PaymentIdParam
+    ExpandParam:
+      $ref: components/parameters/expand.yaml
+  responses:
+    BadRequest:
+      $ref: components/responses/error.yaml#/BadRequest
+    Unauthorized:
+      $ref: components/responses/error.yaml#/Unauthorized
+    Forbidden:
+      $ref: components/responses/error.yaml#/Forbidden
+    NotFound:
+      $ref: components/responses/error.yaml#/NotFound
+    InternalError:
+      $ref: components/responses/error.yaml#/InternalError

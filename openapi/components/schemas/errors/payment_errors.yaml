@@ -1,0 +1,91 @@
+PaymentResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a payment fails or is canceled.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of payment error.
+      enum:
+      - PAYMENT_FAILED
+      - PAYMENT_CANCELED
+    code:
+      type: integer
+      description: Numeric error code (10XXX range).
+      enum:
+      - 10001
+      - 10002
+      - 10003
+      - 10004
+      - 10005
+      - 10006
+      - 10007
+      - 10008
+      - 10009
+      - 10010
+    sub_type:
+      type: string
+      description: Specific payment error classification.
+      enum:
+      - PAYMENT_INSUFFICIENT_FUNDS
+      - PAYMENT_UNAUTHORIZED
+      - PAYMENT_INVALID_ACCOUNT
+      - PAYMENT_UNAUTHORIZED_SOURCE
+      - PAYMENT_UNAUTHORIZED_DESTINATION
+      - PAYMENT_INVALID_SOURCE_ACCOUNT
+      - PAYMENT_INVALID_DESTINATION_ACCOUNT
+      - PAYMENT_REJECTED_BY_DESTINATION_INSTITUTION
+      - PAYMENT_REJECTED_INVALID_AMOUNT
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: PAYMENT_FAILED
+    code: 10001
+    sub_type: PAYMENT_INSUFFICIENT_FUNDS
+    message: Payment failed due to insufficient funds from the source account.
+
+PaymentReversalResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a payment reversal fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of reversal error.
+      enum:
+      - PAYMENT_REVERSAL_FAILED
+    code:
+      type: integer
+      description: Numeric error code (14XXX range).
+      enum:
+      - 14001
+      - 14002
+      - 14003
+    sub_type:
+      type: string
+      description: Specific reversal error classification.
+      enum:
+      - PAYMENT_REVERSAL_INSUFFICIENT_FUNDS
+      - PAYMENT_REVERSAL_UNAUTHORIZED
+      - PAYMENT_REVERSAL_INVALID_ACCOUNT
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: PAYMENT_REVERSAL_FAILED
+    code: 14001
+    sub_type: PAYMENT_REVERSAL_INSUFFICIENT_FUNDS
+    message: Payment reversal failed due to insufficient funds from the account.

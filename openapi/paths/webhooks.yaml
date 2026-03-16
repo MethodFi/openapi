@@ -1,0 +1,210 @@
+collection:
+  get:
+    operationId: listWebhooks
+    summary: List all webhooks
+    description: Returns all active and requires-attention webhooks for the authenticated team.
+    tags:
+      - Webhooks
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+    responses:
+      '200':
+        description: A list of webhooks.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/webhook.yaml#/WebhookListResponse'
+            example:
+              success: true
+              data:
+                - id: whk_cSGjA6d9N8y8v
+                  type: payment.update
+                  url: https://example.com/webhooks
+                  status: active
+                  expand_event: true
+                  error: null
+                  metadata:
+                    environment: production
+                  created_at: '2026-01-15T18:30:00.000Z'
+                  updated_at: '2026-01-15T18:30:00.000Z'
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+  post:
+    operationId: createWebhook
+    summary: Create a webhook
+    description: Creates a new webhook subscription for the specified event type.
+    tags:
+      - Webhooks
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/webhook.yaml#/WebhookCreateRequest'
+          example:
+            type: payment.update
+            url: https://example.com/webhooks
+            auth_token: webhook-basic-token
+            hmac_secret: webhook-signing-secret
+            expand_event: true
+            metadata:
+              environment: production
+    responses:
+      '200':
+        description: The created webhook.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/webhook.yaml#/WebhookResponse'
+            example:
+              success: true
+              data:
+                id: whk_cSGjA6d9N8y8v
+                type: payment.update
+                url: https://example.com/webhooks
+                status: active
+                expand_event: true
+                error: null
+                metadata:
+                  environment: production
+                created_at: '2026-01-15T18:30:00.000Z'
+                updated_at: '2026-01-15T18:30:00.000Z'
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+individual:
+  get:
+    operationId: retrieveWebhook
+    summary: Retrieve a webhook
+    description: Returns a single webhook by its identifier.
+    tags:
+      - Webhooks
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/WebhookIdParam'
+    responses:
+      '200':
+        description: The requested webhook.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/webhook.yaml#/WebhookResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+  patch:
+    operationId: updateWebhook
+    summary: Update a webhook status
+    description: Updates an existing webhook's status.
+    tags:
+      - Webhooks
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/WebhookIdParam'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/webhook.yaml#/WebhookUpdateRequest'
+          example:
+            status: disabled
+    responses:
+      '200':
+        description: The updated webhook.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/webhook.yaml#/WebhookResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+  delete:
+    operationId: deleteWebhook
+    summary: Delete a webhook
+    description: Deletes a webhook subscription.
+    tags:
+      - Webhooks
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/WebhookIdParam'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    responses:
+      '200':
+        description: The deleted webhook.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/webhook.yaml#/WebhookDeleteResponse'
+            example:
+              success: true
+              data: null
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'

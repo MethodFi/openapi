@@ -1,0 +1,106 @@
+collection:
+  get:
+    operationId: listAccountBalances
+    summary: List all account balances
+    description: Returns a list of balance records for the specified account.
+    tags:
+    - Account Balances
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    responses:
+      '200':
+        description: A paginated list of account balances.
+        headers:
+          Pagination-Page:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page
+          Pagination-Page-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Count
+          Pagination-Page-Limit:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Limit
+          Pagination-Total-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Total-Count
+          Pagination-Page-Cursor-Prev:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Prev
+          Pagination-Page-Cursor-Next:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Next
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountBalanceListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createAccountBalance
+    summary: Create an account balance
+    description: Triggers a balance sync for the specified account and returns the new balance record.
+    tags:
+    - Account Balances
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    responses:
+      '200':
+        description: The newly created account balance.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountBalanceResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveAccountBalance
+    summary: Retrieve an account balance
+    description: Retrieves an account balance by its unique identifier.
+    tags:
+    - Account Balances
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountBalanceIdParam
+    responses:
+      '200':
+        description: The requested account balance.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountBalanceResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

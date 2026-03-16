@@ -1,0 +1,51 @@
+CardProduct:
+  type: object
+  description: A Card Product represents a specific card program from a network and issuer.
+  required:
+  - id
+  - network
+  - issuer
+  - name
+  - type
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the card product.
+      example: cprd_mJ3Kvx6G7hBR4
+    network:
+      type:
+      - string
+      - 'null'
+      description: Card network (e.g., Visa, Mastercard).
+    issuer:
+      type:
+      - string
+      - 'null'
+      description: Card issuing institution.
+    name:
+      type:
+      - string
+      - 'null'
+      description: Display name of the card product.
+    type:
+      type:
+      - string
+      - 'null'
+      description: The card product type.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the card product was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the card product was last updated.
+CardProductResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/CardProduct'

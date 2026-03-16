@@ -1,0 +1,139 @@
+verification_amounts:
+  get:
+    operationId: simulateRetrieveVerificationAmounts
+    summary: Retrieve micro-deposit verification amounts
+    description: |
+      Returns the micro-deposit amounts for a verification session in the sandbox environment.
+      Use this to retrieve the test amounts needed to complete micro-deposit verification during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: accountId
+        in: path
+        required: true
+        description: Unique identifier for the account.
+        schema:
+          type: string
+          pattern: '^acc_\w+$'
+      - name: avfId
+        in: path
+        required: true
+        description: Unique identifier for the verification session.
+        schema:
+          type: string
+          pattern: '^avf_\w+$'
+    responses:
+      '200':
+        description: The micro-deposit amounts for the verification session.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/account.yaml#/AccountVerificationSessionAmountsResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'
+
+transactions:
+  post:
+    operationId: simulateCreateAccountTransaction
+    summary: Simulate a transaction
+    description: |
+      Creates a simulated transaction on an account in the sandbox environment.
+      Use this to test transaction-related flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: accountId
+        in: path
+        required: true
+        description: Unique identifier for the account.
+        schema:
+          type: string
+          pattern: '^acc_\w+$'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - amount
+            properties:
+              amount:
+                type: integer
+                description: Transaction amount in cents.
+                minimum: 1
+              type:
+                type: string
+                description: The type of transaction to simulate.
+              merchant_name:
+                type: string
+                description: Merchant name for the simulated transaction.
+    responses:
+      '200':
+        description: The simulated transaction.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/account.yaml#/AccountTransactionResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'
+
+card_brands:
+  post:
+    operationId: simulateCreateAccountCardBrand
+    summary: Simulate a card brand
+    description: |
+      Creates a simulated card brand result for an account in the sandbox environment.
+      Use this to test card brand retrieval flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: accountId
+        in: path
+        required: true
+        description: Unique identifier for the account.
+        schema:
+          type: string
+          pattern: '^acc_\w+$'
+    responses:
+      '200':
+        description: The simulated card brand result.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/account.yaml#/AccountCardBrandResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'

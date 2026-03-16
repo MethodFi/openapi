@@ -1,0 +1,158 @@
+SuccessEnvelope:
+  type: object
+  description: Standard envelope for successful responses that return a single payload.
+  required:
+  - success
+  - data
+  - message
+  properties:
+    success:
+      type: boolean
+      enum:
+      - true
+    data:
+      description: Operation-specific response payload.
+    message:
+      type:
+      - string
+      - 'null'
+  example:
+    success: true
+    data: {}
+    message: null
+ListEnvelope:
+  type: object
+  description: Standard envelope for successful responses that return a list payload.
+  required:
+  - success
+  - data
+  - message
+  properties:
+    success:
+      type: boolean
+      enum:
+      - true
+    data:
+      description: Operation-specific list payload.
+    message:
+      type:
+      - string
+      - 'null'
+  example:
+    success: true
+    data: []
+    message: null
+ObjectResponse:
+  allOf:
+  - $ref: '#/SuccessEnvelope'
+  - type: object
+    properties:
+      data:
+        $ref: '#/JsonObject'
+  example:
+    success: true
+    data:
+      id: obj_123
+    message: null
+ObjectListResponse:
+  allOf:
+  - $ref: '#/ListEnvelope'
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/JsonObject'
+  example:
+    success: true
+    data:
+    - id: obj_123
+    message: null
+JsonValue:
+  description: Arbitrary JSON value.
+  oneOf:
+  - type: string
+  - type: number
+  - type: boolean
+  - type: 'null'
+  - type: object
+    additionalProperties: true
+  - type: array
+    items: {}
+JsonObject:
+  type: object
+  description: Arbitrary JSON object.
+  additionalProperties: true
+ResourceError:
+  type:
+  - object
+  - 'null'
+  required:
+  - type
+  - code
+  - message
+  properties:
+    type:
+      type: string
+    code:
+      type: integer
+    sub_type:
+      type:
+      - string
+      - 'null'
+    message:
+      type: string
+StatusHistoryItem:
+  type: object
+  properties:
+    status:
+      type: string
+    timestamp:
+      type: string
+      format: date-time
+Metadata:
+  type:
+  - object
+  - 'null'
+  additionalProperties: true
+  description: Arbitrary key-value metadata attached to the resource.
+Address:
+  type: object
+  description: Postal mailing address.
+  properties:
+    line1:
+      type:
+      - string
+      - 'null'
+      description: Primary street address line.
+      example: 123 Main St
+    line2:
+      type:
+      - string
+      - 'null'
+      description: Secondary address line such as apartment or suite.
+      example: Apt 4B
+    city:
+      type:
+      - string
+      - 'null'
+      description: City or locality.
+      example: Austin
+    state:
+      type:
+      - string
+      - 'null'
+      description: Two-letter state or province code when available.
+      example: TX
+    zip:
+      type:
+      - string
+      - 'null'
+      description: Postal code.
+      example: '78701'
+  example:
+    line1: 123 Main St
+    line2: Apt 4B
+    city: Austin
+    state: TX
+    zip: '78701'

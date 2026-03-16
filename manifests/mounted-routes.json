@@ -1,0 +1,674 @@
+[
+  {
+    "method": "GET",
+    "path": "/.well-known/jwks.json"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}"
+  },
+  {
+    "method": "PUT",
+    "path": "/accounts/{accountId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/attributes"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/attributes"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/attributes/{accAttrId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/balances"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/balances"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/balances/{balId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/card_brands"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/card_brands"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/card_brands/{cbrdId}"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/consent"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/payment_instruments"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/payment_instruments"
+  },
+  {
+    "method": "DELETE",
+    "path": "/accounts/{accountId}/payment_instruments/{pmtInsId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/payment_instruments/{pmtInsId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/payoffs"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/payoffs"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/payoffs/{pyfId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/products"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/products/{prdId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/sensitive"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/sensitive"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/sensitive/{astvId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/subscriptions"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/subscriptions"
+  },
+  {
+    "method": "DELETE",
+    "path": "/accounts/{accountId}/subscriptions/{subId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/subscriptions/{subId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/transactions"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/transactions/{accTxnId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/updates"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/updates"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/updates/{updateId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/verification_sessions"
+  },
+  {
+    "method": "POST",
+    "path": "/accounts/{accountId}/verification_sessions"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/verification_sessions/{avfId}"
+  },
+  {
+    "method": "PUT",
+    "path": "/accounts/{accountId}/verification_sessions/{avfId}"
+  },
+  {
+    "method": "GET",
+    "path": "/accounts/{accountId}/verification_sessions/{avfId}/amounts"
+  },
+  {
+    "method": "GET",
+    "path": "/auth/{jwk_id}"
+  },
+  {
+    "method": "GET",
+    "path": "/card_products/{product_id}"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/account_verification/accounts/{accountId}/avf_sessions/{avfId}"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/account_verification/avf_sessions/bulk_generate"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/accounts"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/accounts"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/accounts/{accountId}"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/accounts/{accountId}"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/accounts/{accountId}/details"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/accounts/{accountId}/transaction_stream"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/accounts/exchange"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/auth/accounts"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/auth/accounts_with_updatable_numbers"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/auth/accounts_with_updatable_numbers/{accountId}"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/auth/accounts/consent"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/auth/accounts/consent"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/auth/entities"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/auth/entities/phone_verification"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/auth/entities/phone_verification"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/auth/entities/session"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/auth/entities/session"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/auth/mortgages_with_missing_address"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/auth/mortgages_with_missing_address/{accountId}"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/balance_transfer/accounts"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/balance_transfer/auth_token"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/balance_transfer/session"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/config"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/config/{pk_elem_id}"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/connect/generate_next_step_token"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/connect/set_element_complete"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/entities/me"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/entities/me/init_mno_verification"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/events"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/link/credentials"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/merchants"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/merchants_parents"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/merchants/{mchId}"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/sessions/{session_id}"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/sessions/{session_id}"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/token"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/token/{pk_elem_id}/results"
+  },
+  {
+    "method": "DELETE",
+    "path": "/elements/token/revoke"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/transfer"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/transfer/accounts/exchange"
+  },
+  {
+    "method": "GET",
+    "path": "/entities"
+  },
+  {
+    "method": "POST",
+    "path": "/entities"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}"
+  },
+  {
+    "method": "PUT",
+    "path": "/entities/{entityId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/attributes"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/attributes"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/attributes/{attrId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/connect"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/connect"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/connect/{cxnId}"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/consent"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/credit_scores"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/credit_scores"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/credit_scores/{crsId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/identities"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/identities"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/identities/{idnId}"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/manual_connect"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/manual_connect/{mcxnId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/products"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/products/{prdId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/subscriptions"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/subscriptions"
+  },
+  {
+    "method": "DELETE",
+    "path": "/entities/{entityId}/subscriptions/{subId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/subscriptions/{subId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/vehicles"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/vehicles"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/vehicles/{vhlId}"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/verification_sessions"
+  },
+  {
+    "method": "POST",
+    "path": "/entities/{entityId}/verification_sessions"
+  },
+  {
+    "method": "GET",
+    "path": "/entities/{entityId}/verification_sessions/{evfId}"
+  },
+  {
+    "method": "PUT",
+    "path": "/entities/{entityId}/verification_sessions/{evfId}"
+  },
+  {
+    "method": "GET",
+    "path": "/events"
+  },
+  {
+    "method": "GET",
+    "path": "/events/{evtId}"
+  },
+  {
+    "method": "POST",
+    "path": "/forwarding_requests"
+  },
+  {
+    "method": "GET",
+    "path": "/forwarding_requests/{id}"
+  },
+  {
+    "method": "GET",
+    "path": "/managed_accounts"
+  },
+  {
+    "method": "GET",
+    "path": "/managed_accounts/{macc_id}"
+  },
+  {
+    "method": "GET",
+    "path": "/managed_accounts/{macc_id}/transactions"
+  },
+  {
+    "method": "GET",
+    "path": "/merchants"
+  },
+  {
+    "method": "GET",
+    "path": "/merchants/{mchId}"
+  },
+  {
+    "method": "GET",
+    "path": "/opal/events"
+  },
+  {
+    "method": "POST",
+    "path": "/opal/events"
+  },
+  {
+    "method": "DELETE",
+    "path": "/opal/token"
+  },
+  {
+    "method": "GET",
+    "path": "/opal/token"
+  },
+  {
+    "method": "POST",
+    "path": "/opal/token"
+  },
+  {
+    "method": "PUT",
+    "path": "/opal/token/{flow_type}/{operation}"
+  },
+  {
+    "method": "GET",
+    "path": "/payments"
+  },
+  {
+    "method": "POST",
+    "path": "/payments"
+  },
+  {
+    "method": "DELETE",
+    "path": "/payments/{paymentId}"
+  },
+  {
+    "method": "GET",
+    "path": "/payments/{paymentId}"
+  },
+  {
+    "method": "GET",
+    "path": "/payments/{paymentId}/reversals"
+  },
+  {
+    "method": "GET",
+    "path": "/payments/{paymentId}/reversals/{reversalId}"
+  },
+  {
+    "method": "PUT",
+    "path": "/payments/{paymentId}/reversals/{reversalId}"
+  },
+  {
+    "method": "GET",
+    "path": "/ping"
+  },
+  {
+    "method": "POST",
+    "path": "/reports"
+  },
+  {
+    "method": "GET",
+    "path": "/reports/{reportId}"
+  },
+  {
+    "method": "GET",
+    "path": "/reports/{reportId}/download"
+  },
+  {
+    "method": "GET",
+    "path": "/secrets"
+  },
+  {
+    "method": "POST",
+    "path": "/secrets"
+  },
+  {
+    "method": "DELETE",
+    "path": "/secrets/{id}"
+  },
+  {
+    "method": "GET",
+    "path": "/secrets/{id}"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/accounts/{accountId}/card_brands"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/accounts/{accountId}/transactions"
+  },
+  {
+    "method": "GET",
+    "path": "/simulate/accounts/{accountId}/verification_sessions/{avfId}/amounts"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/entities/{entity_id}/attributes"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/entities/{entity_id}/connect"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/entities/{entity_id}/credit_scores/{crs_id}"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/events"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/payments/{paymentId}"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/payments/payment_instruments/{pmt_inst_id}"
+  },
+  {
+    "method": "GET",
+    "path": "/teams"
+  },
+  {
+    "method": "POST",
+    "path": "/teams"
+  },
+  {
+    "method": "POST",
+    "path": "/teams/default_encryption_key"
+  },
+  {
+    "method": "GET",
+    "path": "/teams/mle/public_keys"
+  },
+  {
+    "method": "POST",
+    "path": "/teams/mle/public_keys"
+  },
+  {
+    "method": "DELETE",
+    "path": "/teams/mle/public_keys/{id}"
+  },
+  {
+    "method": "GET",
+    "path": "/teams/mle/public_keys/{id}"
+  },
+  {
+    "method": "GET",
+    "path": "/webhooks"
+  },
+  {
+    "method": "POST",
+    "path": "/webhooks"
+  },
+  {
+    "method": "DELETE",
+    "path": "/webhooks/{webhookId}"
+  },
+  {
+    "method": "GET",
+    "path": "/webhooks/{webhookId}"
+  },
+  {
+    "method": "PATCH",
+    "path": "/webhooks/{webhookId}"
+  }
+]

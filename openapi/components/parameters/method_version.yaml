@@ -1,0 +1,11 @@
+name: Method-Version
+in: header
+required: true
+description: |
+  API version to use for this request. This spec targets `2025-12-01`.
+  The SDK sets this header automatically.
+schema:
+  type: string
+  enum:
+    - '2025-12-01'
+  default: '2025-12-01'

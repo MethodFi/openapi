@@ -1,0 +1,103 @@
+collection:
+  get:
+    operationId: listEntityIdentities
+    summary: List all entity identities
+    description: Returns a list of identity records for the specified entity.
+    tags:
+    - Entity Identities
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    - $ref: ../components/parameters/pagination.yaml#/FromDateParam
+    - $ref: ../components/parameters/pagination.yaml#/ToDateParam
+    responses:
+      '200':
+        description: A list of entity identity records.
+        headers:
+          $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityIdentityListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createEntityIdentity
+    summary: Create an entity identity
+    description: Creates a new identity retrieval for the specified entity.
+    tags:
+    - Entity Identities
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    responses:
+      '200':
+        description: The created entity identity record.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityIdentityResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveEntityIdentity
+    summary: Retrieve an entity identity
+    description: Returns a single entity identity record by its identifier.
+    tags:
+    - Entity Identities
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdentityIdParam
+    responses:
+      '200':
+        description: The requested entity identity record.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityIdentityResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

@@ -1,0 +1,297 @@
+AccountResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when an account is disabled.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of account error.
+      enum:
+      - ACCOUNT_DISABLED
+    code:
+      type: integer
+      description: Numeric error code (11XXX range).
+      enum:
+      - 11001
+      - 11002
+      - 11003
+      - 11004
+      - 11005
+      - 11006
+    sub_type:
+      type: string
+      description: Specific account error classification.
+      enum:
+      - ACCOUNT_INVALID_DETAILS
+      - ACCOUNT_UNAUTHORIZED_PAYMENT
+      - ACCOUNT_CLOSED
+      - ACCOUNT_CONSENT_WITHDRAWN
+      - ACCOUNT_DISABLED_INVALID_STATE
+      - ACCOUNT_DISABLED_HOLDER_ENTITY_DISABLED
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: ACCOUNT_DISABLED
+    code: 11001
+    sub_type: ACCOUNT_INVALID_DETAILS
+    message: Account was disabled due to invalid information reported by the financial institution.
+
+AccountVerificationResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when an account verification is disabled.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of verification error.
+      enum:
+      - ACCOUNT_VERIFICATION_DISABLED
+    code:
+      type: integer
+      description: Numeric error code (13XXX range).
+      enum:
+      - 13001
+      - 13002
+    sub_type:
+      type: string
+      description: Specific verification error classification.
+      enum:
+      - ACCOUNT_VERIFICATION_ATTEMPT_LIMIT_REACHED
+      - ACCOUNT_VERIFICATION_DEPOSITS_FAILED
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: ACCOUNT_VERIFICATION_DISABLED
+    code: 13001
+    sub_type: ACCOUNT_VERIFICATION_ATTEMPT_LIMIT_REACHED
+    message: Account verification was disabled due to the maximum verification limit (5) being reached.
+
+AccountVerificationSessionResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when an account verification session fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of verification session error.
+      enum:
+      - ACCOUNT_VERIFICATION_SESSION_FAILED
+    code:
+      type: integer
+      description: Numeric error code (16XXX range).
+      enum:
+      - 16001
+      - 16002
+      - 16003
+      - 16004
+    sub_type:
+      type: string
+      description: Specific verification session error classification.
+      enum:
+      - VERIFICATION_TYPE_NOT_SUPPORTED
+      - INVALID_DETAILS
+      - VERIFICATION_SESSION_ATTEMPT_LIMIT_REACHED
+      - MICRO_DEPOSITS_FAILED
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: ACCOUNT_VERIFICATION_SESSION_FAILED
+    code: 16001
+    sub_type: VERIFICATION_TYPE_NOT_SUPPORTED
+    message: The verification type provided is not supported for the merchant.
+
+BalanceResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a balance sync fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of balance error.
+      enum:
+      - BALANCE_FAILED
+    code:
+      type: integer
+      description: Numeric error code (20XXX range).
+      enum:
+      - 20001
+    sub_type:
+      type: string
+      description: Specific balance error classification.
+      enum:
+      - BALANCE_TEMPORARILY_UNAVAILABLE
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: BALANCE_FAILED
+    code: 20001
+    sub_type: BALANCE_TEMPORARILY_UNAVAILABLE
+    message: Balance is temporarily unavailable for this account.
+
+PayoffResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a payoff sync fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of payoff error.
+      enum:
+      - PAYOFF_FAILED
+    code:
+      type: integer
+      description: Numeric error code (18XXX range).
+      enum:
+      - 18001
+    sub_type:
+      type: string
+      description: Specific payoff error classification.
+      enum:
+      - PAYOFF_TEMPORARILY_UNAVAILABLE
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: PAYOFF_FAILED
+    code: 18001
+    sub_type: PAYOFF_TEMPORARILY_UNAVAILABLE
+    message: Payoff is temporarily unavailable for this account.
+
+UpdateResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when an account update fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of update error.
+      enum:
+      - UPDATE_FAILED
+    code:
+      type: integer
+      description: Numeric error code (21XXX range).
+      enum:
+      - 21001
+    sub_type:
+      type: string
+      description: Specific update error classification.
+      enum:
+      - UPDATE_TEMPORARILY_UNAVAILABLE
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: UPDATE_FAILED
+    code: 21001
+    sub_type: UPDATE_TEMPORARILY_UNAVAILABLE
+    message: Update is temporarily unavailable for this account.
+
+AccountSensitiveResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when retrieving account sensitive data fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of sensitive data error.
+      enum:
+      - ACCOUNT_SENSITIVE_FAILED
+    code:
+      type: integer
+      description: Numeric error code (17XXX range).
+      enum:
+      - 17001
+    sub_type:
+      type: string
+      description: Specific sensitive data error classification.
+      enum:
+      - ACCOUNT_SENSITIVE_FAILED_VERIFICATION_REQUIRED
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: ACCOUNT_SENSITIVE_FAILED
+    code: 17001
+    sub_type: ACCOUNT_SENSITIVE_FAILED_VERIFICATION_REQUIRED
+    message: Account sensitive failed due to missing required verification.
+
+ProductResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a product execution fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of product error.
+      enum:
+      - PRODUCT_EXECUTION_FAILED
+    code:
+      type: integer
+      description: Numeric error code (24XXX range).
+      enum:
+      - 24001
+    sub_type:
+      type: string
+      description: Specific product error classification.
+      enum:
+      - PRODUCT_EXECUTION_FAILED
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: PRODUCT_EXECUTION_FAILED
+    code: 24001
+    sub_type: PRODUCT_EXECUTION_FAILED
+    message: Product execution failed.

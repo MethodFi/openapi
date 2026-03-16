@@ -1,0 +1,268 @@
+collection:
+  get:
+    operationId: listPayments
+    summary: List all payments
+    description: Returns a paginated list of payments. Results can be filtered by status, type, accounts, holders, reversal, and date range.
+    tags:
+      - Payments
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/pagination.yaml#/PageParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageLimitParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageCursorParam'
+      - $ref: '../components/parameters/pagination.yaml#/FromDateParam'
+      - $ref: '../components/parameters/pagination.yaml#/ToDateParam'
+      - name: status
+        in: query
+        required: false
+        description: Filter payments by status.
+        schema:
+          type: string
+          enum:
+            - pending
+            - processing
+            - sent
+            - posted
+            - settled
+            - failed
+            - reversed
+            - canceled
+            - cashed
+      - name: source
+        in: query
+        required: false
+        description: Filter payments by source account ID.
+        schema:
+          type: string
+          pattern: '^acc_\w+$'
+      - name: destination
+        in: query
+        required: false
+        description: Filter payments by destination account ID.
+        schema:
+          type: string
+          pattern: '^acc_\w+$'
+      - name: type
+        in: query
+        required: false
+        description: Filter payments by payment type.
+        schema:
+          type: string
+          enum:
+            - standard
+            - clearing
+      - name: reversal_id
+        in: query
+        required: false
+        description: Filter payments by reversal ID.
+        schema:
+          type: string
+          pattern: '^rvs_\w+$'
+      - name: acc_id
+        in: query
+        required: false
+        description: Filter payments by either the source or destination account ID.
+        schema:
+          type: string
+          pattern: '^acc_\w+$'
+      - name: destination_holder_id
+        in: query
+        required: false
+        description: Filter payments by destination entity ID.
+        schema:
+          type: string
+          pattern: '^ent_\w+$'
+      - name: source_holder_id
+        in: query
+        required: false
+        description: Filter payments by source entity ID.
+        schema:
+          type: string
+          pattern: '^ent_\w+$'
+      - name: holder_id
+        in: query
+        required: false
+        description: Filter payments by either the source or destination entity ID.
+        schema:
+          type: string
+          pattern: '^ent_\w+$'
+      - $ref: '../components/parameters/expand_payments.yaml'
+    responses:
+      '200':
+        description: A paginated list of payments.
+        headers:
+          Pagination-Page:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page'
+          Pagination-Page-Count:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Count'
+          Pagination-Page-Limit:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Limit'
+          Pagination-Total-Count:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Total-Count'
+          Pagination-Page-Cursor-Prev:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Prev'
+          Pagination-Page-Cursor-Next:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Next'
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/payment.yaml#/PaymentListResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+  post:
+    operationId: createPayment
+    summary: Create a payment
+    description: Creates a new payment to transfer funds from a source account to a destination account.
+    tags:
+      - Payments
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/payment.yaml#/PaymentCreateRequest'
+          examples:
+            standard:
+              summary: Create a standard payment
+              value:
+                source: acc_b9q2XVAnNFbp3
+                destination: acc_Y8u3qL9mNa1Bz
+                amount: 5000
+                description: Monthly card payment
+                metadata:
+                  invoice_id: inv_1001
+            clearing:
+              summary: Create a clearing payment with a fee
+              value:
+                source: acc_b9q2XVAnNFbp3
+                destination: acc_Y8u3qL9mNa1Bz
+                amount: 25000
+                description: Settlement transfer
+                fee:
+                  type: total
+                  amount: 250
+    responses:
+      '200':
+        description: The newly created payment.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/payment.yaml#/PaymentResponse'
+            example:
+              success: true
+              data:
+                id: pmt_rPrDPEwyCVUcm
+                reversal_id: null
+                source_trace_id: null
+                destination_trace_id: null
+                source: acc_b9q2XVAnNFbp3
+                destination: acc_Y8u3qL9mNa1Bz
+                amount: 5000
+                description: Monthly card payment
+                status: pending
+                fund_status: transmitting
+                estimated_completion_date: '2026-01-19'
+                source_settlement_date: null
+                destination_settlement_date: null
+                source_status: null
+                destination_status: null
+                destination_payment_method: null
+                fee: null
+                type: standard
+                error: null
+                metadata:
+                  invoice_id: inv_1001
+                created_at: '2026-01-15T18:30:00.000Z'
+                updated_at: '2026-01-15T18:30:00.000Z'
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+individual:
+  get:
+    operationId: retrievePayment
+    summary: Retrieve a payment
+    description: Retrieves a payment by its unique identifier.
+    tags:
+      - Payments
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/PaymentIdParam'
+      - $ref: '../components/parameters/expand_payments.yaml'
+    responses:
+      '200':
+        description: The requested payment.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/payment.yaml#/PaymentResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+  delete:
+    operationId: deletePayment
+    summary: Delete a payment
+    description: Cancels a pending payment. Only payments with a `pending` status can be canceled.
+    tags:
+      - Payments
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/PaymentIdParam'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    responses:
+      '200':
+        description: The canceled payment.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/payment.yaml#/PaymentResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
