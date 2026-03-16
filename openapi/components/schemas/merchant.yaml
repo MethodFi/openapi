@@ -1,0 +1,143 @@
+Merchant:
+  type: object
+  required:
+  - mch_id
+  - parent_name
+  - name
+  - logo
+  - description
+  - note
+  - types
+  - account_prefixes
+  - provider_ids
+  - credentials
+  - customized_auth
+  - is_temp
+  - account_number_formats
+  properties:
+    mch_id:
+      type: string
+      description: Unique identifier for the merchant.
+      example: mch_aTJMbnCjw34yQ
+    parent_name:
+      type: string
+      description: Name of the parent merchant group.
+      example: Chase
+    name:
+      type: string
+      description: Display name of the merchant.
+      example: Chase - Credit Cards
+    logo:
+      type: string
+      description: URL of the merchant logo.
+      example: https://static.methodfi.com/logos/chase.png
+    description:
+      type:
+      - string
+      - 'null'
+      description: Description of the merchant.
+    note:
+      type:
+      - string
+      - 'null'
+      description: Additional notes about the merchant.
+    types:
+      type: array
+      items:
+        $ref: '#/MerchantType'
+      description: Types of accounts supported by this merchant.
+    account_prefixes:
+      type: array
+      items:
+        type: string
+      description: Known account number prefixes for this merchant.
+    provider_ids:
+      $ref: '#/MerchantProviderIds'
+    credentials:
+      type: array
+      items:
+        $ref: '#/MerchantCredential'
+      description: Credential fields required for account linking.
+    customized_auth:
+      type: boolean
+      description: Whether the merchant has a customized authentication flow.
+    is_temp:
+      type: boolean
+      description: Whether this is a temporary merchant entry.
+    account_number_formats:
+      type: array
+      items:
+        type: string
+      description: Accepted account number formats.
+MerchantType:
+  type: string
+  enum:
+  - auto_loan
+  - business_loan
+  - credit_card
+  - electric_utility
+  - home_loan
+  - insurance
+  - internet_utility
+  - loan
+  - medical
+  - personal_loan
+  - student_loan
+  - telephone_utility
+  - television_utility
+  - water_utility
+  - bank
+  - city
+  - county
+  - home_equity_loan
+  - mortgage
+  - utility
+  - waste_utility
+MerchantProviderIds:
+  type: object
+  properties:
+    plaid:
+      type: array
+      items:
+        type: string
+    mx:
+      type: array
+      items:
+        type: string
+    finicity:
+      type: array
+      items:
+        type: string
+    dpp:
+      type: array
+      items:
+        type: string
+    rpps:
+      type: array
+      items:
+        type: string
+MerchantCredential:
+  type: object
+  properties:
+    type:
+      type: string
+      description: Type of credential field.
+    initial:
+      type: string
+      description: Initial/default value hint for the field.
+MerchantResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Merchant'
+MerchantListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/Merchant'

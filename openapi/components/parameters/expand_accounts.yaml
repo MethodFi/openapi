@@ -1,0 +1,24 @@
+name: expand
+in: query
+required: false
+description: |
+  Expand related account resources inline. Supports the account expandable fields
+  documented by the API validator for account list and retrieve operations.
+style: form
+explode: true
+schema:
+  type: array
+  items:
+    type: string
+    enum:
+      - sensitive
+      - balance
+      - card_brand
+      - attribute
+      - payoff
+      - transaction
+      - update
+      - payment_instrument
+      - latest_verification_session
+      - liability.mch_id
+

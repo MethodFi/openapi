@@ -1,0 +1,159 @@
+EntityResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when an entity is disabled or verification fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of entity error.
+      enum:
+      - ENTITY_DISABLED
+      - ENTITY_VERIFICATION_FAILED
+    code:
+      type: integer
+      description: Numeric error code (12XXX range).
+      enum:
+      - 12001
+      - 12002
+      - 12003
+      - 12004
+      - 12005
+      - 12006
+      - 12007
+    sub_type:
+      type: string
+      description: Specific entity error classification.
+      enum:
+      - ENTITY_UNAUTHORIZED_PAYMENT
+      - ENTITY_INVALID_DETAILS
+      - ENTITY_SSN_MISMATCH
+      - ENTITY_CONSENT_WITHDRAWN
+      - ENTITY_PENDING_KYC_REVIEW
+      - ENTITY_CANNOT_PERFORM_ACTION
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: ENTITY_DISABLED
+    code: 12002
+    sub_type: ENTITY_INVALID_DETAILS
+    message: Entity was disabled due to invalid information.
+
+VerificationSessionResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when an entity verification session fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of verification session error.
+      enum:
+      - VERIFICATION_SESSION_FAILED
+    code:
+      type: integer
+      description: Numeric error code (19XXX range).
+      enum:
+      - 19001
+      - 19002
+      - 19003
+      - 19004
+    sub_type:
+      type: string
+      description: Specific verification session error classification.
+      enum:
+      - VERIFICATION_SESSION_EXPIRED
+      - VERIFICATION_SESSION_INCORRECT_SMS_CODE
+      - VERIFICATION_SESSION_FAILED_SNA
+      - VERIFICATION_SESSION_FAILED_INVALID_ANSWER
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: VERIFICATION_SESSION_FAILED
+    code: 19001
+    sub_type: VERIFICATION_SESSION_EXPIRED
+    message: The verification session has expired. Please re-initiate the verification process.
+
+ConnectResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a connect session fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of connect error.
+      enum:
+      - CONNECT_FAILED
+    code:
+      type: integer
+      description: Numeric error code (26XXX range).
+      enum:
+      - 26001
+      - 26002
+    sub_type:
+      type: string
+      description: Specific connect error classification.
+      enum:
+      - CONNECT_FAILED_THIN_CREDIT_FILE
+      - CONNECT_FAILED_CREDIT_FREEZE
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: CONNECT_FAILED
+    code: 26001
+    sub_type: CONNECT_FAILED_THIN_CREDIT_FILE
+    message: Entity has a thin credit file.
+
+CreditScoreResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a credit score pull fails.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of credit score error.
+      enum:
+      - CREDIT_SCORE_FAILED
+    code:
+      type: integer
+      description: Numeric error code (23XXX range).
+      enum:
+      - 23001
+    sub_type:
+      type: string
+      description: Specific credit score error classification.
+      enum:
+      - CREDIT_SCORE_FAILED_TEMPORARILY_UNAVAILABLE
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: CREDIT_SCORE_FAILED
+    code: 23001
+    sub_type: CREDIT_SCORE_FAILED_TEMPORARILY_UNAVAILABLE
+    message: Credit Score is temporarily unavailable for this entity.

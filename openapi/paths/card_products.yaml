@@ -1,0 +1,33 @@
+get:
+  operationId: retrieveCardProduct
+  summary: Retrieve a card product
+  description: Returns a single card product by its identifier. Card products describe specific card programs from networks and issuers.
+  tags:
+  - Card Products
+  security:
+  - SecretKey: []
+  parameters:
+  - $ref: ../components/parameters/method_version.yaml
+  - name: product_id
+    in: path
+    required: true
+    description: Unique identifier for the card product.
+    schema:
+      type: string
+  responses:
+    '200':
+      description: The requested card product.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/card_product.yaml#/CardProductResponse
+    '400':
+      $ref: ../components/responses/error.yaml#/BadRequest
+    '401':
+      $ref: ../components/responses/error.yaml#/Unauthorized
+    '404':
+      $ref: ../components/responses/error.yaml#/NotFound
+    '429':
+      $ref: ../components/responses/error.yaml#/RateLimited
+    '500':
+      $ref: ../components/responses/error.yaml#/InternalError

@@ -1,0 +1,24 @@
+{
+  "name": "@methodfi/openapi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OpenAPI specification for the Method API",
+  "license": "Proprietary",
+  "scripts": {
+    "lint": "redocly lint openapi/openapi.yaml --config .redocly.yaml",
+    "bundle": "redocly bundle openapi/openapi.yaml --config .redocly.yaml -o latest/openapi.bundled.yaml && redocly bundle openapi/openapi.yaml --config .redocly.yaml -o latest/openapi.bundled.json",
+    "routes": "tsx scripts/generate-route-manifest.ts",
+    "sdk:smoke": "tsx scripts/sdk-smoke-test.ts",
+    "check": "pnpm lint && pnpm bundle && pnpm routes",
+    "validate": "pnpm check && pnpm sdk:smoke"
+  },
+  "devDependencies": {
+    "@redocly/cli": "^1.34.1",
+    "openapi-typescript": "^7.6.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,13 @@
+name: expand
+in: query
+required: false
+description: |
+  Expand related resources inline. Pass one or more field names to replace
+  resource IDs with full objects. Supports dot-notation for nested expansions
+  up to 4 levels deep (e.g., `source.latest_verification_session`).
+style: form
+explode: true
+schema:
+  type: array
+  items:
+    type: string

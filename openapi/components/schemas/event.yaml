@@ -1,0 +1,82 @@
+Event:
+  type: object
+  required:
+    - id
+    - type
+    - resource_id
+    - resource_type
+    - related_ids
+    - data
+    - diff
+    - created_at
+    - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the event.
+      example: evt_HnEJMFWS8rJbh
+    type:
+      description: The webhook event type.
+      example: payment.create
+      $ref: webhook.yaml#/WebhookType
+    resource_id:
+      type: string
+      description: Identifier of the resource that triggered the event.
+      example: pmt_rPrDPEwyCVUFm
+    resource_type:
+      type: string
+      description: Type of the resource that triggered the event.
+      example: payment
+    related_ids:
+      type: array
+      items:
+        type: string
+      description: Identifiers of related resources.
+    data:
+      description: Current state of the resource at the time of the event.
+      $ref: common.yaml#/JsonObject
+    diff:
+      description: Changes from the previous state of the resource.
+      $ref: common.yaml#/JsonObject
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the event was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the event was last updated.
+EventResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Event'
+  example:
+    success: true
+    data:
+      id: evt_HnEJMFWS8rJbh
+      type: payment.create
+      resource_id: pmt_rPrDPEwyCVUcm
+      resource_type: payment
+      related_ids:
+      - acc_b9q2XVAnNFbp3
+      - acc_Y8u3qL9mNa1Bz
+      data:
+        id: pmt_rPrDPEwyCVUcm
+        status: pending
+        amount: 5000
+      diff: {}
+      created_at: '2026-01-15T18:30:00.000Z'
+      updated_at: '2026-01-15T18:30:00.000Z'
+    message: null
+EventListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/Event'

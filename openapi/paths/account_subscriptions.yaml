@@ -1,0 +1,128 @@
+collection:
+  get:
+    operationId: listAccountSubscriptions
+    summary: List all account subscriptions
+    description: Returns a list of subscriptions for the specified account.
+    tags:
+    - Account Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    responses:
+      '200':
+        description: A list of account subscriptions.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountSubscriptionListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createAccountSubscription
+    summary: Create an account subscription
+    description: Creates a new subscription for the specified account.
+    tags:
+    - Account Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml#/AccountSubscriptionCreateRequest
+    responses:
+      '200':
+        description: The newly created account subscription.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountSubscriptionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveAccountSubscription
+    summary: Retrieve an account subscription
+    description: Retrieves an account subscription by its unique identifier.
+    tags:
+    - Account Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountSubscriptionIdParam
+    responses:
+      '200':
+        description: The requested account subscription.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountSubscriptionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deleteAccountSubscription
+    summary: Delete an account subscription
+    description: Deletes an account subscription.
+    tags:
+    - Account Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountSubscriptionIdParam
+    responses:
+      '200':
+        description: The deleted account subscription.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountSubscriptionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

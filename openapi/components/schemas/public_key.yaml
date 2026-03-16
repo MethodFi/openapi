@@ -1,0 +1,85 @@
+JwkPublic:
+  type: object
+  required:
+    - kid
+    - kty
+    - alg
+    - use
+    - n
+    - e
+  properties:
+    kid:
+      type: string
+      description: Key identifier.
+      example: mthd_jwk_abc123
+    kty:
+      type: string
+      description: Key type.
+      example: RSA
+    alg:
+      type: string
+      description: JWK algorithm.
+      example: RSA-OAEP-256
+    use:
+      type: string
+      description: Intended key use.
+      example: enc
+    n:
+      type: string
+      description: RSA modulus.
+    e:
+      type: string
+      description: RSA public exponent.
+
+MethodPublicKey:
+  type: object
+  required:
+    - id
+    - jwk
+    - jwk_thumbprint
+    - status
+    - created_at
+    - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the Method JWK.
+      pattern: '^mthd_jwk_\w+$'
+    jwk:
+      $ref: '#/JwkPublic'
+    jwk_thumbprint:
+      type: string
+      description: SHA-256 thumbprint for the public JWK.
+    status:
+      type: string
+      description: Lifecycle status of the public key.
+      enum:
+        - active
+        - deprecated
+        - disabled
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the key was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the key was last updated.
+
+MethodPublicKeyResponse:
+  allOf:
+    - $ref: 'common.yaml#/SuccessEnvelope'
+    - type: object
+      properties:
+        data:
+          $ref: '#/MethodPublicKey'
+
+WellKnownJwksResponse:
+  type: object
+  required:
+    - keys
+  properties:
+    keys:
+      type: array
+      items:
+        $ref: '#/JwkPublic'

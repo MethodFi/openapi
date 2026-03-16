@@ -1,0 +1,1480 @@
+Account:
+  description: 'An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity.
+
+    '
+  oneOf:
+  - $ref: '#/AccountACHResource'
+  - $ref: '#/AccountLiabilityResource'
+  - $ref: '#/AccountClearingResource'
+  - $ref: '#/AccountDebitCardResource'
+  discriminator:
+    propertyName: type
+    mapping:
+      ach: '#/AccountACHResource'
+      liability: '#/AccountLiabilityResource'
+      clearing: '#/AccountClearingResource'
+      debit_card: '#/AccountDebitCardResource'
+AccountBase:
+  type: object
+  description: 'An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity. Accounts are polymorphic on the `type` field.
+
+    '
+  required:
+  - id
+  - holder_id
+  - type
+  - status
+  - consent_status
+  - ach
+  - liability
+  - clearing
+  - debit_card
+  - capabilities
+  - available_capabilities
+  - error
+  - metadata
+  - products
+  - restricted_products
+  - subscriptions
+  - available_subscriptions
+  - restricted_subscriptions
+  - latest_verification_session
+  - balance
+  - payoff
+  - payment_instrument
+  - card_brand
+  - update
+  - attribute
+  - sensitive
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the account.
+      pattern: ^acc_\w+$
+      example: acc_b9q2XVAnNFbp3
+    holder_id:
+      type: string
+      description: The entity ID that owns this account.
+      pattern: ^ent_\w+$
+      example: ent_au22b1fbFJbp8
+    type:
+      type: string
+      description: The type of account.
+      enum:
+      - ach
+      - liability
+      - clearing
+      - debit_card
+    status:
+      type: string
+      description: Current status of the account.
+      enum:
+      - active
+      - disabled
+      - processing
+      - pending_exchange
+      - closed
+    consent_status:
+      type: string
+      description: Current consent status for data access on this account.
+      enum:
+      - pending
+      - withdrawn
+      - approved
+    ach:
+      $ref: '#/AccountACH'
+    liability:
+      $ref: '#/AccountLiability'
+    clearing:
+      $ref: '#/AccountClearing'
+    debit_card:
+      $ref: '#/AccountDebitCard'
+    capabilities:
+      type: array
+      description: Capabilities currently enabled for this account.
+      items:
+        $ref: '#/AccountCapability'
+    available_capabilities:
+      type: array
+      description: Capabilities available to be enabled for this account.
+      items:
+        $ref: '#/AccountCapability'
+    error:
+      $ref: errors/account_errors.yaml#/AccountResourceError
+    metadata:
+      $ref: common.yaml#/Metadata
+    products:
+      type: array
+      description: Products currently active for this account.
+      items:
+        type: string
+    restricted_products:
+      type: array
+      description: Products restricted from this account.
+      items:
+        type: string
+    subscriptions:
+      type: array
+      description: Subscriptions currently active for this account.
+      items:
+        type: string
+    available_subscriptions:
+      type: array
+      description: Subscriptions available to be enrolled for this account.
+      items:
+        type: string
+    restricted_subscriptions:
+      type: array
+      description: Subscriptions restricted from this account.
+      items:
+        type: string
+    latest_verification_session:
+      description: 'The latest verification session ID. This field is expandable. When expanded, returns the full AccountVerificationSession object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^avf_\w+$
+      - type: 'null'
+      - $ref: '#/AccountVerificationSession'
+    balance:
+      description: 'The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^bal_\w+$
+      - type: 'null'
+      - $ref: '#/AccountBalance'
+    payoff:
+      description: 'The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^pyf_\w+$
+      - type: 'null'
+      - $ref: '#/AccountPayoff'
+    payment_instrument:
+      description: 'The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^pmt_inst_\w+$
+      - type: 'null'
+      - $ref: '#/AccountPaymentInstrument'
+    card_brand:
+      description: 'The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^cbrd_\w+$
+      - type: 'null'
+      - $ref: '#/AccountCardBrand'
+    update:
+      description: 'The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^upd_\w+$
+      - type: 'null'
+      - $ref: '#/AccountUpdate'
+    attribute:
+      description: 'The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^acc_attr_\w+$
+      - type: 'null'
+      - $ref: '#/AccountAttribute'
+    sensitive:
+      description: 'The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.
+
+        '
+      oneOf:
+      - type: string
+        pattern: ^astv_\w+$
+      - type: 'null'
+      - $ref: '#/AccountSensitive'
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the account was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the account was last updated.
+AccountACHResource:
+  allOf:
+  - $ref: '#/AccountBase'
+  - type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - ach
+AccountLiabilityResource:
+  allOf:
+  - $ref: '#/AccountBase'
+  - type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - liability
+AccountClearingResource:
+  allOf:
+  - $ref: '#/AccountBase'
+  - type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - clearing
+AccountDebitCardResource:
+  allOf:
+  - $ref: '#/AccountBase'
+  - type: object
+    properties:
+      type:
+        type: string
+        enum:
+        - debit_card
+AccountACH:
+  type:
+  - object
+  - 'null'
+  description: ACH account details. Present when `type` is `ach`.
+  properties:
+    routing:
+      type: string
+      description: The ACH routing number.
+    number:
+      type: string
+      description: The ACH account number.
+    type:
+      type: string
+      description: The type of ACH account.
+      enum:
+      - checking
+      - savings
+AccountLiability:
+  type:
+  - object
+  - 'null'
+  description: Liability account details. Present when `type` is `liability`.
+  required:
+  - mch_id
+  - mask
+  - ownership
+  - fingerprint
+  - type
+  - sub_type
+  - name
+  properties:
+    mch_id:
+      description: The merchant ID associated with this liability.
+      oneOf:
+      - type: string
+        pattern: ^mch_\w+$
+      - $ref: merchant.yaml#/Merchant
+    mask:
+      type:
+      - string
+      - 'null'
+      description: Last 4 digits of the account number.
+      example: '4321'
+    ownership:
+      type:
+      - string
+      - 'null'
+      description: Ownership type of the account.
+      enum:
+      - primary
+      - authorized
+      - joint
+      - unknown
+      - null
+    fingerprint:
+      type:
+      - string
+      - 'null'
+      description: Unique fingerprint for de-duplication.
+    type:
+      type: string
+      description: The type of liability.
+      enum:
+      - credit_card
+      - auto_loan
+      - mortgage
+      - personal_loan
+      - student_loan
+      - student_loans
+      - collection
+      - credit_builder
+      - insurance
+      - loan
+      - medical
+      - utility
+      - bnpl
+      - fintech
+    sub_type:
+      type:
+      - string
+      - 'null'
+      description: More specific classification of the liability type.
+    name:
+      type:
+      - string
+      - 'null'
+      description: Display name of the liability account.
+AccountClearing:
+  type:
+  - object
+  - 'null'
+  description: Clearing account details. Present when `type` is `clearing`.
+  properties:
+    type:
+      type: string
+      description: The type of clearing account.
+      enum:
+      - single_use
+      - multi_use
+    routing:
+      type: string
+      description: The clearing routing number.
+    number:
+      type: string
+      description: The clearing account number.
+AccountDebitCard:
+  type:
+  - object
+  - 'null'
+  description: Debit card account details. Present when `type` is `debit_card`.
+  properties:
+    network:
+      type: string
+      description: The card network.
+    mask:
+      type: string
+      description: Last 4 digits of the card number.
+    issuer:
+      type: string
+      description: The card issuer.
+AccountCapability:
+  type: string
+  description: A capability that can be enabled for an account.
+  enum:
+  - payments:send
+  - payments:receive
+  - data:retrieve
+  - data:sync
+AccountExpandableFields:
+  type: string
+  description: Fields on an Account that can be expanded.
+  enum:
+  - latest_verification_session
+  - balance
+  - payoff
+  - payment_instrument
+  - card_brand
+  - update
+  - attribute
+  - sensitive
+AccountCreateRequest:
+  description: 'Request body for creating an account.
+
+    `type` is recommended and used for discrimination in generated clients, but
+
+    the API can also infer the account type from the nested object you provide.
+
+    '
+  oneOf:
+  - $ref: '#/CreateAchAccountRequest'
+  - $ref: '#/CreateLiabilityAccountRequest'
+  - $ref: '#/CreateClearingAccountRequest'
+  - $ref: '#/CreateDebitCardAccountRequest'
+  discriminator:
+    propertyName: type
+    mapping:
+      ach: '#/CreateAchAccountRequest'
+      liability: '#/CreateLiabilityAccountRequest'
+      clearing: '#/CreateClearingAccountRequest'
+      debit_card: '#/CreateDebitCardAccountRequest'
+CreateAchAccountRequest:
+  type: object
+  description: Create an ACH account.
+  required:
+  - holder_id
+  - ach
+  properties:
+    type:
+      type: string
+      enum:
+      - ach
+    holder_id:
+      type: string
+      description: The entity ID that will own this account.
+      pattern: ^ent_\w+$
+    ach:
+      type: object
+      description: ACH account details.
+      required:
+      - routing
+      - number
+      - type
+      properties:
+        routing:
+          type: string
+          description: The ACH routing number.
+          pattern: ^\d{9}$
+        number:
+          type: string
+          description: The ACH account number.
+          pattern: ^\d+$
+        type:
+          type: string
+          description: The type of ACH account.
+          enum:
+          - checking
+          - savings
+    metadata:
+      $ref: common.yaml#/Metadata
+CreateLiabilityAccountRequest:
+  type: object
+  description: Create a liability account.
+  required:
+  - holder_id
+  - liability
+  properties:
+    type:
+      type: string
+      enum:
+      - liability
+    holder_id:
+      type: string
+      description: The entity ID that will own this account.
+      pattern: ^ent_\w+$
+    liability:
+      type: object
+      description: Liability account details.
+      properties:
+        mch_id:
+          type: string
+          description: The merchant ID for the liability.
+          pattern: ^mch_\w+$
+        account_number:
+          type: string
+          description: Full account number for the liability.
+        number:
+          type: string
+          description: Alternative liability account number field.
+        credit_card:
+          type: object
+          description: Optional supplemental card details for liability accounts.
+          required:
+          - exp_month
+          - exp_year
+          properties:
+            billing_zip_code:
+              type: string
+            cvv:
+              type: string
+            exp_month:
+              type: string
+              pattern: ^(0[1-9]|1[0-2])$
+            exp_year:
+              type: integer
+      oneOf:
+      - required:
+        - account_number
+      - required:
+        - number
+    metadata:
+      $ref: common.yaml#/Metadata
+CreateClearingAccountRequest:
+  type: object
+  description: Create a clearing account.
+  required:
+  - holder_id
+  - clearing
+  properties:
+    type:
+      type: string
+      enum:
+      - clearing
+    holder_id:
+      type: string
+      description: The entity ID that will own this account.
+      pattern: ^ent_\w+$
+    clearing:
+      type: object
+      description: Clearing account details.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of clearing account to create.
+          enum:
+          - single_use
+          - multi_use
+    metadata:
+      $ref: common.yaml#/Metadata
+CreateDebitCardAccountRequest:
+  type: object
+  description: Create a debit card account.
+  required:
+  - holder_id
+  - debit_card
+  properties:
+    type:
+      type: string
+      enum:
+      - debit_card
+    holder_id:
+      type: string
+      description: The entity ID that will own this account.
+      pattern: ^ent_\w+$
+    debit_card:
+      type: object
+      description: Debit card details.
+      required:
+      - number
+      - exp_month
+      - exp_year
+      properties:
+        number:
+          type: string
+          minLength: 15
+          maxLength: 16
+        exp_month:
+          type: string
+          pattern: ^(0[1-9]|1[0-2])$
+        exp_year:
+          type: integer
+        cvv:
+          type: string
+        billing_zip_code:
+          type: string
+    metadata:
+      $ref: common.yaml#/Metadata
+AccountUpdateRequest:
+  type: object
+  description: Request body for updating an account.
+  properties:
+    metadata:
+      $ref: common.yaml#/Metadata
+    liability:
+      type: object
+      description: Liability-specific update fields. Use either mortgage or credit_card (mutually exclusive).
+      properties:
+        mortgage:
+          type: object
+          description: Mortgage address update.
+          properties:
+            address_street:
+              type: string
+            address_city:
+              type: string
+            address_state:
+              type: string
+            address_zip:
+              type: string
+        credit_card:
+          type: object
+          description: Credit card update. Provide either number alone, or expiration + CVV.
+          properties:
+            number:
+              type: string
+              description: The credit card number.
+            expiration_month:
+              type: string
+              description: Card expiration month.
+            expiration_year:
+              type: string
+              description: Card expiration year.
+            cvv:
+              type: string
+              description: Card CVV.
+AccountResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Account'
+AccountListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/Account'
+AccountAttribute:
+  type: object
+  description: An attribute record for an account containing financial data attributes.
+  required:
+  - id
+  - account_id
+  - status
+  - attributes
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the account attribute.
+      pattern: ^acc_attr_\w+$
+      example: acc_attr_eTJMbnCjw34yQ
+    account_id:
+      type: string
+      description: The account this attribute belongs to.
+      pattern: ^acc_\w+$
+    status:
+      type: string
+      description: Current status of the attribute request.
+      enum:
+      - completed
+      - pending
+      - failed
+    attributes:
+      type: object
+      description: Financial data attributes for the account.
+      additionalProperties: true
+    error:
+      $ref: common.yaml#/ResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the attribute was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the attribute was last updated.
+AccountAttributeResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountAttribute'
+AccountAttributeListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountAttribute'
+AccountBalance:
+  type: object
+  description: A balance record for an account.
+  required:
+  - id
+  - account_id
+  - status
+  - amount
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the balance.
+      pattern: ^bal_\w+$
+      example: bal_dKe9ehC3hEBYy
+    account_id:
+      type: string
+      description: The account this balance belongs to.
+      pattern: ^acc_\w+$
+    status:
+      type: string
+      description: Current status of the balance request.
+      enum:
+      - completed
+      - pending
+      - failed
+    amount:
+      type:
+      - number
+      - 'null'
+      description: The balance amount in cents.
+    error:
+      $ref: errors/account_errors.yaml#/BalanceResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the balance was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the balance was last updated.
+AccountBalanceResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountBalance'
+AccountBalanceListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountBalance'
+AccountCardBrand:
+  type: object
+  description: Card brand information for an account.
+  required:
+  - id
+  - account_id
+  - network
+  - issuer
+  - last4
+  - status
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the card brand.
+      pattern: ^cbrd_\w+$
+      example: cbrd_aTJMbnCjw34yQ
+    account_id:
+      type: string
+      description: The account this card brand belongs to.
+      pattern: ^acc_\w+$
+    network:
+      type:
+      - string
+      - 'null'
+      description: The card network.
+      enum:
+      - visa
+      - mastercard
+      - amex
+      - discover
+      - null
+    issuer:
+      type:
+      - string
+      - 'null'
+      description: The card issuer.
+    last4:
+      type:
+      - string
+      - 'null'
+      description: Last 4 digits of the card number.
+    status:
+      type: string
+      description: Current status of the card brand request.
+      enum:
+      - completed
+      - pending
+      - failed
+    error:
+      $ref: common.yaml#/ResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the card brand was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the card brand was last updated.
+AccountCardBrandResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountCardBrand'
+AccountCardBrandListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountCardBrand'
+AccountConsentUpdateRequest:
+  type: object
+  description: Request body for updating account consent.
+  required:
+  - type
+  properties:
+    type:
+      type: string
+      description: The consent action to take.
+      enum:
+      - withdraw
+    reason:
+      type: string
+      description: Optional reason for the consent action.
+AccountPaymentInstrument:
+  type: object
+  description: A payment instrument for an account.
+  required:
+  - id
+  - account_id
+  - status
+  - type
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the payment instrument.
+      pattern: ^pmt_inst_\w+$
+      example: pmt_inst_aTJMbnCjw34yQ
+    account_id:
+      type: string
+      description: The account this payment instrument belongs to.
+      pattern: ^acc_\w+$
+    status:
+      type: string
+      description: Current status of the payment instrument.
+      enum:
+      - active
+      - pending
+      - failed
+      - closed
+    type:
+      type: string
+      description: The type of payment instrument.
+    error:
+      $ref: common.yaml#/ResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the payment instrument was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the payment instrument was last updated.
+AccountPaymentInstrumentResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountPaymentInstrument'
+AccountPaymentInstrumentListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountPaymentInstrument'
+AccountPayoff:
+  type: object
+  description: A payoff record for an account.
+  required:
+  - id
+  - account_id
+  - status
+  - amount
+  - term
+  - per_diem_amount
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the payoff.
+      pattern: ^pyf_\w+$
+      example: pyf_dKe9ehC3hEBYy
+    account_id:
+      type: string
+      description: The account this payoff belongs to.
+      pattern: ^acc_\w+$
+    status:
+      type: string
+      description: Current status of the payoff request.
+      enum:
+      - completed
+      - pending
+      - failed
+    amount:
+      type:
+      - number
+      - 'null'
+      description: The payoff amount in cents.
+    term:
+      type:
+      - number
+      - 'null'
+      description: Number of days the payoff amount is valid.
+    per_diem_amount:
+      type:
+      - number
+      - 'null'
+      description: Per diem interest amount in cents.
+    error:
+      $ref: errors/account_errors.yaml#/PayoffResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the payoff was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the payoff was last updated.
+AccountPayoffResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountPayoff'
+AccountPayoffListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountPayoff'
+AccountProduct:
+  type: object
+  description: A product associated with an account.
+  required:
+  - id
+  - name
+  - status
+  - status_error
+  - capabilities
+  - reportable
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the product.
+      pattern: ^prd_\w+$
+      example: prd_aTJMbnCjw34yQ
+    name:
+      type: string
+      description: Name of the product.
+    status:
+      type: string
+      description: Current status of the product.
+      enum:
+      - available
+      - unavailable
+      - restricted
+    status_error:
+      $ref: errors/account_errors.yaml#/ProductResourceError
+    capabilities:
+      type: array
+      description: Capabilities provided by this product.
+      items:
+        type: string
+    reportable:
+      type: boolean
+      description: Whether this product generates reportable data.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the product was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the product was last updated.
+AccountProductResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountProduct'
+AccountProductListResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        type: object
+        description: Object keyed by product name.
+        additionalProperties:
+          $ref: '#/AccountProduct'
+AccountSensitive:
+  type: object
+  description: Sensitive data for an account.
+  required:
+  - id
+  - account_id
+  - status
+  - type
+  - fields
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the sensitive record.
+      pattern: ^astv_\w+$
+      example: astv_aTJMbnCjw34yQ
+    account_id:
+      type: string
+      description: The account this sensitive data belongs to.
+      pattern: ^acc_\w+$
+    status:
+      type: string
+      description: Current status of the sensitive data request.
+      enum:
+      - completed
+      - pending
+      - failed
+    type:
+      type: string
+      description: The type of sensitive data.
+    fields:
+      type: array
+      description: List of sensitive data fields retrieved.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the field.
+          value:
+            type: string
+            description: Value of the field.
+    error:
+      $ref: errors/account_errors.yaml#/AccountSensitiveResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the sensitive record was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the sensitive record was last updated.
+AccountSensitiveCreateRequest:
+  type: object
+  description: Request body for creating an account sensitive data request.
+  required:
+  - expand
+  properties:
+    expand:
+      type: array
+      description: List of sensitive field names to retrieve.
+      items:
+        type: string
+AccountSensitiveResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountSensitive'
+AccountSensitiveListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountSensitive'
+AccountSubscription:
+  type: object
+  description: A subscription for an account.
+  required:
+  - id
+  - name
+  - status
+  - latest_request_id
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the subscription.
+      pattern: ^sub_\w+$
+      example: sub_aTJMbnCjw34yQ
+    name:
+      type: string
+      description: Name of the subscription.
+    status:
+      type: string
+      description: Current status of the subscription.
+      enum:
+      - active
+      - inactive
+    latest_request_id:
+      type:
+      - string
+      - 'null'
+      description: ID of the latest request triggered by this subscription.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the subscription was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the subscription was last updated.
+AccountSubscriptionCreateRequest:
+  type: object
+  description: Request body for creating an account subscription.
+  required:
+  - enroll
+  properties:
+    enroll:
+      type: array
+      description: Array of subscription names to enroll.
+      items:
+        type: string
+      minItems: 1
+AccountSubscriptionResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountSubscription'
+AccountSubscriptionListResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        type: object
+        description: Object keyed by subscription name.
+        additionalProperties:
+          $ref: '#/AccountSubscription'
+AccountTransaction:
+  type: object
+  description: A transaction for an account.
+  required:
+  - id
+  - account_id
+  - merchant
+  - amount
+  - auth_amount
+  - currency_code
+  - transaction_amount
+  - transaction_auth_amount
+  - transaction_currency_code
+  - status
+  - descriptor
+  - transacted_at
+  - posted_at
+  - voided_at
+  - original_txn_id
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      pattern: ^txn_\w+$
+      description: Unique identifier for the transaction.
+      example: txn_aTJMbnCjw34yQ
+    account_id:
+      type: string
+      description: The ID of the account this transaction belongs to.
+    merchant:
+      type:
+      - object
+      - 'null'
+      description: Merchant information for this transaction.
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The merchant name.
+        logo:
+          type:
+          - string
+          - 'null'
+          description: URL of the merchant logo.
+    amount:
+      type:
+      - number
+      - 'null'
+      description: The transaction amount in cents.
+    auth_amount:
+      type:
+      - number
+      - 'null'
+      description: The authorized amount in cents.
+    currency_code:
+      type:
+      - string
+      - 'null'
+      description: The ISO 4217 currency code.
+    transaction_amount:
+      type:
+      - number
+      - 'null'
+      description: The transaction amount in the transaction currency.
+    transaction_auth_amount:
+      type:
+      - number
+      - 'null'
+      description: The authorized amount in the transaction currency.
+    transaction_currency_code:
+      type:
+      - string
+      - 'null'
+      description: The ISO 4217 currency code of the transaction currency.
+    status:
+      type: string
+      description: The current status of the transaction.
+      enum:
+      - pending
+      - posted
+      - voided
+    descriptor:
+      type:
+      - string
+      - 'null'
+      description: The transaction descriptor.
+    transacted_at:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Timestamp when the transaction occurred.
+    posted_at:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Timestamp when the transaction was posted.
+    voided_at:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Timestamp when the transaction was voided.
+    original_txn_id:
+      type:
+      - string
+      - 'null'
+      description: The ID of the original transaction if this is a related transaction.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the transaction record was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the transaction record was last updated.
+AccountTransactionResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountTransaction'
+AccountTransactionListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountTransaction'
+AccountUpdate:
+  type: object
+  description: An update record for an account.
+  required:
+  - id
+  - account_id
+  - status
+  - type
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the update.
+      pattern: ^upd_\w+$
+      example: upd_aTJMbnCjw34yQ
+    account_id:
+      type: string
+      description: The account this update belongs to.
+      pattern: ^acc_\w+$
+    status:
+      type: string
+      description: Current status of the update.
+      enum:
+      - completed
+      - pending
+      - failed
+    type:
+      type: string
+      description: The type of update.
+    error:
+      $ref: errors/account_errors.yaml#/UpdateResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the update was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the update was last updated.
+AccountUpdateResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountUpdate'
+AccountUpdateListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountUpdate'
+AccountVerificationSession:
+  type: object
+  description: A verification session for an account.
+  required:
+  - id
+  - account_id
+  - status
+  - type
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the verification session.
+      pattern: ^avf_\w+$
+      example: avf_aTJMbnCjw34yQ
+    account_id:
+      type: string
+      description: The account this verification session belongs to.
+      pattern: ^acc_\w+$
+    status:
+      type: string
+      description: Current status of the verification session.
+      enum:
+      - pending
+      - in_progress
+      - verified
+      - failed
+    type:
+      type: string
+      description: The type of verification.
+      enum:
+      - micro_deposits
+      - mx
+      - plaid
+      - teller
+      - auto_verify
+      - trusted_provisioner
+      - pre_auth
+      - standard
+      - issuer
+      - instant
+      - network
+      - three_ds
+    error:
+      $ref: errors/account_errors.yaml#/AccountVerificationSessionResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the verification session was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the verification session was last updated.
+AccountVerificationSessionCreateRequest:
+  type: object
+  description: Request body for creating an account verification session.
+  required:
+  - type
+  properties:
+    type:
+      type: string
+      description: The type of verification to perform.
+      enum:
+      - micro_deposits
+      - mx
+      - plaid
+      - teller
+      - auto_verify
+      - trusted_provisioner
+      - pre_auth
+      - standard
+      - issuer
+      - instant
+      - network
+      - three_ds
+AccountVerificationSessionUpdateRequest:
+  type: object
+  description: Request body for updating an account verification session.
+  properties:
+    micro_deposits:
+      type: object
+      description: Micro deposit verification amounts.
+      properties:
+        amounts:
+          type: array
+          description: The micro deposit amounts to verify.
+          items:
+            type: integer
+AccountVerificationSessionResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/AccountVerificationSession'
+AccountVerificationSessionListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/AccountVerificationSession'
+AccountVerificationSessionAmountsResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        type: object
+        properties:
+          amounts:
+            type: array
+            description: The micro deposit amounts.
+            items:
+              type: integer

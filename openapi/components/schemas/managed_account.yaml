@@ -1,0 +1,114 @@
+ManagedAccount:
+  type: object
+  description: A Managed Account is a Method-managed financial account used for fund operations.
+  required:
+  - id
+  - type
+  - status
+  - routing_number
+  - account_number
+  - balance
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the managed account.
+      pattern: ^macc_\w+$
+      example: macc_3mDnkR8Ft6Bx7
+    type:
+      type: string
+      description: The type of managed account.
+    status:
+      type: string
+      description: Current status of the managed account.
+    routing_number:
+      type:
+      - string
+      - 'null'
+      description: Bank routing number for the managed account.
+    account_number:
+      type:
+      - string
+      - 'null'
+      description: Bank account number for the managed account.
+    balance:
+      type:
+      - number
+      - 'null'
+      description: Current balance of the managed account in cents.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the managed account was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the managed account was last updated.
+ManagedAccountTransaction:
+  type: object
+  description: A transaction on a managed account.
+  required:
+  - id
+  - managed_account_id
+  - amount
+  - type
+  - status
+  - description
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the transaction.
+    managed_account_id:
+      type: string
+      description: Identifier of the managed account this transaction belongs to.
+      pattern: ^macc_\w+$
+    amount:
+      type: number
+      description: Transaction amount in cents.
+    type:
+      type: string
+      description: The type of transaction.
+    status:
+      type: string
+      description: Current status of the transaction.
+    description:
+      type:
+      - string
+      - 'null'
+      description: Human-readable description of the transaction.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the transaction was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the transaction was last updated.
+ManagedAccountResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/ManagedAccount'
+ManagedAccountListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/ManagedAccount'
+ManagedAccountTransactionListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/ManagedAccountTransaction'

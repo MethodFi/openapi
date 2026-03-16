@@ -1,0 +1,111 @@
+create:
+  post:
+    operationId: createReport
+    summary: Create a report
+    description: Creates a new report of the specified type. The report will be generated asynchronously and can be downloaded once its status is `completed`.
+    tags:
+    - Reports
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report.yaml#/ReportCreateRequest
+    responses:
+      '200':
+        description: The newly created report.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report.yaml#/ReportResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveReport
+    summary: Retrieve a report
+    description: Returns a single report by its identifier. Use this to check the status of a report before downloading.
+    tags:
+    - Reports
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: reportId
+      in: path
+      required: true
+      description: Unique identifier for the report.
+      schema:
+        type: string
+        pattern: ^rpt_\w+$
+    responses:
+      '200':
+        description: The requested report.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report.yaml#/ReportResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+download:
+  get:
+    operationId: downloadReport
+    summary: Download a report
+    description: Returns the completed report as a CSV file attachment.
+    tags:
+    - Reports
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: reportId
+      in: path
+      required: true
+      description: Unique identifier for the report.
+      schema:
+        type: string
+        pattern: ^rpt_\w+$
+    responses:
+      '200':
+        description: CSV report content.
+        headers:
+          Content-Disposition:
+            description: Attachment filename for the downloaded report.
+            schema:
+              type: string
+        content:
+          text/csv:
+            schema:
+              type: string
+              format: binary
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

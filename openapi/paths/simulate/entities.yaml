@@ -1,0 +1,137 @@
+credit_scores:
+  post:
+    operationId: simulateEntityCreditScore
+    summary: Simulate a credit score
+    description: |
+      Simulates a credit score result for an entity in the sandbox environment.
+      Use this to test credit score retrieval flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Entities
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: entity_id
+        in: path
+        required: true
+        description: Unique identifier for the entity.
+        schema:
+          type: string
+          pattern: '^ent_\w+$'
+      - name: crs_id
+        in: path
+        required: true
+        description: Unique identifier for the credit score resource.
+        schema:
+          type: string
+          pattern: '^crs_\w+$'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - score
+            properties:
+              score:
+                type: integer
+                description: The credit score value to simulate.
+                minimum: 300
+                maximum: 850
+              status:
+                type: string
+                description: The status to set on the credit score resource.
+    responses:
+      '200':
+        description: The simulated credit score result.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/entity.yaml#/EntityCreditScoreResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'
+
+connect:
+  post:
+    operationId: simulateEntityConnect
+    summary: Simulate entity connect
+    description: |
+      Simulates the entity connect flow in the sandbox environment.
+      Use this to test account discovery and connection flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Entities
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: entity_id
+        in: path
+        required: true
+        description: Unique identifier for the entity.
+        schema:
+          type: string
+          pattern: '^ent_\w+$'
+    responses:
+      '200':
+        description: The simulated connect result.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/entity.yaml#/EntityConnectResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'
+
+attributes:
+  post:
+    operationId: simulateEntityAttributes
+    summary: Simulate entity attributes
+    description: |
+      Simulates attribute data for an entity in the sandbox environment.
+      Use this to test attribute retrieval flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Entities
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: entity_id
+        in: path
+        required: true
+        description: Unique identifier for the entity.
+        schema:
+          type: string
+          pattern: '^ent_\w+$'
+    responses:
+      '200':
+        description: The simulated entity attributes.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/entity.yaml#/EntityAttributeResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'

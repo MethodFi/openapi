@@ -1,0 +1,97 @@
+collection:
+  get:
+    operationId: listPaymentReversals
+    summary: List all reversals for a payment
+    description: Returns a list of all reversals associated with a specific payment.
+    tags:
+    - Payment Reversals
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/PaymentIdParam
+    responses:
+      '200':
+        description: A list of payment reversals.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/payment.yaml#/PaymentReversalListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrievePaymentReversal
+    summary: Retrieve a payment reversal
+    description: Retrieves a specific reversal for a payment by its unique identifier.
+    tags:
+    - Payment Reversals
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/PaymentIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/ReversalIdParam
+    responses:
+      '200':
+        description: The requested payment reversal.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/payment.yaml#/PaymentReversalResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  put:
+    operationId: updatePaymentReversal
+    summary: Update a payment reversal
+    description: Updates a payment reversal. Currently supports updating the reversal status.
+    tags:
+    - Payment Reversals
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/PaymentIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/ReversalIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/payment.yaml#/PaymentReversalUpdateRequest
+    responses:
+      '200':
+        description: The updated payment reversal.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/payment.yaml#/PaymentReversalResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

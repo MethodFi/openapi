@@ -1,0 +1,144 @@
+ForwardingRequest:
+  type: object
+  required:
+  - id
+  - bindings
+  - request
+  - response
+  - duration_ms
+  - status
+  - status_history
+  - created_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the forwarding request.
+      example: freq_yVf3mkzbhz9tj
+    bindings:
+      type: object
+      additionalProperties:
+        type: string
+      description: Key-value map of secret bindings used in the request.
+    request:
+      $ref: '#/ForwardingRequestDetail'
+    response:
+      $ref: '#/ForwardingResponseDetail'
+    duration_ms:
+      type: number
+      description: Total duration of the forwarded request in milliseconds.
+    status:
+      $ref: '#/ForwardingRequestStatus'
+    status_history:
+      type: array
+      items:
+        $ref: common.yaml#/StatusHistoryItem
+      description: History of status transitions.
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the forwarding request was created.
+ForwardingRequestStatus:
+  type: string
+  enum:
+  - completed
+  - failed
+ForwardingRequestDetail:
+  type: object
+  required:
+  - url
+  - method
+  - headers
+  - body
+  properties:
+    url:
+      type: string
+      description: The destination URL for the forwarded request.
+    method:
+      type: string
+      enum:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      description: HTTP method of the forwarded request.
+    headers:
+      type: object
+      additionalProperties:
+        type: string
+      description: HTTP headers sent with the forwarded request.
+    body:
+      type: string
+      description: Body of the forwarded request.
+ForwardingResponseDetail:
+  type: object
+  description: Details of the upstream response captured for the forwarding request.
+  properties:
+    status_code:
+      type:
+      - integer
+      - 'null'
+      description: HTTP status code returned by the destination.
+    headers:
+      type: object
+      additionalProperties:
+        type: string
+      description: HTTP headers returned by the destination.
+    body:
+      $ref: common.yaml#/JsonValue
+      description: Body returned by the destination.
+ForwardingRequestCreateRequest:
+  type: object
+  required:
+  - url
+  - method
+  - bindings
+  - headers
+  - body
+  properties:
+    url:
+      type: string
+      description: The destination URL for the forwarded request.
+    method:
+      type: string
+      enum:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      description: HTTP method to use.
+    headers:
+      type: object
+      additionalProperties:
+        type: string
+      description: HTTP headers to include in the forwarded request.
+    body:
+      type: string
+      description: Body to send with the forwarded request.
+    bindings:
+      type: object
+      additionalProperties:
+        type: string
+      description: Key-value map of secret bindings to inject into the request.
+    metadata:
+      type:
+      - object
+      - 'null'
+      description: Optional metadata to attach to the forwarding request.
+ForwardingRequestResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/ForwardingRequest'
+ForwardingRequestListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/ForwardingRequest'

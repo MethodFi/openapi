@@ -1,0 +1,335 @@
+Payment:
+  type: object
+  description: A Payment represents a transfer of funds between two accounts.
+  required:
+  - id
+  - reversal_id
+  - source_trace_id
+  - destination_trace_id
+  - source
+  - destination
+  - amount
+  - description
+  - status
+  - estimated_completion_date
+  - source_settlement_date
+  - destination_settlement_date
+  - source_status
+  - destination_status
+  - destination_payment_method
+  - fee
+  - type
+  - error
+  - metadata
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the payment.
+      pattern: ^pmt_\w+$
+      example: pmt_rPrDPEwyCVUcm
+    reversal_id:
+      type:
+      - string
+      - 'null'
+      description: Identifier of the associated reversal, if any.
+      pattern: ^rvs_\w+$
+    source_trace_id:
+      type:
+      - string
+      - 'null'
+      description: Trace identifier for the source side of the payment.
+    destination_trace_id:
+      type:
+      - string
+      - 'null'
+      description: Trace identifier for the destination side of the payment.
+    source:
+      description: 'The source account ID. This field is expandable. When expanded, returns the full Account object.
+
+        '
+      anyOf:
+      - type: string
+        pattern: ^acc_\w+$
+      - type: 'null'
+      - $ref: account.yaml#/Account
+    destination:
+      description: 'The destination account ID. This field is expandable. When expanded, returns the full Account object.
+
+        '
+      anyOf:
+      - type: string
+        pattern: ^acc_\w+$
+      - type: 'null'
+      - $ref: account.yaml#/Account
+    amount:
+      type: integer
+      description: Payment amount in cents.
+      minimum: 0
+      example: 5000
+    description:
+      type:
+      - string
+      - 'null'
+      description: Human-readable description for the payment.
+    status:
+      type: string
+      description: Current status of the payment.
+      enum:
+      - pending
+      - processing
+      - sent
+      - posted
+      - settled
+      - failed
+      - reversed
+      - canceled
+      - cashed
+    fund_status:
+      type:
+      - string
+      - 'null'
+      description: The current status of the payment funds.
+      enum:
+      - transmitting
+      - transmitted
+      - requested
+      - clearing
+      - pending
+      - hold
+      - sent
+      - posted
+      - cashed
+      - unknown
+      - pending_consolidation
+      - pending_clearing
+      - failed
+      - null
+    estimated_completion_date:
+      type:
+      - string
+      - 'null'
+      format: date
+      description: Estimated date when the payment will be completed (YYYY-MM-DD).
+    source_settlement_date:
+      type:
+      - string
+      - 'null'
+      format: date
+      description: The expected or actual settlement date for the source side of the payment.
+    destination_settlement_date:
+      type:
+      - string
+      - 'null'
+      format: date
+      description: The expected or actual settlement date for the destination side of the payment.
+    source_status:
+      type:
+      - string
+      - 'null'
+      description: The status of the source side of the payment.
+    destination_status:
+      type:
+      - string
+      - 'null'
+      description: The status of the destination side of the payment.
+    destination_payment_method:
+      type:
+      - string
+      - 'null'
+      description: The payment method used for the destination.
+    fee:
+      type:
+      - object
+      - 'null'
+      description: Fee associated with the payment.
+      required:
+      - type
+      - amount
+      properties:
+        type:
+          type: string
+          description: The fee type.
+          enum:
+          - total
+        amount:
+          type: integer
+          description: Fee amount in cents.
+          minimum: 0
+    type:
+      type: string
+      description: The type of payment.
+      enum:
+      - standard
+      - clearing
+    error:
+      $ref: errors/payment_errors.yaml#/PaymentResourceError
+    metadata:
+      $ref: common.yaml#/Metadata
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the payment was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the payment was last updated.
+PaymentCreateRequest:
+  type: object
+  description: Request body for creating a payment.
+  required:
+  - source
+  - destination
+  - amount
+  - description
+  properties:
+    source:
+      type: string
+      description: The source account ID.
+      pattern: ^acc_\w+$
+    destination:
+      type: string
+      description: The destination account ID.
+      pattern: ^acc_\w+$
+    amount:
+      type: integer
+      description: Payment amount in cents.
+      minimum: 1
+      example: 5000
+    description:
+      type: string
+      description: Human-readable description for the payment.
+    metadata:
+      $ref: common.yaml#/Metadata
+    dry_run:
+      type: boolean
+      description: Validate the payment request without moving funds.
+    fee:
+      type: object
+      description: Optional fee configuration for the payment.
+      properties:
+        type:
+          type: string
+          description: The fee type.
+          enum:
+          - total
+        amount:
+          type: integer
+          description: Fee amount in cents.
+          minimum: 0
+PaymentResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Payment'
+PaymentListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/Payment'
+PaymentReversal:
+  type: object
+  description: A reversal for a payment, representing a return of funds.
+  required:
+  - id
+  - pmt_id
+  - status
+  - direction
+  - trace_id
+  - target_account
+  - amount
+  - description
+  - fee
+  - error
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the reversal.
+      pattern: ^rvs_\w+$
+      example: rvs_dKe9ehC3hEBYy
+    pmt_id:
+      type: string
+      description: Identifier of the payment being reversed.
+      pattern: ^pmt_\w+$
+    status:
+      type: string
+      description: Current status of the reversal.
+      enum:
+      - pending_approval
+      - pending
+      - processing
+      - failed
+      - sent
+      - pending_settlement
+    direction:
+      type: string
+      description: Direction of the reversal relative to the original payment.
+      enum:
+      - credit
+      - debit
+    trace_id:
+      type:
+      - string
+      - 'null'
+      description: Trace identifier for the reversal.
+    target_account:
+      type:
+      - string
+      - 'null'
+      description: The target account for the reversal.
+    amount:
+      type: integer
+      description: Reversal amount in cents.
+      minimum: 0
+    description:
+      type:
+      - string
+      - 'null'
+      description: Human-readable description for the reversal.
+    fee:
+      type:
+      - object
+      - 'null'
+      description: Fee information for the reversal.
+    error:
+      $ref: errors/payment_errors.yaml#/PaymentReversalResourceError
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the reversal was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the reversal was last updated.
+PaymentReversalResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/PaymentReversal'
+PaymentReversalListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/PaymentReversal'
+PaymentReversalUpdateRequest:
+  type: object
+  description: Request body for updating a payment reversal.
+  properties:
+    status:
+      type: string
+      description: Updated status for the reversal.

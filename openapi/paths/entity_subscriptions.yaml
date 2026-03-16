@@ -1,0 +1,136 @@
+collection:
+  get:
+    operationId: listEntitySubscriptions
+    summary: List all entity subscriptions
+    description: Returns a list of subscriptions for the specified entity.
+    tags:
+    - Entity Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    responses:
+      '200':
+        description: A list of entity subscriptions.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntitySubscriptionListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createEntitySubscription
+    summary: Create an entity subscription
+    description: Creates a new subscription for the specified entity.
+    tags:
+    - Entity Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/entity.yaml#/CreateEntitySubscriptionRequest
+    responses:
+      '200':
+        description: The created entity subscription.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntitySubscriptionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveEntitySubscription
+    summary: Retrieve an entity subscription
+    description: Returns a single entity subscription by its identifier.
+    tags:
+    - Entity Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntitySubscriptionIdParam
+    responses:
+      '200':
+        description: The requested entity subscription.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntitySubscriptionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deleteEntitySubscription
+    summary: Delete an entity subscription
+    description: Deletes an entity subscription by its identifier.
+    tags:
+    - Entity Subscriptions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntitySubscriptionIdParam
+    responses:
+      '200':
+        description: The deleted entity subscription.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntitySubscriptionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

@@ -1,0 +1,115 @@
+collection:
+  get:
+    operationId: listEntityAttributes
+    summary: List all entity attributes
+    description: Returns a list of attributes for the specified entity.
+    tags:
+    - Entity Attributes
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    - $ref: ../components/parameters/pagination.yaml#/FromDateParam
+    - $ref: ../components/parameters/pagination.yaml#/ToDateParam
+    responses:
+      '200':
+        description: A list of entity attributes.
+        headers:
+          $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityAttributeListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createEntityAttributes
+    summary: Create entity attributes
+    description: Creates a new attribute retrieval for the specified entity.
+    tags:
+    - Entity Attributes
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              attributes:
+                type: array
+                description: Specific attributes to request.
+                items:
+                  type: string
+    responses:
+      '200':
+        description: The created entity attribute.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityAttributeResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveEntityAttribute
+    summary: Retrieve an entity attribute
+    description: Returns a single entity attribute by its identifier.
+    tags:
+    - Entity Attributes
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/EntityAttributeIdParam
+    responses:
+      '200':
+        description: The requested entity attribute.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/entity.yaml#/EntityAttributeResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

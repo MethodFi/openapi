@@ -1,0 +1,106 @@
+collection:
+  get:
+    operationId: listAccountPayoffs
+    summary: List all account payoffs
+    description: Returns a list of payoff records for the specified account.
+    tags:
+    - Account Payoffs
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    responses:
+      '200':
+        description: A paginated list of account payoffs.
+        headers:
+          Pagination-Page:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page
+          Pagination-Page-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Count
+          Pagination-Page-Limit:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Limit
+          Pagination-Total-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Total-Count
+          Pagination-Page-Cursor-Prev:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Prev
+          Pagination-Page-Cursor-Next:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Next
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountPayoffListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createAccountPayoff
+    summary: Create an account payoff
+    description: Triggers a payoff sync for the specified account and returns the new payoff record.
+    tags:
+    - Account Payoffs
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    responses:
+      '200':
+        description: The newly created account payoff.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountPayoffResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveAccountPayoff
+    summary: Retrieve an account payoff
+    description: Retrieves an account payoff by its unique identifier.
+    tags:
+    - Account Payoffs
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountPayoffIdParam
+    responses:
+      '200':
+        description: The requested account payoff.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountPayoffResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

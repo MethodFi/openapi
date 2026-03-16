@@ -1,0 +1,180 @@
+collection:
+  get:
+    operationId: listAccountVerificationSessions
+    summary: List all account verification sessions
+    description: Returns a list of verification sessions for the specified account.
+    tags:
+    - Account Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    responses:
+      '200':
+        description: A paginated list of account verification sessions.
+        headers:
+          Pagination-Page:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page
+          Pagination-Page-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Count
+          Pagination-Page-Limit:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Limit
+          Pagination-Total-Count:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Total-Count
+          Pagination-Page-Cursor-Prev:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Prev
+          Pagination-Page-Cursor-Next:
+            $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Next
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountVerificationSessionListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createAccountVerificationSession
+    summary: Create an account verification session
+    description: Creates a new verification session for the specified account.
+    tags:
+    - Account Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml#/AccountVerificationSessionCreateRequest
+    responses:
+      '200':
+        description: The newly created account verification session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountVerificationSessionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveAccountVerificationSession
+    summary: Retrieve an account verification session
+    description: Retrieves an account verification session by its unique identifier.
+    tags:
+    - Account Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountVerificationSessionIdParam
+    responses:
+      '200':
+        description: The requested account verification session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountVerificationSessionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  put:
+    operationId: updateAccountVerificationSession
+    summary: Update an account verification session
+    description: Updates an account verification session, typically to submit micro deposit amounts for verification.
+    tags:
+    - Account Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountVerificationSessionIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml#/AccountVerificationSessionUpdateRequest
+    responses:
+      '200':
+        description: The updated account verification session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountVerificationSessionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+amounts:
+  get:
+    operationId: retrieveAccountVerificationSessionAmounts
+    summary: Retrieve verification session amounts
+    description: Retrieves the micro deposit amounts for a verification session.
+    tags:
+    - Account Verification Sessions
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    - $ref: ../components/parameters/path_ids.yaml#/AccountVerificationSessionIdParam
+    responses:
+      '200':
+        description: The verification session amounts.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/account.yaml#/AccountVerificationSessionAmountsResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

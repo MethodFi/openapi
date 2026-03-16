@@ -1,0 +1,10 @@
+name: Idempotency-Key
+in: header
+required: false
+description: |
+  Idempotency key for safely retrying a write request. Reuse the same value when
+  retrying the same logical operation to avoid creating duplicate side effects.
+schema:
+  type: string
+  format: uuid
+

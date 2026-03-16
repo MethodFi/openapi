@@ -1,0 +1,43 @@
+post:
+  operationId: simulateCreateEvent
+  summary: Simulate an event
+  description: |
+    Creates a simulated webhook event in the sandbox environment.
+    Use this to test webhook handling and event processing during development.
+
+    **Development only** - This endpoint is only available in the sandbox environment.
+  tags:
+    - Simulate Events
+  security:
+    - SecretKey: []
+  parameters:
+    - $ref: '../../components/parameters/method_version.yaml'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - type
+            - resource_id
+          properties:
+            type:
+              type: string
+              description: The event type to simulate (e.g., `payment.update`).
+            resource_id:
+              type: string
+              description: The identifier of the resource to associate with the event.
+  responses:
+    '200':
+      description: The simulated event.
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/event.yaml#/EventResponse'
+    '400':
+      $ref: '../../components/responses/error.yaml#/BadRequest'
+    '401':
+      $ref: '../../components/responses/error.yaml#/Unauthorized'
+    '500':
+      $ref: '../../components/responses/error.yaml#/InternalError'

@@ -1,0 +1,260 @@
+AccountIdParam:
+  name: accountId
+  in: path
+  required: true
+  description: Unique identifier for the account.
+  schema:
+    type: string
+    pattern: '^acc_\w+$'
+
+EntityIdParam:
+  name: entityId
+  in: path
+  required: true
+  description: Unique identifier for the entity.
+  schema:
+    type: string
+    pattern: '^ent_\w+$'
+
+PaymentIdParam:
+  name: paymentId
+  in: path
+  required: true
+  description: Unique identifier for the payment.
+  schema:
+    type: string
+    pattern: '^pmt_\w+$'
+
+WebhookIdParam:
+  name: webhookId
+  in: path
+  required: true
+  description: Unique identifier for the webhook.
+  schema:
+    type: string
+    pattern: '^whk_\w+$'
+
+EventIdParam:
+  name: evtId
+  in: path
+  required: true
+  description: Unique identifier for the event.
+  schema:
+    type: string
+    pattern: '^evt_\w+$'
+
+ConnectionIdParam:
+  name: connectionId
+  in: path
+  required: true
+  description: Unique identifier for the connection.
+  schema:
+    type: string
+    pattern: '^cxn_\w+$'
+
+MethodJwkIdParam:
+  name: jwk_id
+  in: path
+  required: true
+  description: Unique identifier for the Method public JWK.
+  schema:
+    type: string
+    pattern: '^mthd_jwk_\w+$'
+
+ReportIdParam:
+  name: reportId
+  in: path
+  required: true
+  description: Unique identifier for the report.
+  schema:
+    type: string
+    pattern: '^rpt_\w+$'
+
+ReversalIdParam:
+  name: reversalId
+  in: path
+  required: true
+  description: Unique identifier for the reversal.
+  schema:
+    type: string
+    pattern: '^rvs_\w+$'
+
+EntityAttributeIdParam:
+  name: attrId
+  in: path
+  required: true
+  description: Unique identifier for the entity attribute.
+  schema:
+    type: string
+    pattern: '^attr_\w+$'
+
+EntityConnectIdParam:
+  name: cxnId
+  in: path
+  required: true
+  description: Unique identifier for the entity connect session.
+  schema:
+    type: string
+    pattern: '^cxn_\w+$'
+
+EntityManualConnectIdParam:
+  name: mcxnId
+  in: path
+  required: true
+  description: Unique identifier for the entity manual connect session.
+  schema:
+    type: string
+    pattern: '^mcxn_\w+$'
+
+EntityCreditScoreIdParam:
+  name: crsId
+  in: path
+  required: true
+  description: Unique identifier for the entity credit score.
+  schema:
+    type: string
+    pattern: '^crs_\w+$'
+
+EntityIdentityIdParam:
+  name: idnId
+  in: path
+  required: true
+  description: Unique identifier for the entity identity.
+  schema:
+    type: string
+    pattern: '^idn_\w+$'
+
+EntityProductIdParam:
+  name: prdId
+  in: path
+  required: true
+  description: Unique identifier for the entity product.
+  schema:
+    type: string
+    pattern: '^prd_\w+$'
+
+EntitySubscriptionIdParam:
+  name: subId
+  in: path
+  required: true
+  description: Unique identifier for the entity subscription.
+  schema:
+    type: string
+    pattern: '^sub_\w+$'
+
+EntityVehicleIdParam:
+  name: vhlId
+  in: path
+  required: true
+  description: Unique identifier for the entity vehicle.
+  schema:
+    type: string
+    pattern: '^vhl_\w+$'
+
+EntityVerificationSessionIdParam:
+  name: evfId
+  in: path
+  required: true
+  description: Unique identifier for the entity verification session.
+  schema:
+    type: string
+    pattern: '^evf_\w+$'
+
+AccountAttributeIdParam:
+  name: accAttrId
+  in: path
+  required: true
+  description: Unique identifier for the account attribute.
+  schema:
+    type: string
+    pattern: '^acc_attr_\w+$'
+
+AccountBalanceIdParam:
+  name: balId
+  in: path
+  required: true
+  description: Unique identifier for the account balance.
+  schema:
+    type: string
+    pattern: '^bal_\w+$'
+
+AccountCardBrandIdParam:
+  name: cbrdId
+  in: path
+  required: true
+  description: Unique identifier for the account card brand.
+  schema:
+    type: string
+    pattern: '^cbrd_\w+$'
+
+AccountPaymentInstrumentIdParam:
+  name: pmtInsId
+  in: path
+  required: true
+  description: Unique identifier for the account payment instrument.
+  schema:
+    type: string
+    pattern: '^pmt_ins_\w+$'
+
+AccountPayoffIdParam:
+  name: pyfId
+  in: path
+  required: true
+  description: Unique identifier for the account payoff.
+  schema:
+    type: string
+    pattern: '^pyf_\w+$'
+
+AccountProductIdParam:
+  name: prdId
+  in: path
+  required: true
+  description: Unique identifier for the account product.
+  schema:
+    type: string
+    pattern: '^prd_\w+$'
+
+AccountSensitiveIdParam:
+  name: astvId
+  in: path
+  required: true
+  description: Unique identifier for the account sensitive record.
+  schema:
+    type: string
+    pattern: '^astv_\w+$'
+
+AccountSubscriptionIdParam:
+  name: subId
+  in: path
+  required: true
+  description: Unique identifier for the account subscription.
+  schema:
+    type: string
+    pattern: '^sub_\w+$'
+
+AccountTransactionIdParam:
+  name: accTxnId
+  in: path
+  required: true
+  description: Unique identifier for the account transaction.
+  schema:
+    type: string
+    pattern: '^acc_txn_\w+$'
+
+AccountUpdateIdParam:
+  name: updateId
+  in: path
+  required: true
+  description: Unique identifier for the account update.
+  schema:
+    type: string
+    pattern: '^upd_\w+$'
+
+AccountVerificationSessionIdParam:
+  name: avfId
+  in: path
+  required: true
+  description: Unique identifier for the account verification session.
+  schema:
+    type: string
+    pattern: '^avf_\w+$'

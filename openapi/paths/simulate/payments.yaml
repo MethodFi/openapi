@@ -1,0 +1,104 @@
+update_status:
+  post:
+    operationId: simulateUpdatePaymentStatus
+    summary: Simulate a payment status update
+    description: |
+      Updates the status of a payment in the sandbox environment.
+      Use this to test payment lifecycle and status transition flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Payments
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: paymentId
+        in: path
+        required: true
+        description: Unique identifier for the payment.
+        schema:
+          type: string
+          pattern: '^pmt_\w+$'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              status:
+                type: string
+                description: The status to transition the payment to.
+              error_code:
+                type: string
+                description: Error code for the simulated failure. Required when status is reversal_required, reversal_processing, or failed.
+    responses:
+      '200':
+        description: The payment with updated status.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/payment.yaml#/PaymentResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'
+
+payment_instrument:
+  post:
+    operationId: simulatePostPaymentViaPaymentInstrument
+    summary: Simulate a payment via payment instrument
+    description: |
+      Simulates posting a payment through a payment instrument in the sandbox environment.
+      Use this to test payment instrument flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+      This endpoint is available starting with API version `2025-12-01`.
+    tags:
+      - Simulate Payments
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: pmt_inst_id
+        in: path
+        required: true
+        description: Unique identifier for the payment instrument.
+        schema:
+          type: string
+          pattern: '^pmt_inst_\w+$'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - amount
+            properties:
+              amount:
+                type: integer
+                description: Payment amount in cents.
+                minimum: 1
+    responses:
+      '200':
+        description: The simulated payment result.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/payment.yaml#/PaymentResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'

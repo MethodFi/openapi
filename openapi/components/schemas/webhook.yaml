@@ -1,0 +1,177 @@
+Webhook:
+  type: object
+  required:
+  - id
+  - type
+  - url
+  - status
+  - expand_event
+  - error
+  - metadata
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the webhook.
+      example: whk_cSGjA6d9N8y8v
+    type:
+      $ref: '#/WebhookType'
+    url:
+      type: string
+      format: uri
+      description: URL to receive webhook events.
+      example: https://example.com/webhooks
+    status:
+      $ref: '#/WebhookStatus'
+    expand_event:
+      type: boolean
+      description: Whether to include the full resource data in the webhook payload.
+    error:
+      $ref: errors/webhook_errors.yaml#/WebhookResourceError
+    metadata:
+      $ref: common.yaml#/Metadata
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the webhook was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the webhook was last updated.
+WebhookStatus:
+  type: string
+  enum:
+  - active
+  - requires_attention
+  - disabled
+  - deleted
+WebhookType:
+  type: string
+  description: The event type this webhook subscribes to.
+  enum:
+  - payment.create
+  - payment.update
+  - account.create
+  - account.update
+  - account.opened
+  - account.closed
+  - account.balance_increased
+  - account.balance_decreased
+  - account.credit_limit_increased
+  - account.credit_limit_decreased
+  - account.number.update
+  - entity.create
+  - entity.update
+  - entity.new_accounts_pending_consent
+  - account_verification.create
+  - account_verification.update
+  - entity_verification_session.create
+  - entity_verification_session.update
+  - payment_reversal.create
+  - payment_reversal.update
+  - connection.create
+  - connection.update
+  - connect.create
+  - connect.available
+  - connect.update
+  - manual_connect.create
+  - manual_connect.update
+  - report.create
+  - report.update
+  - product.create
+  - product.update
+  - subscription.create
+  - subscription.update
+  - credit_score.create
+  - credit_score.update
+  - credit_score.available
+  - credit_score.increased
+  - credit_score.decreased
+  - payoff.create
+  - payoff.update
+  - balance.create
+  - balance.update
+  - identity.create
+  - identity.update
+  - account_verification_session.create
+  - account_verification_session.update
+  - card_brand.create
+  - card_brand.available
+  - card_brand.update
+  - payment_instrument.create
+  - payment_instrument.update
+  - sensitive.create
+  - sensitive.update
+  - update.create
+  - update.update
+  - attribute.create
+  - attribute.update
+  - entity_attribute.create
+  - entity_attribute.update
+  - account_attribute.create
+  - account_attribute.update
+  - transaction.create
+  - transaction.update
+  - entity_vehicle.create
+  - entity_vehicle.update
+  - method_jwk.create
+  - method_jwk.update
+WebhookCreateRequest:
+  type: object
+  required:
+  - type
+  - url
+  properties:
+    type:
+      $ref: '#/WebhookType'
+    url:
+      type: string
+      format: uri
+      description: URL to receive webhook events.
+    auth_token:
+      type: string
+      description: Authentication token to include in outbound webhook request headers. This value is write-only.
+      writeOnly: true
+    hmac_secret:
+      type: string
+      description: HMAC secret used to sign outbound webhook deliveries. This value is write-only.
+      writeOnly: true
+    expand_event:
+      type: boolean
+      description: Whether to include the full resource data in the webhook payload.
+    metadata:
+      $ref: common.yaml#/Metadata
+WebhookUpdateRequest:
+  type: object
+  required:
+  - status
+  properties:
+    status:
+      $ref: '#/WebhookStatus'
+WebhookResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/Webhook'
+WebhookListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/Webhook'
+WebhookDeleteResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        type:
+        - object
+        - 'null'
+        example: null

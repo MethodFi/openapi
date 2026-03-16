@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  validate:
+    name: Lint, Bundle & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint OpenAPI spec
+        run: pnpm lint
+
+      - name: Bundle OpenAPI spec
+        run: pnpm bundle
+
+      - name: Generate and validate route manifests
+        run: pnpm routes
+
+      - name: SDK smoke test
+        run: pnpm sdk:smoke
+
+      - name: Check bundled specs are up to date
+        run: |
+          git diff --exit-code latest/ manifests/ || {
+            echo "::error::Bundled specs or manifests are out of date. Run 'pnpm check' and commit the changes."
+            exit 1
+          }

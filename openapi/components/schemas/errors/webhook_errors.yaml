@@ -1,0 +1,51 @@
+WebhookResourceError:
+  type:
+  - object
+  - 'null'
+  description: Error details when a webhook is disabled or requires attention.
+  required:
+  - type
+  - code
+  - sub_type
+  - message
+  properties:
+    type:
+      type: string
+      description: The category of webhook error.
+      enum:
+      - WEBHOOK_DISABLED
+      - WEBHOOK_REQUIRES_ATTENTION
+    code:
+      type: integer
+      description: Numeric error code (25XXX range).
+      enum:
+      - 25001
+      - 25002
+      - 25003
+      - 25004
+      - 25005
+      - 25006
+      - 25007
+      - 25008
+      - 25009
+    sub_type:
+      type: string
+      description: Specific webhook error classification.
+      enum:
+      - WEBHOOK_DISABLED_FAILED_OTHER
+      - WEBHOOK_DISABLED_RECEIVED_4XX_ERROR
+      - WEBHOOK_DISABLED_RECEIVED_5XX_ERROR
+      - WEBHOOK_DISABLED_TIMEOUT_ON_RESPONSE
+      - WEBHOOK_DISABLED_BY_USER
+      - WEBHOOK_REQUIRES_ATTENTION_FAILED_OTHER
+      - WEBHOOK_REQUIRES_ATTENTION_RECEIVED_4XX_ERROR
+      - WEBHOOK_REQUIRES_ATTENTION_RECEIVED_5XX_ERROR
+      - WEBHOOK_REQUIRES_ATTENTION_TIMEOUT_ON_RESPONSE
+    message:
+      type: string
+      description: Human-readable error description.
+  example:
+    type: WEBHOOK_DISABLED
+    code: 25002
+    sub_type: WEBHOOK_DISABLED_RECEIVED_4XX_ERROR
+    message: Webhook failed 25 times with a client error (4XX type).

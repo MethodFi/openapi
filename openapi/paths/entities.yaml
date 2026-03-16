@@ -1,0 +1,259 @@
+collection:
+  get:
+    operationId: listEntities
+    summary: List all entities
+    description: Returns a paginated list of entities.
+    tags:
+      - Entities
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/pagination.yaml#/PageParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageLimitParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageCursorParam'
+      - $ref: '../components/parameters/pagination.yaml#/FromDateParam'
+      - $ref: '../components/parameters/pagination.yaml#/ToDateParam'
+      - name: status
+        in: query
+        required: false
+        description: Filter entities by status.
+        schema:
+          type: string
+          enum:
+            - active
+            - incomplete
+            - disabled
+      - name: type
+        in: query
+        required: false
+        description: Filter entities by type.
+        schema:
+          type: string
+          enum:
+            - individual
+            - corporation
+      - name: name
+        in: query
+        required: false
+        description: Filter entities by their name.
+        schema:
+          type: string
+      - $ref: '../components/parameters/expand_entities.yaml'
+    responses:
+      '200':
+        description: A list of entities.
+        headers:
+          $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders'
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/entity.yaml#/EntityListResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+  post:
+    operationId: createEntity
+    summary: Create an entity
+    description: Creates a new entity.
+    tags:
+      - Entities
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/entity.yaml#/CreateEntityRequest'
+          examples:
+            individual:
+              summary: Create an individual entity
+              value:
+                type: individual
+                individual:
+                  first_name: Jane
+                  last_name: Doe
+                  phone: '+15125550123'
+                  email: jane@example.com
+                  dob: '1990-05-21'
+                address:
+                  line1: 123 Main St
+                  line2: null
+                  city: Austin
+                  state: TX
+                  zip: '78701'
+                metadata:
+                  customer_reference: ent-001
+            corporation:
+              summary: Create a corporation entity
+              value:
+                type: corporation
+                corporation:
+                  name: Example Holdings LLC
+                  dba: Example
+                  ein: '123456789'
+                address:
+                  line1: 500 Market St
+                  line2: Suite 200
+                  city: San Francisco
+                  state: CA
+                  zip: '94105'
+    responses:
+      '200':
+        description: The created entity.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/entity.yaml#/EntityResponse'
+            example:
+              success: true
+              data:
+                id: ent_au22b1fbFJbp8
+                type: individual
+                individual:
+                  first_name: Jane
+                  last_name: Doe
+                  phone: '+15125550123'
+                  email: jane@example.com
+                  dob: '1990-05-21'
+                corporation: null
+                receive_only: null
+                address:
+                  line1: 123 Main St
+                  line2: null
+                  city: Austin
+                  state: TX
+                  zip: '78701'
+                capabilities: []
+                available_capabilities:
+                  - payments:send
+                  - payments:receive
+                pending_capabilities: []
+                status: active
+                verification: null
+                error: null
+                metadata:
+                  customer_reference: ent-001
+                products: []
+                restricted_products: []
+                subscriptions: []
+                available_subscriptions: []
+                restricted_subscriptions: []
+                connect: null
+                credit_score: null
+                attribute: null
+                vehicle: null
+                created_at: '2026-01-15T18:30:00.000Z'
+                updated_at: '2026-01-15T18:30:00.000Z'
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+individual:
+  get:
+    operationId: retrieveEntity
+    summary: Retrieve an entity
+    description: Returns a single entity by its identifier.
+    tags:
+      - Entities
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/EntityIdParam'
+      - $ref: '../components/parameters/expand_entities.yaml'
+    responses:
+      '200':
+        description: The requested entity.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/entity.yaml#/EntityResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+  put:
+    operationId: updateEntity
+    summary: Update an entity
+    description: Updates an existing entity.
+    tags:
+      - Entities
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/EntityIdParam'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/entity.yaml#/UpdateEntityRequest'
+          examples:
+            individual:
+              summary: Update an individual entity
+              value:
+                individual:
+                  phone: '+15125550124'
+                  email: jane.doe@example.com
+                metadata:
+                  crm_status: verified
+            corporation:
+              summary: Update a corporation entity
+              value:
+                corporation:
+                  dba: Example Finance
+    responses:
+      '200':
+        description: The updated entity.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/entity.yaml#/EntityResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '403':
+        $ref: '../components/responses/error.yaml#/Forbidden'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'

@@ -1,0 +1,29 @@
+PaginationHeaders:
+  Pagination-Page:
+    description: Current page number.
+    schema:
+      type: integer
+  Pagination-Page-Count:
+    description: Total number of pages.
+    schema:
+      type: integer
+  Pagination-Page-Limit:
+    description: Number of items per page.
+    schema:
+      type: integer
+  Pagination-Total-Count:
+    description: Total number of items across all pages.
+    schema:
+      type: integer
+  Pagination-Page-Cursor-Prev:
+    description: Cursor for the previous page, if available.
+    schema:
+      type:
+      - string
+      - 'null'
+  Pagination-Page-Cursor-Next:
+    description: Cursor for the next page, if available.
+    schema:
+      type:
+      - string
+      - 'null'

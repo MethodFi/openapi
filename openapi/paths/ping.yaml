@@ -1,0 +1,42 @@
+get:
+  operationId: ping
+  summary: Health check
+  description: Returns a simple health check response for authenticated API clients.
+  tags:
+  - Ping
+  parameters:
+  - $ref: ../components/parameters/method_version.yaml
+  responses:
+    '200':
+      description: Successful health check.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - success
+            - data
+            - message
+            properties:
+              success:
+                type: boolean
+                enum:
+                - true
+              data:
+                type: string
+                enum:
+                - pong
+              message:
+                type:
+                - string
+                - 'null'
+          example:
+            success: true
+            data: pong
+            message: null
+    '401':
+      $ref: ../components/responses/error.yaml#/Unauthorized
+    '429':
+      $ref: ../components/responses/error.yaml#/RateLimited
+    '500':
+      $ref: ../components/responses/error.yaml#/InternalError

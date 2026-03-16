@@ -1,0 +1,340 @@
+collection:
+  get:
+    operationId: listAccounts
+    summary: List all accounts
+    description: Returns a paginated list of accounts. Results can be filtered by status, type, holder, and date range.
+    tags:
+      - Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/pagination.yaml#/PageParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageLimitParam'
+      - $ref: '../components/parameters/pagination.yaml#/PageCursorParam'
+      - $ref: '../components/parameters/pagination.yaml#/FromDateParam'
+      - $ref: '../components/parameters/pagination.yaml#/ToDateParam'
+      - name: status
+        in: query
+        required: false
+        description: Filter accounts by status.
+        schema:
+          type: string
+          enum:
+            - active
+            - disabled
+      - name: type
+        in: query
+        required: false
+        description: Filter accounts by type.
+        schema:
+          type: string
+          enum:
+            - ach
+            - liability
+            - clearing
+            - debit_card
+      - name: consent_status
+        in: query
+        required: false
+        description: Filter accounts by consent status.
+        schema:
+          type: string
+          enum:
+            - pending
+            - withdrawn
+            - approved
+      - name: holder_id
+        in: query
+        required: false
+        description: Filter accounts by the entity ID that owns them.
+        schema:
+          type: string
+          pattern: '^ent_\w+$'
+      - name: holder_ids
+        in: query
+        required: false
+        description: Filter accounts by one or more entity IDs.
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            pattern: '^ent_\w+$'
+      - name: include_pending_consent
+        in: query
+        required: false
+        description: Include accounts that are still pending consent.
+        schema:
+          type: boolean
+      - name: liability.mch_id
+        in: query
+        required: false
+        description: Filter liability accounts by merchant ID.
+        schema:
+          type: string
+          pattern: '^mch_\w+$'
+      - name: liability.type
+        in: query
+        required: false
+        description: Filter liability accounts by liability type.
+        schema:
+          type: string
+          enum:
+            - credit_card
+            - auto_loan
+            - mortgage
+            - personal_loan
+            - student_loan
+            - student_loans
+            - collection
+            - credit_builder
+            - insurance
+            - loan
+            - medical
+            - utility
+            - bnpl
+            - fintech
+      - name: liability.ownership
+        in: query
+        required: false
+        description: Filter liability accounts by ownership type.
+        schema:
+          type: string
+          enum:
+            - primary
+            - authorized
+            - joint
+            - unknown
+      - $ref: '../components/parameters/expand_accounts.yaml'
+    responses:
+      '200':
+        description: A paginated list of accounts.
+        headers:
+          Pagination-Page:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page'
+          Pagination-Page-Count:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Count'
+          Pagination-Page-Limit:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Limit'
+          Pagination-Total-Count:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Total-Count'
+          Pagination-Page-Cursor-Prev:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Prev'
+          Pagination-Page-Cursor-Next:
+            $ref: '../components/responses/pagination_headers.yaml#/PaginationHeaders/Pagination-Page-Cursor-Next'
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/account.yaml#/AccountListResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+  post:
+    operationId: createAccount
+    summary: Create an account
+    description: Creates a new account for the specified entity. The request body must include exactly one of `ach`, `liability`, `clearing`, or `debit_card` to determine the account type.
+    tags:
+      - Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/account.yaml#/AccountCreateRequest'
+          examples:
+            ach:
+              summary: Create an ACH account
+              value:
+                type: ach
+                holder_id: ent_au22b1fbFJbp8
+                ach:
+                  routing: '111000025'
+                  number: '000123456789'
+                  type: checking
+                metadata:
+                  customer_reference: acct-001
+            liability:
+              summary: Create a liability account
+              value:
+                type: liability
+                holder_id: ent_au22b1fbFJbp8
+                liability:
+                  mch_id: mch_4c1j9e4t4R8Qd
+                  account_number: '4111111111111111'
+                metadata:
+                  portfolio: cards
+            debit_card:
+              summary: Create a debit card account
+              value:
+                type: debit_card
+                holder_id: ent_au22b1fbFJbp8
+                debit_card:
+                  number: '4111111111111111'
+                  exp_month: '12'
+                  exp_year: 2028
+                  cvv: '123'
+                  billing_zip_code: '78701'
+    responses:
+      '200':
+        description: The newly created account.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/account.yaml#/AccountResponse'
+            example:
+              success: true
+              data:
+                id: acc_b9q2XVAnNFbp3
+                holder_id: ent_au22b1fbFJbp8
+                type: ach
+                status: active
+                consent_status: approved
+                ach:
+                  routing: '111000025'
+                  number: '000123456789'
+                  type: checking
+                liability: null
+                clearing: null
+                debit_card: null
+                capabilities: []
+                available_capabilities:
+                  - payments:send
+                  - payments:receive
+                error: null
+                metadata:
+                  customer_reference: acct-001
+                products: []
+                restricted_products: []
+                subscriptions: []
+                available_subscriptions: []
+                restricted_subscriptions: []
+                latest_verification_session: null
+                balance: null
+                payoff: null
+                payment_instrument: null
+                card_brand: null
+                update: null
+                attribute: null
+                sensitive: null
+                created_at: '2026-01-15T18:30:00.000Z'
+                updated_at: '2026-01-15T18:30:00.000Z'
+              message: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+individual:
+  get:
+    operationId: retrieveAccount
+    summary: Retrieve an account
+    description: Retrieves an account by its unique identifier.
+    tags:
+      - Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/AccountIdParam'
+      - $ref: '../components/parameters/expand_accounts.yaml'
+    responses:
+      '200':
+        description: The requested account.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/account.yaml#/AccountResponse'
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
+
+  put:
+    operationId: updateAccount
+    summary: Update an account
+    description: Updates an account's metadata or liability account number.
+    tags:
+      - Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../components/parameters/method_version.yaml'
+      - $ref: '../components/parameters/path_ids.yaml#/AccountIdParam'
+      - $ref: '../components/parameters/idempotency_key.yaml'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/account.yaml#/AccountUpdateRequest'
+          examples:
+            metadata:
+              summary: Update account metadata
+              value:
+                metadata:
+                  servicing_tier: gold
+            liability:
+              summary: Update a liability account number
+              value:
+                liability:
+                  credit_card:
+                    number: '5555444433331111'
+    responses:
+      '200':
+        description: Account updated successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [success, data, message]
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  type: 'null'
+                  example: null
+                message:
+                  type: ['null', string]
+                  example: null
+      '400':
+        $ref: '../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../components/responses/error.yaml#/InternalError'
