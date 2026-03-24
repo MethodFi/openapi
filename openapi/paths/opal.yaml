@@ -1,0 +1,104 @@
+token:
+  get:
+    operationId: retrieveOpalToken
+    summary: Retrieve an Opal session
+    description: Returns the current state of the Opal session associated with the authenticated token.
+    tags:
+    - Opal
+    security:
+    - OpalToken: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    responses:
+      '200':
+        description: The current session state.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/opal.yaml#/OpalSessionResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createOpalToken
+    summary: Create an Opal token
+    description: >-
+      Creates a new Opal token and, depending on the creation pattern, a new session.
+      Supports three patterns: (A) provide `entity_id` + `mode` + mode config,
+      (B) provide inline `entity` + `mode` + mode config, or (C) provide `session_id`
+      to create an additional token for an existing session.
+    tags:
+    - Opal
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/opal.yaml#/OpalTokenCreateRequest
+          example:
+            entity_id: ent_au22b1fbFJbp8
+            mode: card_connect
+            card_connect:
+              selection_type: single
+    responses:
+      '200':
+        description: The created Opal token.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/opal.yaml#/OpalTokenResponse
+            example:
+              success: true
+              data:
+                token: otkn_yVf8MKZcGj3a9P2xLwR7nT
+                session_id: osess_4kR8mNpL2xQvW7jY
+                valid_until: '2026-03-14T19:30:00.000Z'
+              message: null
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deactivateOpalToken
+    summary: Deactivate an Opal token
+    description: Deactivates the authenticated Opal token, preventing further use.
+    tags:
+    - Opal
+    security:
+    - OpalToken: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    responses:
+      '200':
+        description: Token deactivated successfully.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/opal.yaml#/OpalNullResponse
+            example:
+              success: true
+              data: null
+              message: null
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

@@ -1,3 +1,10 @@
+OpalToken:
+  type: http
+  scheme: bearer
+  description: |
+    Opal token authentication for Opal session endpoints. Use an Opal token (`otkn_...`)
+    as the Bearer token. Created via POST /opal/token using a secret key.
+
 SecretKey:
   type: http
   scheme: bearer

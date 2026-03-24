@@ -101,6 +101,10 @@ tags:
   description: Sandbox event simulation
 - name: Simulate Payments
   description: Sandbox payment simulation
+- name: Opal
+  description: Opal client-side session and token management
+- name: Elements
+  description: Client-side Element endpoints
 paths:
   /.well-known/jwks.json:
     $ref: paths/well_known.yaml
@@ -270,6 +274,16 @@ paths:
     $ref: paths/simulate/payments.yaml#/update_status
   /simulate/payments/payment_instruments/{pmt_inst_id}:
     $ref: paths/simulate/payments.yaml#/payment_instrument
+  /opal/token:
+    $ref: paths/opal.yaml#/token
+  /elements/token:
+    $ref: paths/elements/sk.yaml#/create_token
+  /elements/token/{pk_elem_id}/results:
+    $ref: paths/elements/sk.yaml#/session_results
+  /elements/sessions/{session_id}:
+    $ref: paths/elements/sk.yaml#/sessions
+  /elements/accounts/exchange:
+    $ref: paths/elements/sk.yaml#/exchange_account
 components:
   securitySchemes:
     $ref: components/security_schemes.yaml
