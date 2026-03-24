@@ -172,6 +172,26 @@
     "path": "/card_products/{product_id}"
   },
   {
+    "method": "POST",
+    "path": "/elements/accounts/exchange"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/sessions/{session_id}"
+  },
+  {
+    "method": "PUT",
+    "path": "/elements/sessions/{session_id}"
+  },
+  {
+    "method": "POST",
+    "path": "/elements/token"
+  },
+  {
+    "method": "GET",
+    "path": "/elements/token/{pk_elem_id}/results"
+  },
+  {
     "method": "GET",
     "path": "/entities"
   },
@@ -334,6 +354,18 @@
   {
     "method": "GET",
     "path": "/merchants/{mchId}"
+  },
+  {
+    "method": "DELETE",
+    "path": "/opal/token"
+  },
+  {
+    "method": "GET",
+    "path": "/opal/token"
+  },
+  {
+    "method": "POST",
+    "path": "/opal/token"
   },
   {
     "method": "GET",
