@@ -20,26 +20,16 @@ EntityBase:
   required:
   - id
   - type
-  - individual
-  - corporation
-  - receive_only
-  - address
   - capabilities
   - available_capabilities
   - pending_capabilities
   - status
   - verification
-  - error
-  - metadata
   - products
   - restricted_products
   - subscriptions
   - available_subscriptions
   - restricted_subscriptions
-  - connect
-  - credit_score
-  - attribute
-  - vehicle
   - created_at
   - updated_at
   properties:

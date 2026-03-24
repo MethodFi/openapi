@@ -12167,9 +12167,7 @@
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "description": "Always `false` for error responses."
           },
           "data": {
             "type": "object",
@@ -12198,9 +12196,7 @@
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "description": "Always `true` for successful responses."
           },
           "data": {
             "description": "Operation-specific response payload."
@@ -12288,9 +12284,7 @@
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "description": "Always `true` for successful responses."
           },
           "data": {
             "description": "Operation-specific list payload."
@@ -13485,27 +13479,13 @@
           "type",
           "status",
           "consent_status",
-          "ach",
-          "liability",
-          "clearing",
-          "debit_card",
           "capabilities",
           "available_capabilities",
-          "error",
-          "metadata",
           "products",
           "restricted_products",
           "subscriptions",
           "available_subscriptions",
           "restricted_subscriptions",
-          "latest_verification_session",
-          "balance",
-          "payoff",
-          "payment_instrument",
-          "card_brand",
-          "update",
-          "attribute",
-          "sensitive",
           "created_at",
           "updated_at"
         ],
@@ -16361,26 +16341,16 @@
         "required": [
           "id",
           "type",
-          "individual",
-          "corporation",
-          "receive_only",
-          "address",
           "capabilities",
           "available_capabilities",
           "pending_capabilities",
           "status",
           "verification",
-          "error",
-          "metadata",
           "products",
           "restricted_products",
           "subscriptions",
           "available_subscriptions",
           "restricted_subscriptions",
-          "connect",
-          "credit_score",
-          "attribute",
-          "vehicle",
           "created_at",
           "updated_at"
         ],
@@ -18273,24 +18243,11 @@
         "description": "A Payment represents a transfer of funds between two accounts.",
         "required": [
           "id",
-          "reversal_id",
-          "source_trace_id",
-          "destination_trace_id",
           "source",
           "destination",
           "amount",
-          "description",
           "status",
-          "estimated_completion_date",
-          "source_settlement_date",
-          "destination_settlement_date",
-          "source_status",
-          "destination_status",
-          "destination_payment_method",
-          "fee",
           "type",
-          "error",
-          "metadata",
           "created_at",
           "updated_at"
         ],

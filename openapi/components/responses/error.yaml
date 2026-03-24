@@ -60,8 +60,7 @@ ErrorEnvelope:
   properties:
     success:
       type: boolean
-      enum:
-      - false
+      description: Always `false` for error responses.
     data:
       type: object
       required:

@@ -8,8 +8,7 @@ SuccessEnvelope:
   properties:
     success:
       type: boolean
-      enum:
-      - true
+      description: Always `true` for successful responses.
     data:
       description: Operation-specific response payload.
     message:
@@ -30,8 +29,7 @@ ListEnvelope:
   properties:
     success:
       type: boolean
-      enum:
-      - true
+      description: Always `true` for successful responses.
     data:
       description: Operation-specific list payload.
     message:
