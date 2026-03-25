@@ -3,24 +3,11 @@ Payment:
   description: A Payment represents a transfer of funds between two accounts.
   required:
   - id
-  - reversal_id
-  - source_trace_id
-  - destination_trace_id
   - source
   - destination
   - amount
-  - description
   - status
-  - estimated_completion_date
-  - source_settlement_date
-  - destination_settlement_date
-  - source_status
-  - destination_status
-  - destination_payment_method
-  - fee
   - type
-  - error
-  - metadata
   - created_at
   - updated_at
   properties:

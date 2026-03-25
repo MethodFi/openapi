@@ -256,12 +256,6 @@ paths:
     $ref: paths/webhooks.yaml#/collection
   /webhooks/{webhookId}:
     $ref: paths/webhooks.yaml#/individual
-  /opal/token:
-    $ref: paths/opal.yaml#/token
-  /opal/token/{flow_type}/{operation}:
-    $ref: paths/opal.yaml#/token_update
-  /opal/events:
-    $ref: paths/opal.yaml#/events
   /simulate/accounts/{accountId}/verification_sessions/{avfId}/amounts:
     $ref: paths/simulate/accounts.yaml#/verification_amounts
   /simulate/accounts/{accountId}/transactions:
@@ -280,6 +274,8 @@ paths:
     $ref: paths/simulate/payments.yaml#/update_status
   /simulate/payments/payment_instruments/{pmt_inst_id}:
     $ref: paths/simulate/payments.yaml#/payment_instrument
+  /opal/token:
+    $ref: paths/opal.yaml#/token
   /elements/token:
     $ref: paths/elements/sk.yaml#/create_token
   /elements/token/{pk_elem_id}/results:
@@ -288,70 +284,6 @@ paths:
     $ref: paths/elements/sk.yaml#/sessions
   /elements/accounts/exchange:
     $ref: paths/elements/sk.yaml#/exchange_account
-  /elements/config:
-    $ref: paths/elements/pk.yaml#/config
-  /elements/config/{pk_elem_id}:
-    $ref: paths/elements/pk.yaml#/config_by_id
-  /elements/entities/me:
-    $ref: paths/elements/pk.yaml#/entity_me
-  /elements/entities/me/init_mno_verification:
-    $ref: paths/elements/pk.yaml#/init_mno_verification
-  /elements/accounts:
-    $ref: paths/elements/pk.yaml#/accounts
-  /elements/accounts/{accountId}:
-    $ref: paths/elements/pk.yaml#/account_by_id
-  /elements/accounts/{accountId}/details:
-    $ref: paths/elements/pk.yaml#/account_details
-  /elements/accounts/{accountId}/transaction_stream:
-    $ref: paths/elements/pk.yaml#/transaction_stream
-  /elements/account_verification/accounts/{accountId}/avf_sessions/{avfId}:
-    $ref: paths/elements/pk.yaml#/avf_session_update
-  /elements/account_verification/avf_sessions/bulk_generate:
-    $ref: paths/elements/pk.yaml#/avf_bulk_generate
-  /elements/auth/accounts:
-    $ref: paths/elements/pk.yaml#/auth_accounts
-  /elements/auth/accounts/consent:
-    $ref: paths/elements/pk.yaml#/auth_accounts_consent
-  /elements/auth/accounts_with_updatable_numbers:
-    $ref: paths/elements/pk.yaml#/auth_updatable_numbers
-  /elements/auth/accounts_with_updatable_numbers/{accountId}:
-    $ref: paths/elements/pk.yaml#/auth_updatable_number_update
-  /elements/auth/entities:
-    $ref: paths/elements/pk.yaml#/auth_entities
-  /elements/auth/entities/phone_verification:
-    $ref: paths/elements/pk.yaml#/auth_phone_verification
-  /elements/auth/entities/session:
-    $ref: paths/elements/pk.yaml#/auth_entity_session
-  /elements/auth/mortgages_with_missing_address:
-    $ref: paths/elements/pk.yaml#/auth_mortgages
-  /elements/auth/mortgages_with_missing_address/{accountId}:
-    $ref: paths/elements/pk.yaml#/auth_mortgage_update
-  /elements/balance_transfer/accounts:
-    $ref: paths/elements/pk.yaml#/balance_transfer_accounts
-  /elements/balance_transfer/auth_token:
-    $ref: paths/elements/pk.yaml#/balance_transfer_auth_token
-  /elements/balance_transfer/session:
-    $ref: paths/elements/pk.yaml#/balance_transfer_session
-  /elements/connect/generate_next_step_token:
-    $ref: paths/elements/pk.yaml#/connect_next_step_token
-  /elements/connect/set_element_complete:
-    $ref: paths/elements/pk.yaml#/connect_set_complete
-  /elements/events:
-    $ref: paths/elements/pk.yaml#/events
-  /elements/link/credentials:
-    $ref: paths/elements/pk.yaml#/link_credentials
-  /elements/merchants:
-    $ref: paths/elements/pk.yaml#/merchants
-  /elements/merchants/{mchId}:
-    $ref: paths/elements/pk.yaml#/merchant_by_id
-  /elements/merchants_parents:
-    $ref: paths/elements/pk.yaml#/merchants_parents
-  /elements/transfer:
-    $ref: paths/elements/pk.yaml#/transfer
-  /elements/transfer/accounts/exchange:
-    $ref: paths/elements/pk.yaml#/transfer_exchange
-  /elements/token/revoke:
-    $ref: paths/elements/pk.yaml#/token_revoke
 components:
   securitySchemes:
     $ref: components/security_schemes.yaml

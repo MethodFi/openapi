@@ -172,144 +172,8 @@
     "path": "/card_products/{product_id}"
   },
   {
-    "method": "PUT",
-    "path": "/elements/account_verification/accounts/{accountId}/avf_sessions/{avfId}"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/account_verification/avf_sessions/bulk_generate"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/accounts"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/accounts"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/accounts/{accountId}"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/accounts/{accountId}"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/accounts/{accountId}/details"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/accounts/{accountId}/transaction_stream"
-  },
-  {
     "method": "POST",
     "path": "/elements/accounts/exchange"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/auth/accounts"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/auth/accounts_with_updatable_numbers"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/auth/accounts_with_updatable_numbers/{accountId}"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/auth/accounts/consent"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/auth/accounts/consent"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/auth/entities"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/auth/entities/phone_verification"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/auth/entities/phone_verification"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/auth/entities/session"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/auth/entities/session"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/auth/mortgages_with_missing_address"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/auth/mortgages_with_missing_address/{accountId}"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/balance_transfer/accounts"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/balance_transfer/auth_token"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/balance_transfer/session"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/config"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/config/{pk_elem_id}"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/connect/generate_next_step_token"
-  },
-  {
-    "method": "PUT",
-    "path": "/elements/connect/set_element_complete"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/entities/me"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/entities/me/init_mno_verification"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/events"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/link/credentials"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/merchants"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/merchants_parents"
-  },
-  {
-    "method": "GET",
-    "path": "/elements/merchants/{mchId}"
   },
   {
     "method": "GET",
@@ -326,18 +190,6 @@
   {
     "method": "GET",
     "path": "/elements/token/{pk_elem_id}/results"
-  },
-  {
-    "method": "DELETE",
-    "path": "/elements/token/revoke"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/transfer"
-  },
-  {
-    "method": "POST",
-    "path": "/elements/transfer/accounts/exchange"
   },
   {
     "method": "GET",
@@ -504,14 +356,6 @@
     "path": "/merchants/{mchId}"
   },
   {
-    "method": "GET",
-    "path": "/opal/events"
-  },
-  {
-    "method": "POST",
-    "path": "/opal/events"
-  },
-  {
     "method": "DELETE",
     "path": "/opal/token"
   },
@@ -522,10 +366,6 @@
   {
     "method": "POST",
     "path": "/opal/token"
-  },
-  {
-    "method": "PUT",
-    "path": "/opal/token/{flow_type}/{operation}"
   },
   {
     "method": "GET",

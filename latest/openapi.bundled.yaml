@@ -5018,234 +5018,6 @@ paths:
           $ref: '#/components/responses/RateLimited'
         '500':
           $ref: '#/components/responses/InternalError'
-  /opal/token:
-    get:
-      operationId: retrieveOpalToken
-      summary: Retrieve an Opal session
-      description: Returns the current state of the Opal session associated with the authenticated token.
-      tags:
-        - Opal
-      security:
-        - OpalToken: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: The current session state.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpalSessionResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    post:
-      operationId: createOpalToken
-      summary: Create an Opal token
-      description: 'Creates a new Opal token and, depending on the creation pattern, a new session. Supports three patterns: (A) provide `entity_id` + `mode` + mode config, (B) provide inline `entity` + `mode` + mode config, or (C) provide `session_id` to create an additional token for an existing session.'
-      tags:
-        - Opal
-      security:
-        - SecretKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OpalTokenCreateRequest'
-            example:
-              entity_id: ent_au22b1fbFJbp8
-              mode: card_connect
-              card_connect:
-                selection_type: single
-      responses:
-        '200':
-          description: The created Opal token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpalTokenResponse'
-              example:
-                success: true
-                data:
-                  token: otkn_yVf8MKZcGj3a9P2xLwR7nT
-                  session_id: osess_4kR8mNpL2xQvW7jY
-                  valid_until: '2026-03-14T19:30:00.000Z'
-                message: null
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '422':
-          $ref: '#/components/responses/UnprocessableEntity'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    delete:
-      operationId: deactivateOpalToken
-      summary: Deactivate an Opal token
-      description: Deactivates the authenticated Opal token, preventing further use.
-      tags:
-        - Opal
-      security:
-        - OpalToken: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: Token deactivated successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpalNullResponse'
-              example:
-                success: true
-                data: null
-                message: null
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /opal/token/{flow_type}/{operation}:
-    put:
-      operationId: updateOpalToken
-      summary: Execute an Opal flow operation
-      description: Executes an operation within a specific flow of the Opal session. The flow type and operation determine which step of the workflow is advanced.
-      tags:
-        - Opal
-      security:
-        - OpalToken: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: flow_type
-          in: path
-          required: true
-          description: The flow type to operate on.
-          schema:
-            type: string
-            enum:
-              - idv
-              - cxn
-              - avf
-              - txn
-        - name: operation
-          in: path
-          required: true
-          description: The operation to execute within the flow.
-          schema:
-            type: string
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OpalTokenUpdateRequest'
-            example:
-              data: {}
-      responses:
-        '200':
-          description: The updated session state.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpalSessionResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '422':
-          $ref: '#/components/responses/UnprocessableEntity'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /opal/events:
-    post:
-      operationId: createOpalEvents
-      summary: Record Opal events
-      description: Records one or more events for the current Opal session. Events are used to track user interactions within the Opal client.
-      tags:
-        - Opal
-      security:
-        - OpalToken: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OpalEventCreateRequest'
-            example:
-              events:
-                - action: card_connect.flow.started
-                  metadata: {}
-      responses:
-        '200':
-          description: Events recorded successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpalNullResponse'
-              example:
-                success: true
-                data: null
-                message: null
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    get:
-      operationId: listOpalEvents
-      summary: List Opal events
-      description: Returns all non-internal events for the current Opal session.
-      tags:
-        - Opal
-      security:
-        - OpalToken: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: A list of session events.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpalEventListResponse'
-              example:
-                success: true
-                data:
-                  - type: card_connect.flow.started
-                    mode: card_connect
-                    object: flow
-                    action: started
-                    timestamp: '2026-03-14T19:00:00.000Z'
-                    data: null
-                message: null
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '500':
-          $ref: '#/components/responses/InternalError'
   /simulate/accounts/{accountId}/verification_sessions/{avfId}/amounts:
     get:
       operationId: simulateRetrieveVerificationAmounts
@@ -5665,6 +5437,106 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalError'
+  /opal/token:
+    get:
+      operationId: retrieveOpalToken
+      summary: Retrieve an Opal session
+      description: Returns the current state of the Opal session associated with the authenticated token.
+      tags:
+        - Opal
+      security:
+        - OpalToken: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+      responses:
+        '200':
+          description: The current session state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpalSessionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      operationId: createOpalToken
+      summary: Create an Opal token
+      description: 'Creates a new Opal token and, depending on the creation pattern, a new session. Supports three patterns: (A) provide `entity_id` + `mode` + mode config, (B) provide inline `entity` + `mode` + mode config, or (C) provide `session_id` to create an additional token for an existing session.'
+      tags:
+        - Opal
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpalTokenCreateRequest'
+            example:
+              entity_id: ent_au22b1fbFJbp8
+              mode: card_connect
+              card_connect:
+                selection_type: single
+      responses:
+        '200':
+          description: The created Opal token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpalTokenResponse'
+              example:
+                success: true
+                data:
+                  token: otkn_yVf8MKZcGj3a9P2xLwR7nT
+                  session_id: osess_4kR8mNpL2xQvW7jY
+                  valid_until: '2026-03-14T19:30:00.000Z'
+                message: null
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deactivateOpalToken
+      summary: Deactivate an Opal token
+      description: Deactivates the authenticated Opal token, preventing further use.
+      tags:
+        - Opal
+      security:
+        - OpalToken: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+      responses:
+        '200':
+          description: Token deactivated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpalNullResponse'
+              example:
+                success: true
+                data: null
+                message: null
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
   /elements/token:
     post:
       operationId: elementsCreateToken
@@ -5850,1198 +5722,20 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalError'
-  /elements/config:
-    get:
-      operationId: elementsRetrieveConfig
-      deprecated: true
-      summary: Retrieve element configuration
-      description: Returns the element configuration for the current token. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: The element configuration.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/config/{pk_elem_id}:
-    get:
-      operationId: elementsRetrieveConfigById
-      deprecated: true
-      summary: Retrieve element configuration by ID
-      description: Returns the element configuration for a specific element token ID. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: pk_elem_id
-          in: path
-          required: true
-          description: The element token identifier.
-          schema:
-            type: string
-            pattern: ^pk_elem_\w+$
-      responses:
-        '200':
-          description: The element configuration.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/entities/me:
-    get:
-      operationId: elementsRetrieveEntity
-      deprecated: true
-      summary: Retrieve the current entity
-      description: Returns the entity associated with the current element token. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: The entity associated with the token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EntityResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/entities/me/init_mno_verification:
-    post:
-      operationId: elementsInitMnoVerification
-      deprecated: true
-      summary: Initialize MNO verification
-      description: Initiates a mobile network operator (MNO) verification for the current entity. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: The MNO verification initialization result.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/accounts:
-    get:
-      operationId: listElementsAccounts
-      deprecated: true
-      summary: List element accounts
-      description: Returns a list of accounts accessible to the current element token. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: A list of accounts.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountListResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    post:
-      operationId: createElementsAccount
-      deprecated: true
-      summary: Create an element account
-      description: Creates a new account through the element. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Account creation parameters.
-      responses:
-        '200':
-          description: The newly created account.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/accounts/{accountId}:
-    get:
-      operationId: retrieveElementsAccount
-      deprecated: true
-      summary: Retrieve an element account
-      description: Returns a single account by its identifier. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: accountId
-          in: path
-          required: true
-          description: Unique identifier for the account.
-          schema:
-            type: string
-            pattern: ^acc_\w+$
-      responses:
-        '200':
-          description: The requested account.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    put:
-      operationId: updateElementsAccount
-      deprecated: true
-      summary: Update an element account
-      description: Updates an account through the element. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: accountId
-          in: path
-          required: true
-          description: Unique identifier for the account.
-          schema:
-            type: string
-            pattern: ^acc_\w+$
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Account update parameters.
-      responses:
-        '200':
-          description: The updated account.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/accounts/{accountId}/details:
-    get:
-      operationId: elementsRetrieveAccountDetails
-      deprecated: true
-      summary: Retrieve element account details
-      description: Returns detailed information for an account. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: accountId
-          in: path
-          required: true
-          description: Unique identifier for the account.
-          schema:
-            type: string
-            pattern: ^acc_\w+$
-      responses:
-        '200':
-          description: Account details.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/accounts/{accountId}/transaction_stream:
-    post:
-      operationId: elementsInitTransactionStream
-      deprecated: true
-      summary: Initialize a transaction stream
-      description: Initiates a transaction stream for an account. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: accountId
-          in: path
-          required: true
-          description: Unique identifier for the account.
-          schema:
-            type: string
-            pattern: ^acc_\w+$
-      responses:
-        '200':
-          description: The transaction stream initialization result.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/account_verification/accounts/{accountId}/avf_sessions/{avfId}:
-    put:
-      operationId: elementsUpdateAvfSession
-      deprecated: true
-      summary: Update a verification session
-      description: Updates a verification session for an account. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: accountId
-          in: path
-          required: true
-          description: Unique identifier for the account.
-          schema:
-            type: string
-            pattern: ^acc_\w+$
-        - name: avfId
-          in: path
-          required: true
-          description: Unique identifier for the verification session.
-          schema:
-            type: string
-            pattern: ^avf_\w+$
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Verification session update parameters.
-      responses:
-        '200':
-          description: The updated verification session.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountVerificationSessionResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/account_verification/avf_sessions/bulk_generate:
-    post:
-      operationId: elementsBulkGenerateAvfSessions
-      deprecated: true
-      summary: Bulk generate verification sessions
-      description: Generates verification sessions for multiple accounts at once. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Parameters for bulk verification session generation.
-      responses:
-        '200':
-          description: The generated verification sessions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/accounts:
-    get:
-      operationId: elementsListAuthAccounts
-      deprecated: true
-      summary: List auth accounts
-      description: Returns a list of accounts available for authentication flows. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: A list of accounts for authentication.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountListResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/accounts/consent:
-    get:
-      operationId: elementsRetrieveAuthAccountsConsent
-      deprecated: true
-      summary: Retrieve auth accounts consent
-      description: Returns the current consent status for account authentication. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: The consent status.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    post:
-      operationId: elementsCreateAuthAccountsConsent
-      deprecated: true
-      summary: Create auth accounts consent
-      description: Creates or updates consent for account authentication. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Consent parameters.
-      responses:
-        '200':
-          description: The created consent.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/accounts_with_updatable_numbers:
-    get:
-      operationId: elementsListUpdatableNumbers
-      deprecated: true
-      summary: List accounts with updatable numbers
-      description: Returns accounts whose account numbers can be updated. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: A list of accounts with updatable numbers.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountListResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/accounts_with_updatable_numbers/{accountId}:
-    put:
-      operationId: elementsUpdateAccountNumber
-      deprecated: true
-      summary: Update an account number
-      description: Updates the account number for an account. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: accountId
-          in: path
-          required: true
-          description: Unique identifier for the account.
-          schema:
-            type: string
-            pattern: ^acc_\w+$
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Account number update parameters.
-      responses:
-        '200':
-          description: The updated account.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/entities:
-    put:
-      operationId: elementsUpdateAuthEntity
-      deprecated: true
-      summary: Update auth entity
-      description: Updates the entity associated with the current authentication session. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Entity update parameters.
-      responses:
-        '200':
-          description: The updated entity.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EntityResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/entities/phone_verification:
-    post:
-      operationId: elementsCreatePhoneVerification
-      deprecated: true
-      summary: Create phone verification
-      description: Initiates a phone verification for the current entity. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Phone verification parameters.
-      responses:
-        '200':
-          description: The phone verification result.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    put:
-      operationId: elementsUpdatePhoneVerification
-      deprecated: true
-      summary: Update phone verification
-      description: Completes or updates a phone verification for the current entity. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Phone verification update parameters (e.g., OTP code).
-      responses:
-        '200':
-          description: The updated phone verification.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/entities/session:
-    post:
-      operationId: elementsCreateEntitySession
-      deprecated: true
-      summary: Create entity session
-      description: Creates an authentication session for the current entity. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Session creation parameters.
-      responses:
-        '200':
-          description: The created entity session.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    put:
-      operationId: elementsUpdateEntitySession
-      deprecated: true
-      summary: Update entity session
-      description: Updates an authentication session for the current entity. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Session update parameters.
-      responses:
-        '200':
-          description: The updated entity session.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/mortgages_with_missing_address:
-    get:
-      operationId: elementsListMortgagesMissingAddress
-      deprecated: true
-      summary: List mortgages missing address
-      description: Returns mortgage accounts that are missing property address information. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: A list of mortgage accounts missing address data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountListResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/auth/mortgages_with_missing_address/{accountId}:
-    put:
-      operationId: elementsUpdateMortgageAddress
-      deprecated: true
-      summary: Update mortgage address
-      description: Updates the property address for a mortgage account. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: accountId
-          in: path
-          required: true
-          description: Unique identifier for the mortgage account.
-          schema:
-            type: string
-            pattern: ^acc_\w+$
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Address update parameters.
-      responses:
-        '200':
-          description: The updated account.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/balance_transfer/accounts:
-    get:
-      operationId: elementsListBalanceTransferAccounts
-      deprecated: true
-      summary: List balance transfer accounts
-      description: Returns accounts eligible for balance transfers. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: A list of accounts eligible for balance transfers.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountListResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/balance_transfer/auth_token:
-    post:
-      operationId: elementsCreateBalanceTransferAuthToken
-      deprecated: true
-      summary: Create balance transfer auth token
-      description: Creates an authorization token for balance transfer operations. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Auth token creation parameters.
-      responses:
-        '200':
-          description: The created auth token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/balance_transfer/session:
-    put:
-      operationId: elementsUpdateBalanceTransferSession
-      deprecated: true
-      summary: Update balance transfer session
-      description: Updates the balance transfer session state. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Balance transfer session update parameters.
-      responses:
-        '200':
-          description: The updated balance transfer session.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/connect/generate_next_step_token:
-    post:
-      operationId: elementsGenerateNextStepToken
-      deprecated: true
-      summary: Generate connect next step token
-      description: Generates a token for the next step in the connect flow. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: The generated next step token.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/connect/set_element_complete:
-    put:
-      operationId: elementsSetConnectComplete
-      deprecated: true
-      summary: Set connect element complete
-      description: Marks the connect element flow as complete. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: The updated connect element state.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/events:
-    post:
-      operationId: elementsCreateEvent
-      deprecated: true
-      summary: Create an element event
-      description: Creates an event from the element client. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Event data.
-      responses:
-        '200':
-          description: The created event.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EventResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/link/credentials:
-    post:
-      operationId: elementsProcessLinkCredential
-      deprecated: true
-      summary: Process link credentials
-      description: Processes link credentials for account connection. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Link credential parameters.
-      responses:
-        '200':
-          description: The link credential processing result.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/merchants:
-    get:
-      operationId: elementsListMerchants
-      deprecated: true
-      summary: List merchants
-      description: Returns a list of merchants available in the element. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: A list of merchants.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectListResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/merchants/{mchId}:
-    get:
-      operationId: elementsRetrieveMerchant
-      deprecated: true
-      summary: Retrieve a merchant
-      description: Returns a single merchant by its identifier. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - name: mchId
-          in: path
-          required: true
-          description: Unique identifier for the merchant.
-          schema:
-            type: string
-            pattern: ^mch_\w+$
-      responses:
-        '200':
-          description: The requested merchant.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/merchants_parents:
-    get:
-      operationId: elementsListMerchantParents
-      deprecated: true
-      summary: List merchant parents
-      description: Returns a list of parent merchant groups. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/PageLimitParam'
-        - $ref: '#/components/parameters/PageCursorParam'
-      responses:
-        '200':
-          description: A list of parent merchants.
-          headers:
-            Pagination-Page:
-              description: Current page number.
-              schema:
-                type: integer
-            Pagination-Page-Count:
-              description: Total number of pages.
-              schema:
-                type: integer
-            Pagination-Page-Limit:
-              description: Number of items per page.
-              schema:
-                type: integer
-            Pagination-Total-Count:
-              description: Total number of items across all pages.
-              schema:
-                type: integer
-            Pagination-Page-Cursor-Prev:
-              description: Cursor for the previous page, if available.
-              schema:
-                type:
-                  - string
-                  - 'null'
-            Pagination-Page-Cursor-Next:
-              description: Cursor for the next page, if available.
-              schema:
-                type:
-                  - string
-                  - 'null'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectListResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/transfer:
-    post:
-      operationId: elementsCreateTransfer
-      deprecated: true
-      summary: Create a transfer
-      description: Creates a transfer through the element. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Transfer creation parameters.
-      responses:
-        '200':
-          description: The created transfer.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/transfer/accounts/exchange:
-    post:
-      operationId: elementsExchangeTransferAccount
-      deprecated: true
-      summary: Exchange transfer account
-      description: Exchanges account information for a transfer operation. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Account exchange parameters.
-      responses:
-        '200':
-          description: The exchanged account data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  /elements/token/revoke:
-    delete:
-      operationId: elementsRevokeToken
-      deprecated: true
-      summary: Revoke element token
-      description: Revokes the current element token, invalidating it for future requests. Requires a `pk_...` token.
-      tags:
-        - Elements
-      security:
-        - PublicKey: []
-      parameters:
-        - $ref: '#/components/parameters/method_version'
-      responses:
-        '200':
-          description: Token successfully revoked.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ObjectResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalError'
 components:
   securitySchemes:
-    SecretKey:
-      type: http
-      scheme: bearer
-      description: |
-        Secret key authentication. Use your team's secret key (`sk_...`) as the Bearer token.
-        All authenticated API endpoints require this scheme unless otherwise noted.
-    PublicKey:
-      type: http
-      scheme: bearer
-      description: |
-        Public key authentication for Element endpoints. Use a public element token (`pk_...`)
-        as the Bearer token. Element tokens are scoped to a specific entity and have an expiration.
-    SessionKey:
-      type: http
-      scheme: bearer
-      description: |
-        Session key authentication for Element session endpoints. Use a session element token
-        as the Bearer token. Created via POST /elements/token.
     OpalToken:
       type: http
       scheme: bearer
       description: |
         Opal token authentication for Opal session endpoints. Use an Opal token (`otkn_...`)
         as the Bearer token. Created via POST /opal/token using a secret key.
+    SecretKey:
+      type: http
+      scheme: bearer
+      description: |
+        Secret key authentication. Use your team's secret key (`sk_...`) as the Bearer token.
+        All authenticated API endpoints require this scheme unless otherwise noted.
   parameters:
     MethodVersion:
       $ref: '#/components/parameters/method_version'
@@ -7558,8 +6252,7 @@ components:
       properties:
         success:
           type: boolean
-          enum:
-            - false
+          description: Always `false` for error responses.
         data:
           type: object
           required:
@@ -7579,8 +6272,7 @@ components:
       properties:
         success:
           type: boolean
-          enum:
-            - true
+          description: Always `true` for successful responses.
         data:
           description: Operation-specific response payload.
         message:
@@ -7642,8 +6334,7 @@ components:
       properties:
         success:
           type: boolean
-          enum:
-            - true
+          description: Always `true` for successful responses.
         data:
           description: Operation-specific list payload.
         message:
@@ -8558,27 +7249,13 @@ components:
         - type
         - status
         - consent_status
-        - ach
-        - liability
-        - clearing
-        - debit_card
         - capabilities
         - available_capabilities
-        - error
-        - metadata
         - products
         - restricted_products
         - subscriptions
         - available_subscriptions
         - restricted_subscriptions
-        - latest_verification_session
-        - balance
-        - payoff
-        - payment_instrument
-        - card_brand
-        - update
-        - attribute
-        - sensitive
         - created_at
         - updated_at
       properties:
@@ -10508,26 +9185,16 @@ components:
       required:
         - id
         - type
-        - individual
-        - corporation
-        - receive_only
-        - address
         - capabilities
         - available_capabilities
         - pending_capabilities
         - status
         - verification
-        - error
-        - metadata
         - products
         - restricted_products
         - subscriptions
         - available_subscriptions
         - restricted_subscriptions
-        - connect
-        - credit_score
-        - attribute
-        - vehicle
         - created_at
         - updated_at
       properties:
@@ -11805,24 +10472,11 @@ components:
       description: A Payment represents a transfer of funds between two accounts.
       required:
         - id
-        - reversal_id
-        - source_trace_id
-        - destination_trace_id
         - source
         - destination
         - amount
-        - description
         - status
-        - estimated_completion_date
-        - source_settlement_date
-        - destination_settlement_date
-        - source_status
-        - destination_status
-        - destination_payment_method
-        - fee
         - type
-        - error
-        - metadata
         - created_at
         - updated_at
       properties:
@@ -13002,78 +11656,6 @@ components:
                 - object
                 - 'null'
               example: null
-    OpalTokenUpdateRequest:
-      type: object
-      description: Request body for updating an Opal token session by executing a flow operation.
-      properties:
-        data:
-          type: object
-          description: Operation-specific data payload. The shape depends on the flow type and operation being executed.
-    OpalEvent:
-      type: object
-      description: An event recorded during an Opal session, following the `<mode>.<object>.<action>` type pattern.
-      required:
-        - type
-        - mode
-        - object
-        - action
-        - timestamp
-        - data
-      properties:
-        type:
-          type: string
-          description: Full event type in the format `<mode>.<object>.<action>`.
-          example: card_connect.flow.started
-        mode:
-          type: string
-          description: The session mode that produced this event.
-          example: card_connect
-        object:
-          type: string
-          description: The object within the mode that the event relates to.
-          example: flow
-        action:
-          type: string
-          description: The action that occurred on the object.
-          example: started
-        timestamp:
-          type: string
-          format: date-time
-          description: ISO 8601 timestamp of when the event occurred.
-        data:
-          type:
-            - object
-            - 'null'
-          description: Optional event-specific data payload.
-    OpalEventListResponse:
-      allOf:
-        - $ref: '#/components/schemas/ListEnvelope'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/OpalEvent'
-    OpalEventCreateRequest:
-      type: object
-      description: Request to record one or more events for the current Opal session.
-      required:
-        - events
-      properties:
-        events:
-          type: array
-          minItems: 1
-          items:
-            type: object
-            required:
-              - action
-            properties:
-              action:
-                type: string
-                description: Event action identifier.
-              metadata:
-                type: object
-                description: Optional metadata associated with the event.
     ObjectResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessEnvelope'
@@ -13085,20 +11667,6 @@ components:
         success: true
         data:
           id: obj_123
-        message: null
-    ObjectListResponse:
-      allOf:
-        - $ref: '#/components/schemas/ListEnvelope'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/JsonObject'
-      example:
-        success: true
-        data:
-          - id: obj_123
         message: null
   headers:
     Pagination-Page:

@@ -1,3 +1,10 @@
+OpalToken:
+  type: http
+  scheme: bearer
+  description: |
+    Opal token authentication for Opal session endpoints. Use an Opal token (`otkn_...`)
+    as the Bearer token. Created via POST /opal/token using a secret key.
+
 SecretKey:
   type: http
   scheme: bearer
@@ -5,23 +12,3 @@ SecretKey:
     Secret key authentication. Use your team's secret key (`sk_...`) as the Bearer token.
     All authenticated API endpoints require this scheme unless otherwise noted.
 
-PublicKey:
-  type: http
-  scheme: bearer
-  description: |
-    Public key authentication for Element endpoints. Use a public element token (`pk_...`)
-    as the Bearer token. Element tokens are scoped to a specific entity and have an expiration.
-
-SessionKey:
-  type: http
-  scheme: bearer
-  description: |
-    Session key authentication for Element session endpoints. Use a session element token
-    as the Bearer token. Created via POST /elements/token.
-
-OpalToken:
-  type: http
-  scheme: bearer
-  description: |
-    Opal token authentication for Opal session endpoints. Use an Opal token (`otkn_...`)
-    as the Bearer token. Created via POST /opal/token using a secret key.
