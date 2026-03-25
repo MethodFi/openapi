@@ -20,9 +20,6 @@ EntityBase:
   required:
   - id
   - type
-  - capabilities
-  - available_capabilities
-  - pending_capabilities
   - status
   - verification
   - products
@@ -63,21 +60,6 @@ EntityBase:
       description: The entity's address.
       allOf:
       - $ref: common.yaml#/Address
-    capabilities:
-      type: array
-      items:
-        $ref: '#/EntityCapability'
-      description: Capabilities currently enabled for this entity.
-    available_capabilities:
-      type: array
-      items:
-        $ref: '#/EntityCapability'
-      description: Capabilities available to be enabled for this entity.
-    pending_capabilities:
-      type: array
-      items:
-        $ref: '#/EntityCapability'
-      description: Capabilities pending activation for this entity.
     status:
       type: string
       description: Current status of the entity.
@@ -1388,11 +1370,6 @@ EntityResponse:
         city: Austin
         state: TX
         zip: '78701'
-      capabilities: []
-      available_capabilities:
-      - payments:send
-      - payments:receive
-      pending_capabilities: []
       status: active
       verification: null
       error: null

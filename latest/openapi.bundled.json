@@ -344,9 +344,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "enum": [
-                        true
-                      ]
+                      "description": "Always `true` for successful responses."
                     },
                     "data": {
                       "type": "string",
@@ -10494,16 +10492,6 @@
           }
         }
       },
-      "AccountCapability": {
-        "type": "string",
-        "description": "A capability that can be enabled for an account.",
-        "enum": [
-          "payments:send",
-          "payments:receive",
-          "data:retrieve",
-          "data:sync"
-        ]
-      },
       "AccountResourceError": {
         "type": [
           "object",
@@ -11340,8 +11328,6 @@
           "type",
           "status",
           "consent_status",
-          "capabilities",
-          "available_capabilities",
           "products",
           "restricted_products",
           "subscriptions",
@@ -11404,20 +11390,6 @@
           },
           "debit_card": {
             "$ref": "#/components/schemas/AccountDebitCard"
-          },
-          "capabilities": {
-            "type": "array",
-            "description": "Capabilities currently enabled for this account.",
-            "items": {
-              "$ref": "#/components/schemas/AccountCapability"
-            }
-          },
-          "available_capabilities": {
-            "type": "array",
-            "description": "Capabilities available to be enabled for this account.",
-            "items": {
-              "$ref": "#/components/schemas/AccountCapability"
-            }
           },
           "error": {
             "$ref": "#/components/schemas/AccountResourceError"
@@ -13113,15 +13085,6 @@
           }
         }
       },
-      "EntityCapability": {
-        "type": "string",
-        "enum": [
-          "payments:receive",
-          "payments:send",
-          "data:retrieve",
-          "data:sync"
-        ]
-      },
       "VerificationSessionResourceError": {
         "type": [
           "object",
@@ -14202,9 +14165,6 @@
         "required": [
           "id",
           "type",
-          "capabilities",
-          "available_capabilities",
-          "pending_capabilities",
           "status",
           "verification",
           "products",
@@ -14256,27 +14216,6 @@
                 "$ref": "#/components/schemas/Address"
               }
             ]
-          },
-          "capabilities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EntityCapability"
-            },
-            "description": "Capabilities currently enabled for this entity."
-          },
-          "available_capabilities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EntityCapability"
-            },
-            "description": "Capabilities available to be enabled for this entity."
-          },
-          "pending_capabilities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EntityCapability"
-            },
-            "description": "Capabilities pending activation for this entity."
           },
           "status": {
             "type": "string",
@@ -14686,12 +14625,6 @@
               "state": "TX",
               "zip": "78701"
             },
-            "capabilities": [],
-            "available_capabilities": [
-              "payments:send",
-              "payments:receive"
-            ],
-            "pending_capabilities": [],
             "status": "active",
             "verification": null,
             "error": null,
