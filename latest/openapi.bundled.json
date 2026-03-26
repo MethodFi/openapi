@@ -3409,18 +3409,16 @@
                         "id": "ent_au22b1fbFJbp8",
                         "type": "individual",
                         "individual": {
-                          "first_name": "JANE",
-                          "last_name": "DOE",
+                          "first_name": "Jane",
+                          "last_name": "Doe",
                           "phone": "+15125550123",
                           "dob": "1990-05-21",
-                          "email": "JANE.DOE@EXAMPLE.COM",
-                          "ssn": "xxxxxxxxx",
-                          "ssn_4": "xxxx"
+                          "email": "jane@example.com"
                         },
                         "address": {
-                          "line1": "123 MAIN ST",
-                          "line2": "",
-                          "city": "AUSTIN",
+                          "line1": "123 Main St",
+                          "line2": null,
+                          "city": "Austin",
                           "state": "TX",
                           "zip": "78701"
                         },
@@ -14609,8 +14607,6 @@
               "email": "jane@example.com",
               "dob": "1990-05-21"
             },
-            "corporation": null,
-            "receive_only": null,
             "address": {
               "line1": "123 Main St",
               "line2": null,

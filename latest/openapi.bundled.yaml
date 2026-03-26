@@ -9443,8 +9443,8 @@ components:
             first_name: Jane
             last_name: Doe
             phone: '+15125550123'
-            dob: '1990-05-21'
             email: jane@example.com
+            dob: '1990-05-21'
           address:
             line1: 123 Main St
             line2: null
