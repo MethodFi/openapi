@@ -6446,33 +6446,19 @@ components:
           type: array
           items:
             type: string
-    MerchantCredential:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of credential field.
-        initial:
-          type: string
-          description: Initial/default value hint for the field.
     Merchant:
       type: object
       required:
-        - mch_id
+        - id
         - parent_name
         - name
         - logo
-        - description
-        - note
-        - types
-        - account_prefixes
+        - type
         - provider_ids
-        - credentials
-        - customized_auth
         - is_temp
         - account_number_formats
       properties:
-        mch_id:
+        id:
           type: string
           description: Unique identifier for the merchant.
           example: mch_aTJMbnCjw34yQ
@@ -6488,36 +6474,11 @@ components:
           type: string
           description: URL of the merchant logo.
           example: https://static.methodfi.com/logos/chase.png
-        description:
-          type:
-            - string
-            - 'null'
-          description: Description of the merchant.
-        note:
-          type:
-            - string
-            - 'null'
-          description: Additional notes about the merchant.
-        types:
-          type: array
-          items:
-            $ref: '#/components/schemas/MerchantType'
-          description: Types of accounts supported by this merchant.
-        account_prefixes:
-          type: array
-          items:
-            type: string
-          description: Known account number prefixes for this merchant.
+        type:
+          $ref: '#/components/schemas/MerchantType'
+          description: Type of accounts supported by this merchant.
         provider_ids:
           $ref: '#/components/schemas/MerchantProviderIds'
-        credentials:
-          type: array
-          items:
-            $ref: '#/components/schemas/MerchantCredential'
-          description: Credential fields required for account linking.
-        customized_auth:
-          type: boolean
-          description: Whether the merchant has a customized authentication flow.
         is_temp:
           type: boolean
           description: Whether this is a temporary merchant entry.
@@ -11199,8 +11160,6 @@ components:
         - url
         - status
         - expand_event
-        - error
-        - metadata
         - created_at
         - updated_at
       properties:
