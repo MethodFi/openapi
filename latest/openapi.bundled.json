@@ -11379,9 +11379,6 @@
           "consent_status",
           "products",
           "restricted_products",
-          "subscriptions",
-          "available_subscriptions",
-          "restricted_subscriptions",
           "created_at",
           "updated_at"
         ],
@@ -11456,27 +11453,6 @@
           "restricted_products": {
             "type": "array",
             "description": "Products restricted from this account.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "subscriptions": {
-            "type": "array",
-            "description": "Subscriptions currently active for this account.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "available_subscriptions": {
-            "type": "array",
-            "description": "Subscriptions available to be enrolled for this account.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "restricted_subscriptions": {
-            "type": "array",
-            "description": "Subscriptions restricted from this account.",
             "items": {
               "type": "string"
             }
@@ -11638,12 +11614,38 @@
           },
           {
             "type": "object",
+            "required": [
+              "subscriptions",
+              "available_subscriptions",
+              "restricted_subscriptions"
+            ],
             "properties": {
               "type": {
                 "type": "string",
                 "enum": [
                   "liability"
                 ]
+              },
+              "subscriptions": {
+                "type": "array",
+                "description": "Subscriptions currently active for this account.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "available_subscriptions": {
+                "type": "array",
+                "description": "Subscriptions available to be enrolled for this account.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "restricted_subscriptions": {
+                "type": "array",
+                "description": "Subscriptions restricted from this account.",
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
