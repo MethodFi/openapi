@@ -244,8 +244,7 @@ paths:
                 properties:
                   success:
                     type: boolean
-                    enum:
-                      - true
+                    description: Always `true` for successful responses.
                   data:
                     type: string
                     enum:
@@ -6593,14 +6592,6 @@ components:
         issuer:
           type: string
           description: The card issuer.
-    AccountCapability:
-      type: string
-      description: A capability that can be enabled for an account.
-      enum:
-        - payments:send
-        - payments:receive
-        - data:retrieve
-        - data:sync
     AccountResourceError:
       type:
         - object
@@ -7249,8 +7240,6 @@ components:
         - type
         - status
         - consent_status
-        - capabilities
-        - available_capabilities
         - products
         - restricted_products
         - subscriptions
@@ -7301,16 +7290,6 @@ components:
           $ref: '#/components/schemas/AccountClearing'
         debit_card:
           $ref: '#/components/schemas/AccountDebitCard'
-        capabilities:
-          type: array
-          description: Capabilities currently enabled for this account.
-          items:
-            $ref: '#/components/schemas/AccountCapability'
-        available_capabilities:
-          type: array
-          description: Capabilities available to be enabled for this account.
-          items:
-            $ref: '#/components/schemas/AccountCapability'
         error:
           $ref: '#/components/schemas/AccountResourceError'
         metadata:
@@ -8397,13 +8376,6 @@ components:
             - 'null'
           description: Email address of the receive-only entity.
           format: email
-    EntityCapability:
-      type: string
-      enum:
-        - payments:receive
-        - payments:send
-        - data:retrieve
-        - data:sync
     VerificationSessionResourceError:
       type:
         - object
@@ -9185,9 +9157,6 @@ components:
       required:
         - id
         - type
-        - capabilities
-        - available_capabilities
-        - pending_capabilities
         - status
         - verification
         - products
@@ -9228,21 +9197,6 @@ components:
           description: The entity's address.
           allOf:
             - $ref: '#/components/schemas/Address'
-        capabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCapability'
-          description: Capabilities currently enabled for this entity.
-        available_capabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCapability'
-          description: Capabilities available to be enabled for this entity.
-        pending_capabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityCapability'
-          description: Capabilities pending activation for this entity.
         status:
           type: string
           description: Current status of the entity.
@@ -9501,11 +9455,6 @@ components:
             city: Austin
             state: TX
             zip: '78701'
-          capabilities: []
-          available_capabilities:
-            - payments:send
-            - payments:receive
-          pending_capabilities: []
           status: active
           verification: null
           error: null

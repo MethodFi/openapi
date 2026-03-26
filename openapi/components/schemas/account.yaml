@@ -25,8 +25,6 @@ AccountBase:
   - type
   - status
   - consent_status
-  - capabilities
-  - available_capabilities
   - products
   - restricted_products
   - subscriptions
@@ -77,16 +75,6 @@ AccountBase:
       $ref: '#/AccountClearing'
     debit_card:
       $ref: '#/AccountDebitCard'
-    capabilities:
-      type: array
-      description: Capabilities currently enabled for this account.
-      items:
-        $ref: '#/AccountCapability'
-    available_capabilities:
-      type: array
-      description: Capabilities available to be enabled for this account.
-      items:
-        $ref: '#/AccountCapability'
     error:
       $ref: errors/account_errors.yaml#/AccountResourceError
     metadata:

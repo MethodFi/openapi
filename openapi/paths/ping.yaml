@@ -20,8 +20,7 @@ get:
             properties:
               success:
                 type: boolean
-                enum:
-                - true
+                description: Always `true` for successful responses.
               data:
                 type: string
                 enum:
