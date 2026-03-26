@@ -21,12 +21,6 @@ EntityBase:
   - id
   - type
   - status
-  - verification
-  - products
-  - restricted_products
-  - subscriptions
-  - available_subscriptions
-  - restricted_subscriptions
   - created_at
   - updated_at
   properties:
@@ -47,12 +41,6 @@ EntityBase:
       - sole_proprietorship
       - receive_only
       - corporation
-    individual:
-      $ref: '#/EntityIndividual'
-    corporation:
-      $ref: '#/EntityCorporation'
-    receive_only:
-      $ref: '#/EntityReceiveOnly'
     address:
       type:
       - object
@@ -67,8 +55,6 @@ EntityBase:
       - active
       - incomplete
       - disabled
-    verification:
-      $ref: '#/EntityVerification'
     error:
       type:
       - object
@@ -78,63 +64,6 @@ EntityBase:
       - $ref: errors/entity_errors.yaml#/EntityResourceError
     metadata:
       $ref: common.yaml#/Metadata
-    products:
-      type: array
-      items:
-        type: string
-      description: Products currently active for this entity.
-    restricted_products:
-      type: array
-      items:
-        type: string
-      description: Products restricted for this entity.
-    subscriptions:
-      type: array
-      items:
-        type: string
-      description: Active subscriptions for this entity.
-    available_subscriptions:
-      type: array
-      items:
-        type: string
-      description: Subscriptions available for this entity.
-    restricted_subscriptions:
-      type: array
-      items:
-        type: string
-      description: Subscriptions restricted for this entity.
-    connect:
-      description: Expandable. The entity connect session ID or expanded connect object.
-      example: cxn_iENwGBMDnr7sJ
-      oneOf:
-      - type: string
-        pattern: ^cxn_\w+$
-      - type: 'null'
-      - $ref: '#/EntityConnect'
-    credit_score:
-      description: Expandable. The entity credit score ID or expanded credit score object.
-      example: crs_pn4ca33GRnrJm
-      oneOf:
-      - type: string
-        pattern: ^crs_\w+$
-      - type: 'null'
-      - $ref: '#/EntityCreditScore'
-    attribute:
-      description: Expandable. The entity attribute ID or expanded attribute object.
-      example: attr_QwMjMDEwMTY1
-      oneOf:
-      - type: string
-        pattern: ^attr_\w+$
-      - type: 'null'
-      - $ref: '#/EntityAttribute'
-    vehicle:
-      description: Expandable. The entity vehicle ID or expanded vehicle object.
-      example: vhl_JMDEwMTY1Qw4c
-      oneOf:
-      - type: string
-        pattern: ^vhl_\w+$
-      - type: 'null'
-      - $ref: '#/EntityVehicle'
     created_at:
       type: string
       format: date-time
@@ -147,11 +76,78 @@ EntityIndividualResource:
   allOf:
   - $ref: '#/EntityBase'
   - type: object
+    required:
+    - products
+    - restricted_products
+    - subscriptions
+    - available_subscriptions
+    - restricted_subscriptions
     properties:
       type:
         type: string
         enum:
         - individual
+      individual:
+        $ref: '#/EntityIndividual'
+      verification:
+        $ref: '#/EntityVerification'
+      connect:
+        description: Expandable. The entity connect session ID or expanded connect object.
+        example: cxn_iENwGBMDnr7sJ
+        oneOf:
+        - type: string
+          pattern: ^cxn_\w+$
+        - type: 'null'
+        - $ref: '#/EntityConnect'
+      credit_score:
+        description: Expandable. The entity credit score ID or expanded credit score object.
+        example: crs_pn4ca33GRnrJm
+        oneOf:
+        - type: string
+          pattern: ^crs_\w+$
+        - type: 'null'
+        - $ref: '#/EntityCreditScore'
+      attribute:
+        description: Expandable. The entity attribute ID or expanded attribute object.
+        example: attr_QwMjMDEwMTY1
+        oneOf:
+        - type: string
+          pattern: ^attr_\w+$
+        - type: 'null'
+        - $ref: '#/EntityAttribute'
+      vehicle:
+        description: Expandable. The entity vehicle ID or expanded vehicle object.
+        example: vhl_JMDEwMTY1Qw4c
+        oneOf:
+        - type: string
+          pattern: ^vhl_\w+$
+        - type: 'null'
+        - $ref: '#/EntityVehicle'
+      products:
+        type: array
+        items:
+          type: string
+        description: Products currently active for this entity.
+      restricted_products:
+        type: array
+        items:
+          type: string
+        description: Products restricted for this entity.
+      subscriptions:
+        type: array
+        items:
+          type: string
+        description: Active subscriptions for this entity.
+      available_subscriptions:
+        type: array
+        items:
+          type: string
+        description: Subscriptions available for this entity.
+      restricted_subscriptions:
+        type: array
+        items:
+          type: string
+        description: Subscriptions restricted for this entity.
 EntityCorporationResource:
   allOf:
   - $ref: '#/EntityBase'
@@ -166,6 +162,8 @@ EntityCorporationResource:
         - llc
         - partnership
         - sole_proprietorship
+      corporation:
+        $ref: '#/EntityCorporation'
 EntityReceiveOnlyResource:
   allOf:
   - $ref: '#/EntityBase'
@@ -175,6 +173,8 @@ EntityReceiveOnlyResource:
         type: string
         enum:
         - receive_only
+      receive_only:
+        $ref: '#/EntityReceiveOnly'
 EntityIndividual:
   type:
   - object
