@@ -341,14 +341,6 @@ AccountDebitCard:
     issuer:
       type: string
       description: The card issuer.
-AccountCapability:
-  type: string
-  description: A capability that can be enabled for an account.
-  enum:
-  - payments:send
-  - payments:receive
-  - data:retrieve
-  - data:sync
 AccountExpandableFields:
   type: string
   description: Fields on an Account that can be expanded.

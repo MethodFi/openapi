@@ -3376,15 +3376,15 @@
                     "type": "corporation",
                     "corporation": {
                       "name": "Example Holdings LLC",
-                      "dba": "Example",
+                      "dba": "Example Holdings",
                       "ein": "123456789"
                     },
                     "address": {
-                      "line1": "500 Market St",
-                      "line2": "Suite 200",
-                      "city": "San Francisco",
-                      "state": "CA",
-                      "zip": "94105"
+                      "line1": "123 Main St",
+                      "line2": null,
+                      "city": "Austin",
+                      "state": "TX",
+                      "zip": "78701"
                     }
                   }
                 }
@@ -3400,52 +3400,103 @@
                 "schema": {
                   "$ref": "#/components/schemas/EntityResponse"
                 },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "id": "ent_au22b1fbFJbp8",
-                    "type": "individual",
-                    "individual": {
-                      "first_name": "Jane",
-                      "last_name": "Doe",
-                      "phone": "+15125550123",
-                      "email": "jane@example.com",
-                      "dob": "1990-05-21"
-                    },
-                    "corporation": null,
-                    "receive_only": null,
-                    "address": {
-                      "line1": "123 Main St",
-                      "line2": null,
-                      "city": "Austin",
-                      "state": "TX",
-                      "zip": "78701"
-                    },
-                    "capabilities": [],
-                    "available_capabilities": [
-                      "payments:send",
-                      "payments:receive"
-                    ],
-                    "pending_capabilities": [],
-                    "status": "active",
-                    "verification": null,
-                    "error": null,
-                    "metadata": {
-                      "customer_reference": "ent-001"
-                    },
-                    "products": [],
-                    "restricted_products": [],
-                    "subscriptions": [],
-                    "available_subscriptions": [],
-                    "restricted_subscriptions": [],
-                    "connect": null,
-                    "credit_score": null,
-                    "attribute": null,
-                    "vehicle": null,
-                    "created_at": "2026-01-15T18:30:00.000Z",
-                    "updated_at": "2026-01-15T18:30:00.000Z"
+                "examples": {
+                  "individual": {
+                    "summary": "Individual entity",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "ent_au22b1fbFJbp8",
+                        "type": "individual",
+                        "individual": {
+                          "first_name": "JANE",
+                          "last_name": "DOE",
+                          "phone": "+15125550123",
+                          "dob": "1990-05-21",
+                          "email": "JANE.DOE@EXAMPLE.COM",
+                          "ssn": "xxxxxxxxx",
+                          "ssn_4": "xxxx"
+                        },
+                        "address": {
+                          "line1": "123 MAIN ST",
+                          "line2": "",
+                          "city": "AUSTIN",
+                          "state": "TX",
+                          "zip": "78701"
+                        },
+                        "verification": {
+                          "identity": {
+                            "verified": true,
+                            "matched": true,
+                            "latest_verification_session": "evf_aBcDeFgHiJkLm",
+                            "methods": []
+                          },
+                          "phone": {
+                            "verified": true,
+                            "latest_verification_session": "evf_nOpQrStUvWxYz",
+                            "methods": []
+                          }
+                        },
+                        "connect": null,
+                        "credit_score": null,
+                        "attribute": null,
+                        "vehicle": null,
+                        "products": [
+                          "connect",
+                          "credit_score"
+                        ],
+                        "restricted_products": [
+                          "attribute",
+                          "identity",
+                          "manual_connect",
+                          "vehicle"
+                        ],
+                        "subscriptions": [],
+                        "available_subscriptions": [
+                          "connect",
+                          "credit_score"
+                        ],
+                        "restricted_subscriptions": [
+                          "attribute"
+                        ],
+                        "status": "active",
+                        "error": null,
+                        "metadata": null,
+                        "created_at": "2024-12-05T10:05:21.742Z",
+                        "updated_at": "2024-12-05T10:11:17.823Z"
+                      },
+                      "message": null
+                    }
                   },
-                  "message": null
+                  "corporation": {
+                    "summary": "Corporation entity",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "ent_bWxYzAbCdEfGh",
+                        "type": "corporation",
+                        "corporation": {
+                          "name": "Example Holdings LLC",
+                          "dba": "Example Holdings",
+                          "ein": "123456789",
+                          "owners": []
+                        },
+                        "address": {
+                          "line1": "123 Main St",
+                          "line2": null,
+                          "city": "Austin",
+                          "state": "TX",
+                          "zip": "78701"
+                        },
+                        "status": "active",
+                        "error": null,
+                        "metadata": null,
+                        "created_at": "2024-12-03T17:08:05.455Z",
+                        "updated_at": "2024-12-03T17:08:05.455Z"
+                      },
+                      "message": null
+                    }
+                  }
                 }
               }
             }
@@ -13010,7 +13061,6 @@
               "llc",
               "partnership",
               "sole_proprietorship",
-              "receive_only",
               "corporation"
             ]
           },
@@ -14351,65 +14401,11 @@
               "type": {
                 "type": "string",
                 "enum": [
-                  "corporation",
-                  "c_corporation",
-                  "s_corporation",
-                  "llc",
-                  "partnership",
-                  "sole_proprietorship"
+                  "corporation"
                 ]
               },
               "corporation": {
                 "$ref": "#/components/schemas/EntityCorporation"
-              }
-            }
-          }
-        ]
-      },
-      "EntityReceiveOnly": {
-        "type": [
-          "object",
-          "null"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the receive-only entity."
-          },
-          "phone": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Phone number of the receive-only entity.",
-            "pattern": "^\\+\\d{10,15}$"
-          },
-          "email": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Email address of the receive-only entity.",
-            "format": "email"
-          }
-        }
-      },
-      "EntityReceiveOnlyResource": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "receive_only"
-                ]
-              },
-              "receive_only": {
-                "$ref": "#/components/schemas/EntityReceiveOnly"
               }
             }
           }
@@ -14423,9 +14419,6 @@
           },
           {
             "$ref": "#/components/schemas/EntityCorporationResource"
-          },
-          {
-            "$ref": "#/components/schemas/EntityReceiveOnlyResource"
           }
         ],
         "discriminator": {
@@ -14437,8 +14430,7 @@
             "s_corporation": "#/components/schemas/EntityCorporationResource",
             "llc": "#/components/schemas/EntityCorporationResource",
             "partnership": "#/components/schemas/EntityCorporationResource",
-            "sole_proprietorship": "#/components/schemas/EntityCorporationResource",
-            "receive_only": "#/components/schemas/EntityReceiveOnlyResource"
+            "sole_proprietorship": "#/components/schemas/EntityCorporationResource"
           }
         }
       },
@@ -14626,23 +14618,46 @@
               "state": "TX",
               "zip": "78701"
             },
-            "status": "active",
-            "verification": null,
-            "error": null,
-            "metadata": {
-              "customer_reference": "ent-001"
+            "verification": {
+              "identity": {
+                "verified": true,
+                "matched": true,
+                "latest_verification_session": "evf_aBcDeFgHiJkLm",
+                "methods": []
+              },
+              "phone": {
+                "verified": true,
+                "latest_verification_session": "evf_nOpQrStUvWxYz",
+                "methods": []
+              }
             },
-            "products": [],
-            "restricted_products": [],
-            "subscriptions": [],
-            "available_subscriptions": [],
-            "restricted_subscriptions": [],
             "connect": null,
             "credit_score": null,
             "attribute": null,
             "vehicle": null,
-            "created_at": "2026-01-15T18:30:00.000Z",
-            "updated_at": "2026-01-15T18:30:00.000Z"
+            "products": [
+              "connect",
+              "credit_score"
+            ],
+            "restricted_products": [
+              "attribute",
+              "identity",
+              "manual_connect",
+              "vehicle"
+            ],
+            "subscriptions": [],
+            "available_subscriptions": [
+              "connect",
+              "credit_score"
+            ],
+            "restricted_subscriptions": [
+              "attribute"
+            ],
+            "status": "active",
+            "error": null,
+            "metadata": null,
+            "created_at": "2024-12-05T10:05:21.742Z",
+            "updated_at": "2024-12-05T10:11:17.823Z"
           },
           "message": null
         }
