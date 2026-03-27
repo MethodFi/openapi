@@ -10612,7 +10612,6 @@
           "account_id",
           "status",
           "type",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10725,7 +10724,6 @@
           "account_id",
           "status",
           "amount",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10828,7 +10826,6 @@
           "amount",
           "term",
           "per_diem_amount",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10925,7 +10922,6 @@
           "account_id",
           "status",
           "type",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10980,7 +10976,6 @@
           "issuer",
           "last4",
           "status",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -11102,7 +11097,6 @@
           "account_id",
           "status",
           "type",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -11154,7 +11148,6 @@
           "account_id",
           "status",
           "attributes",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -11254,7 +11247,6 @@
           "status",
           "type",
           "fields",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -13180,7 +13172,6 @@
           "status",
           "type",
           "method",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -13449,7 +13440,6 @@
           "accounts",
           "requested_products",
           "requested_subscriptions",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -13605,7 +13595,6 @@
           "entity_id",
           "status",
           "scores",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -13968,7 +13957,6 @@
           "entity_id",
           "status",
           "attributes",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -14027,7 +14015,6 @@
           "entity_id",
           "status",
           "vehicles",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -14750,7 +14737,6 @@
           "entity_id",
           "status",
           "identities",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -16365,7 +16351,6 @@
           "amount",
           "description",
           "fee",
-          "error",
           "created_at",
           "updated_at"
         ],

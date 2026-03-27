@@ -594,7 +594,6 @@ AccountAttribute:
   - account_id
   - status
   - attributes
-  - error
   - created_at
   - updated_at
   properties:
@@ -652,7 +651,6 @@ AccountBalance:
   - account_id
   - status
   - amount
-  - error
   - created_at
   - updated_at
   properties:
@@ -713,7 +711,6 @@ AccountCardBrand:
   - issuer
   - last4
   - status
-  - error
   - created_at
   - updated_at
   properties:
@@ -802,7 +799,6 @@ AccountPaymentInstrument:
   - account_id
   - status
   - type
-  - error
   - created_at
   - updated_at
   properties:
@@ -862,7 +858,6 @@ AccountPayoff:
   - amount
   - term
   - per_diem_amount
-  - error
   - created_at
   - updated_at
   properties:
@@ -995,7 +990,6 @@ AccountSensitive:
   - status
   - type
   - fields
-  - error
   - created_at
   - updated_at
   properties:
@@ -1277,7 +1271,6 @@ AccountUpdate:
   - account_id
   - status
   - type
-  - error
   - created_at
   - updated_at
   properties:
@@ -1334,7 +1327,6 @@ AccountVerificationSession:
   - account_id
   - status
   - type
-  - error
   - created_at
   - updated_at
   properties:

@@ -407,7 +407,6 @@ EntityAttribute:
   - entity_id
   - status
   - attributes
-  - error
   - created_at
   - updated_at
   properties:
@@ -630,7 +629,6 @@ EntityConnect:
   - accounts
   - requested_products
   - requested_subscriptions
-  - error
   - created_at
   - updated_at
   properties:
@@ -694,7 +692,6 @@ EntityCreditScore:
   - entity_id
   - status
   - scores
-  - error
   - created_at
   - updated_at
   properties:
@@ -789,7 +786,6 @@ EntityIdentity:
   - entity_id
   - status
   - identities
-  - error
   - created_at
   - updated_at
   properties:
@@ -989,7 +985,6 @@ EntityVehicle:
   - entity_id
   - status
   - vehicles
-  - error
   - created_at
   - updated_at
   properties:
@@ -1078,7 +1073,6 @@ EntityVerificationSession:
   - status
   - type
   - method
-  - error
   - created_at
   - updated_at
   properties:
