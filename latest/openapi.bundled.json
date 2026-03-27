@@ -3376,15 +3376,15 @@
                     "type": "corporation",
                     "corporation": {
                       "name": "Example Holdings LLC",
-                      "dba": "Example",
+                      "dba": "Example Holdings",
                       "ein": "123456789"
                     },
                     "address": {
-                      "line1": "500 Market St",
-                      "line2": "Suite 200",
-                      "city": "San Francisco",
-                      "state": "CA",
-                      "zip": "94105"
+                      "line1": "123 Main St",
+                      "line2": null,
+                      "city": "Austin",
+                      "state": "TX",
+                      "zip": "78701"
                     }
                   }
                 }
@@ -3400,52 +3400,101 @@
                 "schema": {
                   "$ref": "#/components/schemas/EntityResponse"
                 },
-                "example": {
-                  "success": true,
-                  "data": {
-                    "id": "ent_au22b1fbFJbp8",
-                    "type": "individual",
-                    "individual": {
-                      "first_name": "Jane",
-                      "last_name": "Doe",
-                      "phone": "+15125550123",
-                      "email": "jane@example.com",
-                      "dob": "1990-05-21"
-                    },
-                    "corporation": null,
-                    "receive_only": null,
-                    "address": {
-                      "line1": "123 Main St",
-                      "line2": null,
-                      "city": "Austin",
-                      "state": "TX",
-                      "zip": "78701"
-                    },
-                    "capabilities": [],
-                    "available_capabilities": [
-                      "payments:send",
-                      "payments:receive"
-                    ],
-                    "pending_capabilities": [],
-                    "status": "active",
-                    "verification": null,
-                    "error": null,
-                    "metadata": {
-                      "customer_reference": "ent-001"
-                    },
-                    "products": [],
-                    "restricted_products": [],
-                    "subscriptions": [],
-                    "available_subscriptions": [],
-                    "restricted_subscriptions": [],
-                    "connect": null,
-                    "credit_score": null,
-                    "attribute": null,
-                    "vehicle": null,
-                    "created_at": "2026-01-15T18:30:00.000Z",
-                    "updated_at": "2026-01-15T18:30:00.000Z"
+                "examples": {
+                  "individual": {
+                    "summary": "Individual entity",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "ent_au22b1fbFJbp8",
+                        "type": "individual",
+                        "individual": {
+                          "first_name": "Jane",
+                          "last_name": "Doe",
+                          "phone": "+15125550123",
+                          "dob": "1990-05-21",
+                          "email": "jane@example.com"
+                        },
+                        "address": {
+                          "line1": "123 Main St",
+                          "line2": null,
+                          "city": "Austin",
+                          "state": "TX",
+                          "zip": "78701"
+                        },
+                        "verification": {
+                          "identity": {
+                            "verified": true,
+                            "matched": true,
+                            "latest_verification_session": "evf_aBcDeFgHiJkLm",
+                            "methods": []
+                          },
+                          "phone": {
+                            "verified": true,
+                            "latest_verification_session": "evf_nOpQrStUvWxYz",
+                            "methods": []
+                          }
+                        },
+                        "connect": null,
+                        "credit_score": null,
+                        "attribute": null,
+                        "vehicle": null,
+                        "products": [
+                          "connect",
+                          "credit_score"
+                        ],
+                        "restricted_products": [
+                          "attribute",
+                          "identity",
+                          "manual_connect",
+                          "vehicle"
+                        ],
+                        "subscriptions": [],
+                        "available_subscriptions": [
+                          "connect",
+                          "credit_score"
+                        ],
+                        "restricted_subscriptions": [
+                          "attribute"
+                        ],
+                        "status": "active",
+                        "error": null,
+                        "metadata": null,
+                        "created_at": "2024-12-05T10:05:21.742Z",
+                        "updated_at": "2024-12-05T10:11:17.823Z"
+                      },
+                      "message": null
+                    }
                   },
-                  "message": null
+                  "corporation": {
+                    "summary": "Corporation entity",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "ent_bWxYzAbCdEfGh",
+                        "type": "corporation",
+                        "corporation": {
+                          "name": "Example Holdings LLC",
+                          "dba": "Example Holdings",
+                          "ein": "123456789",
+                          "owners": []
+                        },
+                        "address": {
+                          "line1": "123 Main St",
+                          "line2": null,
+                          "city": "Austin",
+                          "state": "TX",
+                          "zip": "78701"
+                        },
+                        "status": "active",
+                        "error": null,
+                        "metadata": null,
+                        "created_at": "2024-12-03T17:08:05.455Z",
+                        "updated_at": "2024-12-03T17:08:05.455Z"
+                      },
+                      "message": null
+                    }
+                  }
                 }
               }
             }
@@ -10247,38 +10296,20 @@
           }
         }
       },
-      "MerchantCredential": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Type of credential field."
-          },
-          "initial": {
-            "type": "string",
-            "description": "Initial/default value hint for the field."
-          }
-        }
-      },
       "Merchant": {
         "type": "object",
         "required": [
-          "mch_id",
+          "id",
           "parent_name",
           "name",
           "logo",
-          "description",
-          "note",
-          "types",
-          "account_prefixes",
+          "type",
           "provider_ids",
-          "credentials",
-          "customized_auth",
           "is_temp",
           "account_number_formats"
         ],
         "properties": {
-          "mch_id": {
+          "id": {
             "type": "string",
             "description": "Unique identifier for the merchant.",
             "example": "mch_aTJMbnCjw34yQ"
@@ -10298,47 +10329,12 @@
             "description": "URL of the merchant logo.",
             "example": "https://static.methodfi.com/logos/chase.png"
           },
-          "description": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Description of the merchant."
-          },
-          "note": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Additional notes about the merchant."
-          },
-          "types": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MerchantType"
-            },
-            "description": "Types of accounts supported by this merchant."
-          },
-          "account_prefixes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Known account number prefixes for this merchant."
+          "type": {
+            "$ref": "#/components/schemas/MerchantType",
+            "description": "Type of accounts supported by this merchant."
           },
           "provider_ids": {
             "$ref": "#/components/schemas/MerchantProviderIds"
-          },
-          "credentials": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MerchantCredential"
-            },
-            "description": "Credential fields required for account linking."
-          },
-          "customized_auth": {
-            "type": "boolean",
-            "description": "Whether the merchant has a customized authentication flow."
           },
           "is_temp": {
             "type": "boolean",
@@ -10616,7 +10612,6 @@
           "account_id",
           "status",
           "type",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10729,7 +10724,6 @@
           "account_id",
           "status",
           "amount",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10832,7 +10826,6 @@
           "amount",
           "term",
           "per_diem_amount",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10929,7 +10922,6 @@
           "account_id",
           "status",
           "type",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -10984,7 +10976,6 @@
           "issuer",
           "last4",
           "status",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -11106,7 +11097,6 @@
           "account_id",
           "status",
           "type",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -11158,7 +11148,6 @@
           "account_id",
           "status",
           "attributes",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -11258,7 +11247,6 @@
           "status",
           "type",
           "fields",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -11330,9 +11318,6 @@
           "consent_status",
           "products",
           "restricted_products",
-          "subscriptions",
-          "available_subscriptions",
-          "restricted_subscriptions",
           "created_at",
           "updated_at"
         ],
@@ -11407,27 +11392,6 @@
           "restricted_products": {
             "type": "array",
             "description": "Products restricted from this account.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "subscriptions": {
-            "type": "array",
-            "description": "Subscriptions currently active for this account.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "available_subscriptions": {
-            "type": "array",
-            "description": "Subscriptions available to be enrolled for this account.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "restricted_subscriptions": {
-            "type": "array",
-            "description": "Subscriptions restricted from this account.",
             "items": {
               "type": "string"
             }
@@ -11589,12 +11553,38 @@
           },
           {
             "type": "object",
+            "required": [
+              "subscriptions",
+              "available_subscriptions",
+              "restricted_subscriptions"
+            ],
             "properties": {
               "type": {
                 "type": "string",
                 "enum": [
                   "liability"
                 ]
+              },
+              "subscriptions": {
+                "type": "array",
+                "description": "Subscriptions currently active for this account.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "available_subscriptions": {
+                "type": "array",
+                "description": "Subscriptions available to be enrolled for this account.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "restricted_subscriptions": {
+                "type": "array",
+                "description": "Subscriptions restricted from this account.",
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -12873,6 +12863,194 @@
           }
         ]
       },
+      "Address": {
+        "type": "object",
+        "description": "Postal mailing address.",
+        "properties": {
+          "line1": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Primary street address line.",
+            "example": "123 Main St"
+          },
+          "line2": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Secondary address line such as apartment or suite.",
+            "example": "Apt 4B"
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "City or locality.",
+            "example": "Austin"
+          },
+          "state": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Two-letter state or province code when available.",
+            "example": "TX"
+          },
+          "zip": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Postal code.",
+            "example": "78701"
+          }
+        },
+        "example": {
+          "line1": "123 Main St",
+          "line2": "Apt 4B",
+          "city": "Austin",
+          "state": "TX",
+          "zip": "78701"
+        }
+      },
+      "EntityResourceError": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Error details when an entity is disabled or verification fails.",
+        "required": [
+          "type",
+          "code",
+          "sub_type",
+          "message"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The category of entity error.",
+            "enum": [
+              "ENTITY_DISABLED",
+              "ENTITY_VERIFICATION_FAILED"
+            ]
+          },
+          "code": {
+            "type": "integer",
+            "description": "Numeric error code (12XXX range).",
+            "enum": [
+              12001,
+              12002,
+              12003,
+              12004,
+              12005,
+              12006,
+              12007
+            ]
+          },
+          "sub_type": {
+            "type": "string",
+            "description": "Specific entity error classification.",
+            "enum": [
+              "ENTITY_UNAUTHORIZED_PAYMENT",
+              "ENTITY_INVALID_DETAILS",
+              "ENTITY_SSN_MISMATCH",
+              "ENTITY_CONSENT_WITHDRAWN",
+              "ENTITY_PENDING_KYC_REVIEW",
+              "ENTITY_CANNOT_PERFORM_ACTION"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error description."
+          }
+        },
+        "example": {
+          "type": "ENTITY_DISABLED",
+          "code": 12002,
+          "sub_type": "ENTITY_INVALID_DETAILS",
+          "message": "Entity was disabled due to invalid information."
+        }
+      },
+      "EntityBase": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the entity.",
+            "pattern": "^ent_\\w+$",
+            "example": "ent_au22b1fbFJbp8"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of entity.",
+            "enum": [
+              "individual",
+              "c_corporation",
+              "s_corporation",
+              "llc",
+              "partnership",
+              "sole_proprietorship",
+              "corporation"
+            ]
+          },
+          "address": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The entity's address.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Address"
+              }
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the entity.",
+            "enum": [
+              "active",
+              "incomplete",
+              "disabled"
+            ]
+          },
+          "error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Error details if the entity encountered an error.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityResourceError"
+              }
+            ]
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the entity was created."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the entity was last updated."
+          }
+        }
+      },
       "EntityIndividual": {
         "type": [
           "object",
@@ -12931,157 +13109,6 @@
               "null"
             ],
             "description": "Last 4 digits of SSN (masked)."
-          }
-        }
-      },
-      "Address": {
-        "type": "object",
-        "description": "Postal mailing address.",
-        "properties": {
-          "line1": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Primary street address line.",
-            "example": "123 Main St"
-          },
-          "line2": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Secondary address line such as apartment or suite.",
-            "example": "Apt 4B"
-          },
-          "city": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "City or locality.",
-            "example": "Austin"
-          },
-          "state": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Two-letter state or province code when available.",
-            "example": "TX"
-          },
-          "zip": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Postal code.",
-            "example": "78701"
-          }
-        },
-        "example": {
-          "line1": "123 Main St",
-          "line2": "Apt 4B",
-          "city": "Austin",
-          "state": "TX",
-          "zip": "78701"
-        }
-      },
-      "EntityCorporationOwner": {
-        "type": "object",
-        "properties": {
-          "first_name": {
-            "type": "string",
-            "description": "First name of the owner."
-          },
-          "last_name": {
-            "type": "string",
-            "description": "Last name of the owner."
-          },
-          "phone": {
-            "type": "string",
-            "description": "Phone number of the owner.",
-            "pattern": "^\\+\\d{10,15}$"
-          },
-          "email": {
-            "type": "string",
-            "description": "Email address of the owner.",
-            "format": "email"
-          },
-          "dob": {
-            "type": "string",
-            "format": "date",
-            "description": "Date of birth of the owner (YYYY-MM-DD)."
-          },
-          "address": {
-            "$ref": "#/components/schemas/Address"
-          }
-        }
-      },
-      "EntityCorporation": {
-        "type": [
-          "object",
-          "null"
-        ],
-        "properties": {
-          "name": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Legal name of the corporation."
-          },
-          "dba": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Doing business as name."
-          },
-          "ein": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Employer Identification Number."
-          },
-          "owners": {
-            "type": [
-              "array",
-              "null"
-            ],
-            "items": {
-              "$ref": "#/components/schemas/EntityCorporationOwner"
-            },
-            "description": "List of beneficial owners."
-          }
-        }
-      },
-      "EntityReceiveOnly": {
-        "type": [
-          "object",
-          "null"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the receive-only entity."
-          },
-          "phone": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Phone number of the receive-only entity.",
-            "pattern": "^\\+\\d{10,15}$"
-          },
-          "email": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Email address of the receive-only entity.",
-            "format": "email"
           }
         }
       },
@@ -13145,7 +13172,6 @@
           "status",
           "type",
           "method",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -13357,64 +13383,6 @@
           }
         }
       },
-      "EntityResourceError": {
-        "type": [
-          "object",
-          "null"
-        ],
-        "description": "Error details when an entity is disabled or verification fails.",
-        "required": [
-          "type",
-          "code",
-          "sub_type",
-          "message"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "The category of entity error.",
-            "enum": [
-              "ENTITY_DISABLED",
-              "ENTITY_VERIFICATION_FAILED"
-            ]
-          },
-          "code": {
-            "type": "integer",
-            "description": "Numeric error code (12XXX range).",
-            "enum": [
-              12001,
-              12002,
-              12003,
-              12004,
-              12005,
-              12006,
-              12007
-            ]
-          },
-          "sub_type": {
-            "type": "string",
-            "description": "Specific entity error classification.",
-            "enum": [
-              "ENTITY_UNAUTHORIZED_PAYMENT",
-              "ENTITY_INVALID_DETAILS",
-              "ENTITY_SSN_MISMATCH",
-              "ENTITY_CONSENT_WITHDRAWN",
-              "ENTITY_PENDING_KYC_REVIEW",
-              "ENTITY_CANNOT_PERFORM_ACTION"
-            ]
-          },
-          "message": {
-            "type": "string",
-            "description": "Human-readable error description."
-          }
-        },
-        "example": {
-          "type": "ENTITY_DISABLED",
-          "code": 12002,
-          "sub_type": "ENTITY_INVALID_DETAILS",
-          "message": "Entity was disabled due to invalid information."
-        }
-      },
       "ConnectResourceError": {
         "type": [
           "object",
@@ -13472,7 +13440,6 @@
           "accounts",
           "requested_products",
           "requested_subscriptions",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -13628,7 +13595,6 @@
           "entity_id",
           "status",
           "scores",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -13991,7 +13957,6 @@
           "entity_id",
           "status",
           "attributes",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -14050,7 +14015,6 @@
           "entity_id",
           "status",
           "vehicles",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -14160,201 +14124,6 @@
           }
         }
       },
-      "EntityBase": {
-        "type": "object",
-        "required": [
-          "id",
-          "type",
-          "status",
-          "verification",
-          "products",
-          "restricted_products",
-          "subscriptions",
-          "available_subscriptions",
-          "restricted_subscriptions",
-          "created_at",
-          "updated_at"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the entity.",
-            "pattern": "^ent_\\w+$",
-            "example": "ent_au22b1fbFJbp8"
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of entity.",
-            "enum": [
-              "individual",
-              "c_corporation",
-              "s_corporation",
-              "llc",
-              "partnership",
-              "sole_proprietorship",
-              "receive_only",
-              "corporation"
-            ]
-          },
-          "individual": {
-            "$ref": "#/components/schemas/EntityIndividual"
-          },
-          "corporation": {
-            "$ref": "#/components/schemas/EntityCorporation"
-          },
-          "receive_only": {
-            "$ref": "#/components/schemas/EntityReceiveOnly"
-          },
-          "address": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "The entity's address.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Address"
-              }
-            ]
-          },
-          "status": {
-            "type": "string",
-            "description": "Current status of the entity.",
-            "enum": [
-              "active",
-              "incomplete",
-              "disabled"
-            ]
-          },
-          "verification": {
-            "$ref": "#/components/schemas/EntityVerification"
-          },
-          "error": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "Error details if the entity encountered an error.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EntityResourceError"
-              }
-            ]
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/Metadata"
-          },
-          "products": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Products currently active for this entity."
-          },
-          "restricted_products": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Products restricted for this entity."
-          },
-          "subscriptions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Active subscriptions for this entity."
-          },
-          "available_subscriptions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Subscriptions available for this entity."
-          },
-          "restricted_subscriptions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Subscriptions restricted for this entity."
-          },
-          "connect": {
-            "description": "Expandable. The entity connect session ID or expanded connect object.",
-            "example": "cxn_iENwGBMDnr7sJ",
-            "oneOf": [
-              {
-                "type": "string",
-                "pattern": "^cxn_\\w+$"
-              },
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/EntityConnect"
-              }
-            ]
-          },
-          "credit_score": {
-            "description": "Expandable. The entity credit score ID or expanded credit score object.",
-            "example": "crs_pn4ca33GRnrJm",
-            "oneOf": [
-              {
-                "type": "string",
-                "pattern": "^crs_\\w+$"
-              },
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/EntityCreditScore"
-              }
-            ]
-          },
-          "attribute": {
-            "description": "Expandable. The entity attribute ID or expanded attribute object.",
-            "example": "attr_QwMjMDEwMTY1",
-            "oneOf": [
-              {
-                "type": "string",
-                "pattern": "^attr_\\w+$"
-              },
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/EntityAttribute"
-              }
-            ]
-          },
-          "vehicle": {
-            "description": "Expandable. The entity vehicle ID or expanded vehicle object.",
-            "example": "vhl_JMDEwMTY1Qw4c",
-            "oneOf": [
-              {
-                "type": "string",
-                "pattern": "^vhl_\\w+$"
-              },
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/EntityVehicle"
-              }
-            ]
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the entity was created."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the entity was last updated."
-          }
-        }
-      },
       "EntityIndividualResource": {
         "allOf": [
           {
@@ -14362,16 +14131,198 @@
           },
           {
             "type": "object",
+            "required": [
+              "products",
+              "restricted_products",
+              "subscriptions",
+              "available_subscriptions",
+              "restricted_subscriptions"
+            ],
             "properties": {
               "type": {
                 "type": "string",
                 "enum": [
                   "individual"
                 ]
+              },
+              "individual": {
+                "$ref": "#/components/schemas/EntityIndividual"
+              },
+              "verification": {
+                "$ref": "#/components/schemas/EntityVerification"
+              },
+              "connect": {
+                "description": "Expandable. The entity connect session ID or expanded connect object.",
+                "example": "cxn_iENwGBMDnr7sJ",
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^cxn_\\w+$"
+                  },
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/EntityConnect"
+                  }
+                ]
+              },
+              "credit_score": {
+                "description": "Expandable. The entity credit score ID or expanded credit score object.",
+                "example": "crs_pn4ca33GRnrJm",
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^crs_\\w+$"
+                  },
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/EntityCreditScore"
+                  }
+                ]
+              },
+              "attribute": {
+                "description": "Expandable. The entity attribute ID or expanded attribute object.",
+                "example": "attr_QwMjMDEwMTY1",
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^attr_\\w+$"
+                  },
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/EntityAttribute"
+                  }
+                ]
+              },
+              "vehicle": {
+                "description": "Expandable. The entity vehicle ID or expanded vehicle object.",
+                "example": "vhl_JMDEwMTY1Qw4c",
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^vhl_\\w+$"
+                  },
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/EntityVehicle"
+                  }
+                ]
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Products currently active for this entity."
+              },
+              "restricted_products": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Products restricted for this entity."
+              },
+              "subscriptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Active subscriptions for this entity."
+              },
+              "available_subscriptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Subscriptions available for this entity."
+              },
+              "restricted_subscriptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Subscriptions restricted for this entity."
               }
             }
           }
         ]
+      },
+      "EntityCorporationOwner": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "description": "First name of the owner."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Last name of the owner."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number of the owner.",
+            "pattern": "^\\+\\d{10,15}$"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the owner.",
+            "format": "email"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of birth of the owner (YYYY-MM-DD)."
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          }
+        }
+      },
+      "EntityCorporation": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Legal name of the corporation."
+          },
+          "dba": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Doing business as name."
+          },
+          "ein": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Employer Identification Number."
+          },
+          "owners": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/EntityCorporationOwner"
+            },
+            "description": "List of beneficial owners."
+          }
+        }
       },
       "EntityCorporationResource": {
         "allOf": [
@@ -14384,31 +14335,11 @@
               "type": {
                 "type": "string",
                 "enum": [
-                  "corporation",
-                  "c_corporation",
-                  "s_corporation",
-                  "llc",
-                  "partnership",
-                  "sole_proprietorship"
+                  "corporation"
                 ]
-              }
-            }
-          }
-        ]
-      },
-      "EntityReceiveOnlyResource": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "receive_only"
-                ]
+              },
+              "corporation": {
+                "$ref": "#/components/schemas/EntityCorporation"
               }
             }
           }
@@ -14422,9 +14353,6 @@
           },
           {
             "$ref": "#/components/schemas/EntityCorporationResource"
-          },
-          {
-            "$ref": "#/components/schemas/EntityReceiveOnlyResource"
           }
         ],
         "discriminator": {
@@ -14436,8 +14364,7 @@
             "s_corporation": "#/components/schemas/EntityCorporationResource",
             "llc": "#/components/schemas/EntityCorporationResource",
             "partnership": "#/components/schemas/EntityCorporationResource",
-            "sole_proprietorship": "#/components/schemas/EntityCorporationResource",
-            "receive_only": "#/components/schemas/EntityReceiveOnlyResource"
+            "sole_proprietorship": "#/components/schemas/EntityCorporationResource"
           }
         }
       },
@@ -14616,8 +14543,6 @@
               "email": "jane@example.com",
               "dob": "1990-05-21"
             },
-            "corporation": null,
-            "receive_only": null,
             "address": {
               "line1": "123 Main St",
               "line2": null,
@@ -14625,23 +14550,46 @@
               "state": "TX",
               "zip": "78701"
             },
-            "status": "active",
-            "verification": null,
-            "error": null,
-            "metadata": {
-              "customer_reference": "ent-001"
+            "verification": {
+              "identity": {
+                "verified": true,
+                "matched": true,
+                "latest_verification_session": "evf_aBcDeFgHiJkLm",
+                "methods": []
+              },
+              "phone": {
+                "verified": true,
+                "latest_verification_session": "evf_nOpQrStUvWxYz",
+                "methods": []
+              }
             },
-            "products": [],
-            "restricted_products": [],
-            "subscriptions": [],
-            "available_subscriptions": [],
-            "restricted_subscriptions": [],
             "connect": null,
             "credit_score": null,
             "attribute": null,
             "vehicle": null,
-            "created_at": "2026-01-15T18:30:00.000Z",
-            "updated_at": "2026-01-15T18:30:00.000Z"
+            "products": [
+              "connect",
+              "credit_score"
+            ],
+            "restricted_products": [
+              "attribute",
+              "identity",
+              "manual_connect",
+              "vehicle"
+            ],
+            "subscriptions": [],
+            "available_subscriptions": [
+              "connect",
+              "credit_score"
+            ],
+            "restricted_subscriptions": [
+              "attribute"
+            ],
+            "status": "active",
+            "error": null,
+            "metadata": null,
+            "created_at": "2024-12-05T10:05:21.742Z",
+            "updated_at": "2024-12-05T10:11:17.823Z"
           },
           "message": null
         }
@@ -14789,7 +14737,6 @@
           "entity_id",
           "status",
           "identities",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -16404,7 +16351,6 @@
           "amount",
           "description",
           "fee",
-          "error",
           "created_at",
           "updated_at"
         ],
@@ -17099,8 +17045,6 @@
           "url",
           "status",
           "expand_event",
-          "error",
-          "metadata",
           "created_at",
           "updated_at"
         ],

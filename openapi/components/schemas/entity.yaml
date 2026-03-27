@@ -3,7 +3,6 @@ Entity:
   oneOf:
   - $ref: '#/EntityIndividualResource'
   - $ref: '#/EntityCorporationResource'
-  - $ref: '#/EntityReceiveOnlyResource'
   discriminator:
     propertyName: type
     mapping:
@@ -14,19 +13,12 @@ Entity:
       llc: '#/EntityCorporationResource'
       partnership: '#/EntityCorporationResource'
       sole_proprietorship: '#/EntityCorporationResource'
-      receive_only: '#/EntityReceiveOnlyResource'
 EntityBase:
   type: object
   required:
   - id
   - type
   - status
-  - verification
-  - products
-  - restricted_products
-  - subscriptions
-  - available_subscriptions
-  - restricted_subscriptions
   - created_at
   - updated_at
   properties:
@@ -45,14 +37,7 @@ EntityBase:
       - llc
       - partnership
       - sole_proprietorship
-      - receive_only
       - corporation
-    individual:
-      $ref: '#/EntityIndividual'
-    corporation:
-      $ref: '#/EntityCorporation'
-    receive_only:
-      $ref: '#/EntityReceiveOnly'
     address:
       type:
       - object
@@ -67,8 +52,6 @@ EntityBase:
       - active
       - incomplete
       - disabled
-    verification:
-      $ref: '#/EntityVerification'
     error:
       type:
       - object
@@ -78,63 +61,6 @@ EntityBase:
       - $ref: errors/entity_errors.yaml#/EntityResourceError
     metadata:
       $ref: common.yaml#/Metadata
-    products:
-      type: array
-      items:
-        type: string
-      description: Products currently active for this entity.
-    restricted_products:
-      type: array
-      items:
-        type: string
-      description: Products restricted for this entity.
-    subscriptions:
-      type: array
-      items:
-        type: string
-      description: Active subscriptions for this entity.
-    available_subscriptions:
-      type: array
-      items:
-        type: string
-      description: Subscriptions available for this entity.
-    restricted_subscriptions:
-      type: array
-      items:
-        type: string
-      description: Subscriptions restricted for this entity.
-    connect:
-      description: Expandable. The entity connect session ID or expanded connect object.
-      example: cxn_iENwGBMDnr7sJ
-      oneOf:
-      - type: string
-        pattern: ^cxn_\w+$
-      - type: 'null'
-      - $ref: '#/EntityConnect'
-    credit_score:
-      description: Expandable. The entity credit score ID or expanded credit score object.
-      example: crs_pn4ca33GRnrJm
-      oneOf:
-      - type: string
-        pattern: ^crs_\w+$
-      - type: 'null'
-      - $ref: '#/EntityCreditScore'
-    attribute:
-      description: Expandable. The entity attribute ID or expanded attribute object.
-      example: attr_QwMjMDEwMTY1
-      oneOf:
-      - type: string
-        pattern: ^attr_\w+$
-      - type: 'null'
-      - $ref: '#/EntityAttribute'
-    vehicle:
-      description: Expandable. The entity vehicle ID or expanded vehicle object.
-      example: vhl_JMDEwMTY1Qw4c
-      oneOf:
-      - type: string
-        pattern: ^vhl_\w+$
-      - type: 'null'
-      - $ref: '#/EntityVehicle'
     created_at:
       type: string
       format: date-time
@@ -147,11 +73,78 @@ EntityIndividualResource:
   allOf:
   - $ref: '#/EntityBase'
   - type: object
+    required:
+    - products
+    - restricted_products
+    - subscriptions
+    - available_subscriptions
+    - restricted_subscriptions
     properties:
       type:
         type: string
         enum:
         - individual
+      individual:
+        $ref: '#/EntityIndividual'
+      verification:
+        $ref: '#/EntityVerification'
+      connect:
+        description: Expandable. The entity connect session ID or expanded connect object.
+        example: cxn_iENwGBMDnr7sJ
+        oneOf:
+        - type: string
+          pattern: ^cxn_\w+$
+        - type: 'null'
+        - $ref: '#/EntityConnect'
+      credit_score:
+        description: Expandable. The entity credit score ID or expanded credit score object.
+        example: crs_pn4ca33GRnrJm
+        oneOf:
+        - type: string
+          pattern: ^crs_\w+$
+        - type: 'null'
+        - $ref: '#/EntityCreditScore'
+      attribute:
+        description: Expandable. The entity attribute ID or expanded attribute object.
+        example: attr_QwMjMDEwMTY1
+        oneOf:
+        - type: string
+          pattern: ^attr_\w+$
+        - type: 'null'
+        - $ref: '#/EntityAttribute'
+      vehicle:
+        description: Expandable. The entity vehicle ID or expanded vehicle object.
+        example: vhl_JMDEwMTY1Qw4c
+        oneOf:
+        - type: string
+          pattern: ^vhl_\w+$
+        - type: 'null'
+        - $ref: '#/EntityVehicle'
+      products:
+        type: array
+        items:
+          type: string
+        description: Products currently active for this entity.
+      restricted_products:
+        type: array
+        items:
+          type: string
+        description: Products restricted for this entity.
+      subscriptions:
+        type: array
+        items:
+          type: string
+        description: Active subscriptions for this entity.
+      available_subscriptions:
+        type: array
+        items:
+          type: string
+        description: Subscriptions available for this entity.
+      restricted_subscriptions:
+        type: array
+        items:
+          type: string
+        description: Subscriptions restricted for this entity.
 EntityCorporationResource:
   allOf:
   - $ref: '#/EntityBase'
@@ -161,20 +154,8 @@ EntityCorporationResource:
         type: string
         enum:
         - corporation
-        - c_corporation
-        - s_corporation
-        - llc
-        - partnership
-        - sole_proprietorship
-EntityReceiveOnlyResource:
-  allOf:
-  - $ref: '#/EntityBase'
-  - type: object
-    properties:
-      type:
-        type: string
-        enum:
-        - receive_only
+      corporation:
+        $ref: '#/EntityCorporation'
 EntityIndividual:
   type:
   - object
@@ -269,33 +250,6 @@ EntityCorporationOwner:
       description: Date of birth of the owner (YYYY-MM-DD).
     address:
       $ref: common.yaml#/Address
-EntityReceiveOnly:
-  type:
-  - object
-  - 'null'
-  properties:
-    name:
-      type: string
-      description: Name of the receive-only entity.
-    phone:
-      type:
-      - string
-      - 'null'
-      description: Phone number of the receive-only entity.
-      pattern: '^\+\d{10,15}$'
-    email:
-      type:
-      - string
-      - 'null'
-      description: Email address of the receive-only entity.
-      format: email
-EntityCapability:
-  type: string
-  enum:
-  - payments:receive
-  - payments:send
-  - data:retrieve
-  - data:sync
 EntityVerification:
   type:
   - object
@@ -435,22 +389,6 @@ CreateEntityCorporation:
       items:
         $ref: '#/EntityCorporationOwner'
       description: List of beneficial owners.
-CreateEntityReceiveOnly:
-  type: object
-  required:
-  - name
-  properties:
-    name:
-      type: string
-      description: Name of the receive-only entity (required).
-    phone:
-      type: string
-      description: Phone number of the receive-only entity.
-      pattern: '^\+\d{10,15}$'
-    email:
-      type: string
-      description: Email address of the receive-only entity.
-      format: email
 UpdateEntityRequest:
   type: object
   properties:
@@ -469,7 +407,6 @@ EntityAttribute:
   - entity_id
   - status
   - attributes
-  - error
   - created_at
   - updated_at
   properties:
@@ -692,7 +629,6 @@ EntityConnect:
   - accounts
   - requested_products
   - requested_subscriptions
-  - error
   - created_at
   - updated_at
   properties:
@@ -756,7 +692,6 @@ EntityCreditScore:
   - entity_id
   - status
   - scores
-  - error
   - created_at
   - updated_at
   properties:
@@ -851,7 +786,6 @@ EntityIdentity:
   - entity_id
   - status
   - identities
-  - error
   - created_at
   - updated_at
   properties:
@@ -1051,7 +985,6 @@ EntityVehicle:
   - entity_id
   - status
   - vehicles
-  - error
   - created_at
   - updated_at
   properties:
@@ -1140,7 +1073,6 @@ EntityVerificationSession:
   - status
   - type
   - method
-  - error
   - created_at
   - updated_at
   properties:
@@ -1362,30 +1294,45 @@ EntityResponse:
         phone: '+15125550123'
         email: jane@example.com
         dob: '1990-05-21'
-      corporation: null
-      receive_only: null
       address:
         line1: 123 Main St
         line2: null
         city: Austin
         state: TX
         zip: '78701'
-      status: active
-      verification: null
-      error: null
-      metadata:
-        customer_reference: ent-001
-      products: []
-      restricted_products: []
-      subscriptions: []
-      available_subscriptions: []
-      restricted_subscriptions: []
+      verification:
+        identity:
+          verified: true
+          matched: true
+          latest_verification_session: evf_aBcDeFgHiJkLm
+          methods: []
+        phone:
+          verified: true
+          latest_verification_session: evf_nOpQrStUvWxYz
+          methods: []
       connect: null
       credit_score: null
       attribute: null
       vehicle: null
-      created_at: '2026-01-15T18:30:00.000Z'
-      updated_at: '2026-01-15T18:30:00.000Z'
+      products:
+        - connect
+        - credit_score
+      restricted_products:
+        - attribute
+        - identity
+        - manual_connect
+        - vehicle
+      subscriptions: []
+      available_subscriptions:
+        - connect
+        - credit_score
+      restricted_subscriptions:
+        - attribute
+      status: active
+      error: null
+      metadata: null
+      created_at: '2024-12-05T10:05:21.742Z'
+      updated_at: '2024-12-05T10:11:17.823Z'
     message: null
 EntityListResponse:
   allOf:

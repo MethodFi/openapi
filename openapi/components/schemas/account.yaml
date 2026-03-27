@@ -27,9 +27,6 @@ AccountBase:
   - consent_status
   - products
   - restricted_products
-  - subscriptions
-  - available_subscriptions
-  - restricted_subscriptions
   - created_at
   - updated_at
   properties:
@@ -87,21 +84,6 @@ AccountBase:
     restricted_products:
       type: array
       description: Products restricted from this account.
-      items:
-        type: string
-    subscriptions:
-      type: array
-      description: Subscriptions currently active for this account.
-      items:
-        type: string
-    available_subscriptions:
-      type: array
-      description: Subscriptions available to be enrolled for this account.
-      items:
-        type: string
-    restricted_subscriptions:
-      type: array
-      description: Subscriptions restricted from this account.
       items:
         type: string
     latest_verification_session:
@@ -197,11 +179,30 @@ AccountLiabilityResource:
   allOf:
   - $ref: '#/AccountBase'
   - type: object
+    required:
+    - subscriptions
+    - available_subscriptions
+    - restricted_subscriptions
     properties:
       type:
         type: string
         enum:
         - liability
+      subscriptions:
+        type: array
+        description: Subscriptions currently active for this account.
+        items:
+          type: string
+      available_subscriptions:
+        type: array
+        description: Subscriptions available to be enrolled for this account.
+        items:
+          type: string
+      restricted_subscriptions:
+        type: array
+        description: Subscriptions restricted from this account.
+        items:
+          type: string
 AccountClearingResource:
   allOf:
   - $ref: '#/AccountBase'
@@ -341,14 +342,6 @@ AccountDebitCard:
     issuer:
       type: string
       description: The card issuer.
-AccountCapability:
-  type: string
-  description: A capability that can be enabled for an account.
-  enum:
-  - payments:send
-  - payments:receive
-  - data:retrieve
-  - data:sync
 AccountExpandableFields:
   type: string
   description: Fields on an Account that can be expanded.
@@ -601,7 +594,6 @@ AccountAttribute:
   - account_id
   - status
   - attributes
-  - error
   - created_at
   - updated_at
   properties:
@@ -659,7 +651,6 @@ AccountBalance:
   - account_id
   - status
   - amount
-  - error
   - created_at
   - updated_at
   properties:
@@ -720,7 +711,6 @@ AccountCardBrand:
   - issuer
   - last4
   - status
-  - error
   - created_at
   - updated_at
   properties:
@@ -809,7 +799,6 @@ AccountPaymentInstrument:
   - account_id
   - status
   - type
-  - error
   - created_at
   - updated_at
   properties:
@@ -869,7 +858,6 @@ AccountPayoff:
   - amount
   - term
   - per_diem_amount
-  - error
   - created_at
   - updated_at
   properties:
@@ -1002,7 +990,6 @@ AccountSensitive:
   - status
   - type
   - fields
-  - error
   - created_at
   - updated_at
   properties:
@@ -1284,7 +1271,6 @@ AccountUpdate:
   - account_id
   - status
   - type
-  - error
   - created_at
   - updated_at
   properties:
@@ -1341,7 +1327,6 @@ AccountVerificationSession:
   - account_id
   - status
   - type
-  - error
   - created_at
   - updated_at
   properties:

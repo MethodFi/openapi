@@ -234,7 +234,6 @@ PaymentReversal:
   - amount
   - description
   - fee
-  - error
   - created_at
   - updated_at
   properties:
