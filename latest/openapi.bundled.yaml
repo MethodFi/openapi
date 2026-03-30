@@ -1021,6 +1021,12 @@ paths:
         - $ref: '#/components/parameters/method_version'
         - $ref: '#/components/parameters/idempotency_key'
         - $ref: '#/components/parameters/AccountIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountPaymentInstrumentCreateRequest'
       responses:
         '200':
           description: The newly created account payment instrument.
@@ -7179,13 +7185,58 @@ components:
           type: string
           description: Current status of the payment instrument.
           enum:
-            - active
             - pending
-            - failed
-            - closed
+            - in_progress
+            - completed
         type:
           type: string
           description: The type of payment instrument.
+          enum:
+            - card
+            - network_token
+            - inbound_achwire_payment
+        chargeable:
+          type: boolean
+          description: Whether this payment instrument is currently chargeable.
+        card:
+          type:
+            - object
+            - 'null'
+          description: Card details. Present when type is card.
+          properties:
+            number:
+              type: string
+              description: The card number.
+            exp_month:
+              type: string
+              description: Card expiration month.
+            exp_year:
+              type: string
+              description: Card expiration year.
+            billing_zip_code:
+              type: string
+              description: Billing zip code.
+        network_token:
+          type:
+            - object
+            - 'null'
+          description: Network token details. Present when type is network_token.
+          properties:
+            token:
+              type: string
+              description: The network token value.
+        inbound_achwire_payment:
+          type:
+            - object
+            - 'null'
+          description: ACH/wire payment details. Present when type is inbound_achwire_payment.
+          properties:
+            account_number:
+              type: string
+              description: The account number.
+            routing_number:
+              type: string
+              description: The routing number.
         error:
           $ref: '#/components/schemas/ResourceError'
         created_at:
@@ -7202,9 +7253,6 @@ components:
       required:
         - id
         - account_id
-        - network
-        - issuer
-        - last4
         - status
         - created_at
         - updated_at
@@ -7218,11 +7266,62 @@ components:
           type: string
           description: The account this card brand belongs to.
           pattern: ^acc_\w+$
+        brands:
+          type:
+            - array
+            - 'null'
+          description: Array of card brand entries for this account.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unique identifier for the brand entry.
+              card_product_id:
+                type:
+                  - string
+                  - 'null'
+                description: Associated card product ID.
+              description:
+                type: string
+                description: Description of the brand.
+              name:
+                type: string
+                description: Name of the brand.
+              issuer:
+                type: string
+                description: The card issuer.
+              network:
+                type: string
+                description: The card network.
+              network_tier:
+                type: string
+                description: The tier of the card network.
+              type:
+                type:
+                  - string
+                  - 'null'
+                description: The brand type.
+              url:
+                type: string
+                description: URL for the brand image.
+        source:
+          type:
+            - string
+            - 'null'
+          description: Source of the card brand data.
+          enum:
+            - network
+            - method
+            - null
+        shared:
+          type: boolean
+          description: Whether this card brand record is shared.
         network:
           type:
             - string
             - 'null'
-          description: The card network.
+          description: The card network. Deprecated in favor of brands[].network.
           enum:
             - visa
             - mastercard
@@ -7233,12 +7332,12 @@ components:
           type:
             - string
             - 'null'
-          description: The card issuer.
+          description: The card issuer. Deprecated in favor of brands[].issuer.
         last4:
           type:
             - string
             - 'null'
-          description: Last 4 digits of the card number.
+          description: Last 4 digits of the card number. Deprecated in favor of brands[].
         status:
           type: string
           description: Current status of the card brand request.
@@ -7971,6 +8070,19 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/AccountPaymentInstrument'
+    AccountPaymentInstrumentCreateRequest:
+      type: object
+      description: Request body for creating an account payment instrument.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The type of payment instrument to create.
+          enum:
+            - card
+            - network_token
+            - inbound_achwire_payment
     AccountPaymentInstrumentResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessEnvelope'
@@ -8173,11 +8285,8 @@ components:
         - enroll
       properties:
         enroll:
-          type: array
-          description: Array of subscription names to enroll.
-          items:
-            type: string
-          minItems: 1
+          type: string
+          description: Subscription name to enroll.
     AccountSubscriptionResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessEnvelope'
@@ -8524,6 +8633,36 @@ components:
             - string
             - 'null'
           description: The card product type.
+          enum:
+            - specific
+            - generic
+            - in_review
+            - null
+        brands:
+          type:
+            - array
+            - 'null'
+          description: Array of brand entries for this card product.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unique identifier for the brand.
+              description:
+                type: string
+                description: Description of the brand.
+              network:
+                type: string
+                description: Card network for this brand.
+              network_tier:
+                type: string
+                description: Network tier for this brand.
+              default_image:
+                type: string
+                description: URL of the default image for this brand.
+        error:
+          $ref: '#/components/schemas/ResourceError'
         created_at:
           type: string
           format: date-time
@@ -10066,15 +10205,27 @@ components:
         - enroll
       properties:
         enroll:
-          type: array
-          description: Array of subscription names to enroll.
-          items:
-            type: string
-            enum:
-              - attribute
-              - connect
-              - credit_score
-          minItems: 1
+          type: string
+          description: Subscription name to enroll.
+          enum:
+            - attribute
+            - connect
+            - credit_score
+        payload:
+          type:
+            - object
+            - 'null'
+          description: Optional payload for the subscription. Required when enroll is attribute.
+          properties:
+            attributes:
+              type: object
+              description: Attributes configuration for the subscription.
+              properties:
+                requested_attributes:
+                  type: array
+                  description: List of attribute names to request.
+                  items:
+                    type: string
     EntitySubscriptionResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessEnvelope'

@@ -969,15 +969,27 @@ CreateEntitySubscriptionRequest:
   - enroll
   properties:
     enroll:
-      type: array
-      description: Array of subscription names to enroll.
-      items:
-        type: string
-        enum:
-        - attribute
-        - connect
-        - credit_score
-      minItems: 1
+      type: string
+      description: Subscription name to enroll.
+      enum:
+      - attribute
+      - connect
+      - credit_score
+    payload:
+      type:
+      - object
+      - 'null'
+      description: Optional payload for the subscription. Required when enroll is attribute.
+      properties:
+        attributes:
+          type: object
+          description: Attributes configuration for the subscription.
+          properties:
+            requested_attributes:
+              type: array
+              description: List of attribute names to request.
+              items:
+                type: string
 EntityVehicle:
   type: object
   required:
