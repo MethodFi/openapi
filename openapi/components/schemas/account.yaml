@@ -1363,6 +1363,244 @@ AccountVerificationSession:
       - instant
       - network
       - three_ds
+    micro_deposits:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type micro_deposits.
+      properties:
+        amounts:
+          type: array
+          description: The latest amounts that this verification session was updated with.
+          items:
+            type: integer
+    plaid:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type plaid.
+      properties:
+        balances:
+          type: object
+          description: The raw balance data received from Plaid.
+        transactions:
+          type: array
+          description: The raw transaction data received from Plaid.
+          items:
+            type: object
+    mx:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type mx.
+      properties:
+        account:
+          type: object
+          description: The raw account data received from MX.
+        transactions:
+          type: array
+          description: The raw transaction data received from MX.
+          items:
+            type: object
+    teller:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type teller.
+      properties:
+        balances:
+          type: object
+          description: The raw balance data received from Teller.
+        transactions:
+          type: array
+          description: The raw transaction data received from Teller.
+          items:
+            type: object
+    auto_verify:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type auto_verify.
+    trusted_provisioner:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type trusted_provisioner.
+    standard:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type standard.
+      properties:
+        number:
+          type:
+          - string
+          - 'null'
+          description: The masked card number. Null if the number still needs to be provided.
+    pre_auth:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type pre_auth.
+      properties:
+        number:
+          type:
+          - string
+          - 'null'
+          description: The masked card number. Null if the number still needs to be provided.
+        exp_month:
+          type:
+          - string
+          - 'null'
+          description: The masked card expiration month. Null if it still needs to be provided.
+        exp_year:
+          type:
+          - string
+          - 'null'
+          description: The masked card expiration year. Null if it still needs to be provided.
+        exp_check:
+          type:
+          - string
+          - 'null'
+          description: The card expiration verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+        cvv:
+          type:
+          - string
+          - 'null'
+          description: The masked card CVV. Null if it still needs to be provided.
+        cvv_check:
+          type:
+          - string
+          - 'null'
+          description: The card CVV verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+        billing_zip_code:
+          type:
+          - string
+          - 'null'
+          description: The masked billing zip code.
+        billing_zip_code_check:
+          type:
+          - string
+          - 'null'
+          description: The billing zip code verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+        pre_auth_check:
+          type:
+          - string
+          - 'null'
+          description: The pre-auth verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+    network:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type network.
+      properties:
+        number:
+          type:
+          - string
+          - 'null'
+          description: The masked card number. Null if the number still needs to be provided.
+        exp_month:
+          type:
+          - string
+          - 'null'
+          description: The masked card expiration month. Null if it still needs to be provided.
+        exp_year:
+          type:
+          - string
+          - 'null'
+          description: The masked card expiration year. Null if it still needs to be provided.
+        exp_check:
+          type:
+          - string
+          - 'null'
+          description: The card expiration verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+        cvv:
+          type:
+          - string
+          - 'null'
+          description: The masked card CVV. Null if it still needs to be provided.
+        cvv_check:
+          type:
+          - string
+          - 'null'
+          description: The card CVV verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+        billing_zip_code:
+          type:
+          - string
+          - 'null'
+          description: The masked billing zip code.
+        billing_zip_code_check:
+          type:
+          - string
+          - 'null'
+          description: The billing zip code verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+        network_check:
+          type:
+          - string
+          - 'null'
+          description: The network verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
+    instant:
+      type:
+      - object
+      - 'null'
+      description: Populated when the verification session is of type instant.
+      properties:
+        number:
+          type:
+          - string
+          - 'null'
+          description: The masked card number. Null if the number still needs to be provided.
+        exp_month:
+          type:
+          - string
+          - 'null'
+          description: The masked card expiration month. Null if it still needs to be provided.
+        exp_year:
+          type:
+          - string
+          - 'null'
+          description: The masked card expiration year. Null if it still needs to be provided.
+        exp_check:
+          type:
+          - string
+          - 'null'
+          description: The card expiration verification check result.
+          enum:
+          - pass
+          - fail
+          - unavailable
     error:
       $ref: errors/account_errors.yaml#/AccountVerificationSessionResourceError
     created_at:
@@ -1401,13 +1639,101 @@ AccountVerificationSessionUpdateRequest:
   properties:
     micro_deposits:
       type: object
-      description: Micro deposit verification amounts.
+      description: Micro deposit verification amounts. Required for micro_deposits type.
       properties:
         amounts:
           type: array
           description: The micro deposit amounts to verify.
           items:
             type: integer
+    plaid:
+      type: object
+      description: Plaid verification data. Required for plaid type.
+      properties:
+        balances:
+          type: object
+          description: The raw balance data received from Plaid.
+        transactions:
+          type: array
+          description: The raw transaction data received from Plaid.
+          items:
+            type: object
+    mx:
+      type: object
+      description: MX verification data. Required for mx type.
+      properties:
+        account:
+          type: object
+          description: The raw account data received from MX.
+        transactions:
+          type: array
+          description: The raw transaction data received from MX.
+          items:
+            type: object
+    teller:
+      type: object
+      description: Teller verification data. Required for teller type.
+      properties:
+        balances:
+          type: object
+          description: The raw balance data received from Teller.
+        transactions:
+          type: array
+          description: The raw transaction data received from Teller.
+          items:
+            type: object
+    standard:
+      type: object
+      description: Standard verification data. Required for standard type.
+      properties:
+        number:
+          type: string
+          description: The full card number.
+    pre_auth:
+      type: object
+      description: Pre-auth verification data. Required for pre_auth type.
+      properties:
+        number:
+          type: string
+          description: The full card number. Required if the number on the session is null.
+        exp_month:
+          type: string
+          description: The card expiration month. Required if null or exp_check is fail.
+        exp_year:
+          type: string
+          description: The card expiration year. Required if null or exp_check is fail.
+        cvv:
+          type: string
+          description: The card CVV. Required if null or cvv_check is fail.
+    network:
+      type: object
+      description: Network verification data. Required for network type.
+      properties:
+        number:
+          type: string
+          description: The full card number. Required if the number on the session is null.
+        exp_month:
+          type: string
+          description: The card expiration month. Required if null or exp_check is fail.
+        exp_year:
+          type: string
+          description: The card expiration year. Required if null or exp_check is fail.
+        cvv:
+          type: string
+          description: The card CVV. Required if null or cvv_check is fail.
+    instant:
+      type: object
+      description: Instant verification data. Required for instant type.
+      properties:
+        number:
+          type: string
+          description: The full card number. Required if the number on the session is null.
+        exp_month:
+          type: string
+          description: The card expiration month. Required if null or exp_check is fail.
+        exp_year:
+          type: string
+          description: The card expiration year. Required if null or exp_check is fail.
 AccountVerificationSessionResponse:
   allOf:
   - $ref: common.yaml#/SuccessEnvelope
