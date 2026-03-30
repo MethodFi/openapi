@@ -55,6 +55,12 @@ collection:
     - $ref: ../components/parameters/method_version.yaml
     - $ref: ../components/parameters/idempotency_key.yaml
     - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml#/AccountPaymentInstrumentCreateRequest
     responses:
       '200':
         description: The newly created account payment instrument.

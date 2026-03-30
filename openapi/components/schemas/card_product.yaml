@@ -34,6 +34,36 @@ CardProduct:
       - string
       - 'null'
       description: The card product type.
+      enum:
+      - specific
+      - generic
+      - in_review
+      - null
+    brands:
+      type:
+      - array
+      - 'null'
+      description: Array of brand entries for this card product.
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: Unique identifier for the brand.
+          description:
+            type: string
+            description: Description of the brand.
+          network:
+            type: string
+            description: Card network for this brand.
+          network_tier:
+            type: string
+            description: Network tier for this brand.
+          default_image:
+            type: string
+            description: URL of the default image for this brand.
+    error:
+      $ref: common.yaml#/ResourceError
     created_at:
       type: string
       format: date-time
