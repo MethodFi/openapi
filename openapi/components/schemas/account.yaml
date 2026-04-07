@@ -354,6 +354,8 @@ AccountExpandableFields:
   - update
   - attribute
   - sensitive
+  - transaction
+  - liability.mch_id
 AccountCreateRequest:
   description: 'Request body for creating an account.
 
