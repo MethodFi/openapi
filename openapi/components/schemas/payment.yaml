@@ -22,6 +22,12 @@ Payment:
       - 'null'
       description: Identifier of the associated reversal, if any.
       pattern: ^rvs_\w+$
+    reversal_account:
+      type:
+      - string
+      - 'null'
+      description: Account ID used for the reversal leg of the payment.
+      pattern: ^acc_\w+$
     source_trace_id:
       type:
       - string
@@ -187,6 +193,10 @@ PaymentCreateRequest:
     description:
       type: string
       description: Human-readable description for the payment.
+    reversal_account:
+      type: string
+      description: Account ID to use for the reversal leg of the payment, if applicable.
+      pattern: ^acc_\w+$
     metadata:
       $ref: common.yaml#/Metadata
     dry_run:

@@ -16036,7 +16036,31 @@
           "entity_vehicle.create",
           "entity_vehicle.update",
           "method_jwk.create",
-          "method_jwk.update"
+          "method_jwk.update",
+          "attribute.credit_health_credit_card_usage.increased",
+          "attribute.credit_health_credit_card_usage.decreased",
+          "attribute.credit_health_derogatory_marks.increased",
+          "attribute.credit_health_derogatory_marks.decreased",
+          "attribute.credit_health_hard_inquiries.increased",
+          "attribute.credit_health_hard_inquiries.decreased",
+          "attribute.credit_health_total_accounts.increased",
+          "attribute.credit_health_total_accounts.decreased",
+          "attribute.credit_health_credit_age.increased",
+          "attribute.credit_health_credit_age.decreased",
+          "attribute.credit_health_payment_history.increased",
+          "attribute.credit_health_payment_history.decreased",
+          "attribute.credit_health_open_accounts.increased",
+          "attribute.credit_health_open_accounts.decreased",
+          "entity_attribute.credit_health_open_accounts_value.decreased",
+          "entity_attribute.credit_health_open_accounts_value.increased",
+          "entity_attribute.credit_health_total_accounts_value.decreased",
+          "entity_attribute.credit_health_total_accounts_value.increased",
+          "entity_attribute.credit_health_credit_card_usage_value.decreased",
+          "entity_attribute.credit_health_credit_card_usage_value.increased",
+          "entity_attribute.credit_health_soft_inquiries_value.decreased",
+          "entity_attribute.credit_health_soft_inquiries_value.increased",
+          "entity_attribute.credit_health_hard_inquiries_value.decreased",
+          "entity_attribute.credit_health_hard_inquiries_value.increased"
         ]
       },
       "JsonObject": {
@@ -16675,6 +16699,14 @@
             "description": "Identifier of the associated reversal, if any.",
             "pattern": "^rvs_\\w+$"
           },
+          "reversal_account": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Account ID used for the reversal leg of the payment.",
+            "pattern": "^acc_\\w+$"
+          },
           "source_trace_id": {
             "type": [
               "string",
@@ -16913,6 +16945,11 @@
           "description": {
             "type": "string",
             "description": "Human-readable description for the payment."
+          },
+          "reversal_account": {
+            "type": "string",
+            "description": "Account ID to use for the reversal leg of the payment, if applicable.",
+            "pattern": "^acc_\\w+$"
           },
           "metadata": {
             "$ref": "#/components/schemas/Metadata"
