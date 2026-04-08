@@ -10456,8 +10456,6 @@ components:
         - entity_attribute.credit_health_soft_inquiries_value.increased
         - entity_attribute.credit_health_hard_inquiries_value.decreased
         - entity_attribute.credit_health_hard_inquiries_value.increased
-        - account_verification.sent
-        - account_verification.returned
     JsonObject:
       type: object
       description: Arbitrary JSON object.
