@@ -28,6 +28,13 @@ Payment:
       - 'null'
       description: Account ID used for the reversal leg of the payment.
       pattern: ^acc_\w+$
+    payment_instrument:
+      type:
+      - string
+      - 'null'
+      description: Identifier of the payment instrument used to create this payment, if any.
+      pattern: ^pmt_inst_\w+$
+      example: pmt_inst_aTJMbnCjw34yQ
     source_trace_id:
       type:
       - string
