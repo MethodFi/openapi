@@ -46,6 +46,74 @@ Event:
       type: string
       format: date-time
       description: Timestamp when the event was last updated.
+WebhookEventPayload:
+  type: object
+  description: The outbound payload delivered to a webhook subscription URL when an event occurs.
+  required:
+    - webhook_id
+    - id
+    - type
+    - op
+    - event
+    - refs
+  properties:
+    webhook_id:
+      type:
+        - string
+        - 'null'
+      description: The unique identifier of the webhook subscription that triggered this event.
+      example: whk_cSGjA6d9N8y8R
+    id:
+      type:
+        - string
+        - 'null'
+      description: The identifier of the resource modified.
+      example: acc_BcRdHNjb9TYKV
+    type:
+      description: The webhook event type.
+      example: account.update
+      oneOf:
+        - $ref: webhook.yaml#/WebhookType
+        - type: 'null'
+    op:
+      type:
+        - string
+        - 'null'
+      description: The operation type derived from the event type (the segment after the first dot).
+      example: update
+    path:
+      type:
+        - string
+        - 'null'
+      description: The URL path pointing to the affected resource. Make a HTTP GET request to this path to retrieve the resource. Only present when available.
+      example: /accounts/acc_BcRdHNjb9TYKV
+    event:
+      type:
+        - string
+        - 'null'
+      description: The unique identifier of the event record. Can be used to retrieve the full event details via the Events API.
+      example: evt_knqJgxKUnqDVJ
+    refs:
+      description: An object containing reference IDs to related resources. Commonly includes entity and may include other resource references depending on the event type.
+      oneOf:
+        - type: object
+          additionalProperties:
+            type: string
+        - type: 'null'
+      example:
+        account: acc_BcRdHNjb9TYKV
+        entity: ent_qKNBB68bfHGNA
+  example:
+    webhook_id: whk_cSGjA6d9N8y8R
+    id: acc_BcRdHNjb9TYKV
+    type: account.update
+    op: update
+    path: /accounts/acc_BcRdHNjb9TYKV
+    event: evt_knqJgxKUnqDVJ
+    refs:
+      account: acc_BcRdHNjb9TYKV
+      entity: ent_qKNBB68bfHGNA
+
 EventResponse:
   allOf:
   - $ref: common.yaml#/SuccessEnvelope

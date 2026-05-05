@@ -98,6 +98,21 @@ collection:
         $ref: '../components/responses/error.yaml#/RateLimited'
       '500':
         $ref: '../components/responses/error.yaml#/InternalError'
+    callbacks:
+      webhookEvent:
+        '{$request.body#/url}':
+          post:
+            summary: Webhook event delivery
+            description: Method will POST this payload to your webhook URL when a subscribed event occurs.
+            requestBody:
+              required: true
+              content:
+                application/json:
+                  schema:
+                    $ref: '../components/schemas/event.yaml#/WebhookEventPayload'
+            responses:
+              '200':
+                description: Webhook received successfully.
 
 individual:
   get:
