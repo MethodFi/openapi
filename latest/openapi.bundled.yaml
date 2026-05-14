@@ -6424,26 +6424,33 @@ components:
       type: string
       enum:
         - auto_loan
+        - bank
+        - bnpl
         - business_loan
+        - city
+        - collection
+        - county
+        - credit_builder
         - credit_card
         - electric_utility
+        - fintech
+        - home_equity_loan
         - home_loan
         - insurance
         - internet_utility
         - loan
         - medical
+        - mortgage
         - personal_loan
         - student_loan
+        - student_loans
+        - subscription
         - telephone_utility
         - television_utility
-        - water_utility
-        - bank
-        - city
-        - county
-        - home_equity_loan
-        - mortgage
+        - unknown
         - utility
         - waste_utility
+        - water_utility
     MerchantProviderIds:
       type: object
       properties:
