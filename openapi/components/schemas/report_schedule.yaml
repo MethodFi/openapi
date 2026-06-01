@@ -1,0 +1,204 @@
+ReportScheduleReportType:
+  type: string
+  description: A type of report that can be scheduled.
+  enum:
+  - payments.created.current
+  - payments.created.previous
+  - payments.created.previous_day
+  - payments.updated.current
+  - payments.updated.previous
+  - payments.failed.previous_day
+  - ach.pull.upcoming
+  - ach.pull.previous
+  - ach.pull.nightly
+  - ach.reversals.nightly
+  - ach.debit.daily
+  - entities.created.previous_day
+  - reserve_fbo_balance.created.previous_day
+ReportScheduleDeliveryMethod:
+  type: string
+  description: How a scheduled report is delivered.
+  enum:
+  - webhook
+  - email
+ReportScheduleStatus:
+  type: string
+  description: Current status of the report schedule.
+  enum:
+  - active
+  - inactive
+ReportSchedule:
+  type: object
+  description: A Report Schedule automates report generation and delivery on a recurring cron cadence.
+  required:
+  - id
+  - types
+  - delivery_methods
+  - recipients
+  - cron
+  - status
+  - created_at
+  - updated_at
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the report schedule.
+      pattern: ^rpt_sch_\w+$
+      example: rpt_sch_Gqjh8pzeUfzH6
+    types:
+      type: array
+      description: The types of report that are generated on this schedule.
+      items:
+        $ref: '#/ReportScheduleReportType'
+    delivery_methods:
+      type: array
+      description: How scheduled reports are delivered.
+      items:
+        $ref: '#/ReportScheduleDeliveryMethod'
+    recipients:
+      type:
+      - array
+      - 'null'
+      description: The email addresses that emailed reports are sent to. Required when `delivery_methods` includes `email`.
+      items:
+        type: string
+        format: email
+    cron:
+      type: string
+      description: The cadence at which the schedule runs, provided as a cron expression.
+      example: 0 8 * * *
+    status:
+      $ref: '#/ReportScheduleStatus'
+    created_at:
+      type: string
+      format: date-time
+      description: Timestamp when the report schedule was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the report schedule was last updated.
+ReportScheduleCreateRequest:
+  type: object
+  description: Request body for creating a report schedule.
+  required:
+  - types
+  - delivery_methods
+  properties:
+    types:
+      type: array
+      minItems: 1
+      description: The types of report to generate on this schedule.
+      items:
+        $ref: '#/ReportScheduleReportType'
+    delivery_methods:
+      type: array
+      minItems: 1
+      description: How scheduled reports are delivered. Can be `email`, `webhook`, or both.
+      items:
+        $ref: '#/ReportScheduleDeliveryMethod'
+    recipients:
+      type: array
+      minItems: 1
+      description: The email addresses that emailed reports are sent to. Required when `delivery_methods` includes `email`.
+      items:
+        type: string
+        format: email
+    cron:
+      type: string
+      description: The cadence at which the schedule runs, provided as a cron expression. Defaults to `0 8 * * 1-5` (weekdays at 8:00am CST).
+      example: 0 8 * * *
+ReportScheduleUpdateRequest:
+  type: object
+  description: Request body for updating a report schedule's cron expression.
+  required:
+  - cron
+  properties:
+    cron:
+      type: string
+      description: The cadence at which the schedule runs, provided as a cron expression.
+      example: 0 9 * * 1-5
+ReportScheduleAddTypeRequest:
+  type: object
+  description: Request body for adding a single report type to a schedule.
+  required:
+  - type
+  properties:
+    type:
+      $ref: '#/ReportScheduleReportType'
+ReportScheduleReplaceTypesRequest:
+  type: object
+  description: Request body for replacing the full set of report types on a schedule.
+  required:
+  - types
+  properties:
+    types:
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/ReportScheduleReportType'
+ReportScheduleAddDeliveryMethodRequest:
+  type: object
+  description: Request body for adding a single delivery method to a schedule.
+  required:
+  - delivery_method
+  properties:
+    delivery_method:
+      $ref: '#/ReportScheduleDeliveryMethod'
+ReportScheduleReplaceDeliveryMethodsRequest:
+  type: object
+  description: Request body for replacing the full set of delivery methods on a schedule.
+  required:
+  - delivery_methods
+  properties:
+    delivery_methods:
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/ReportScheduleDeliveryMethod'
+ReportScheduleAddRecipientRequest:
+  type: object
+  description: Request body for adding a single recipient to a schedule.
+  required:
+  - recipient
+  properties:
+    recipient:
+      type: string
+      format: email
+ReportScheduleReplaceRecipientsRequest:
+  type: object
+  description: Request body for replacing the full set of recipients on a schedule.
+  required:
+  - recipients
+  properties:
+    recipients:
+      type: array
+      minItems: 1
+      items:
+        type: string
+        format: email
+ReportScheduleResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/ReportSchedule'
+ReportScheduleListResponse:
+  allOf:
+  - $ref: common.yaml#/ListEnvelope
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/ReportSchedule'
+ReportScheduleDeleteResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        type:
+        - object
+        - 'null'
+        example: null

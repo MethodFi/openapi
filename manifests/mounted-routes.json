@@ -400,6 +400,62 @@
     "path": "/ping"
   },
   {
+    "method": "GET",
+    "path": "/report_schedules"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{scheduleId}"
+  },
+  {
+    "method": "GET",
+    "path": "/report_schedules/{scheduleId}"
+  },
+  {
+    "method": "PATCH",
+    "path": "/report_schedules/{scheduleId}"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{scheduleId}/delivery_methods"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules/{scheduleId}/delivery_methods"
+  },
+  {
+    "method": "PUT",
+    "path": "/report_schedules/{scheduleId}/delivery_methods"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{scheduleId}/recipients"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules/{scheduleId}/recipients"
+  },
+  {
+    "method": "PUT",
+    "path": "/report_schedules/{scheduleId}/recipients"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{scheduleId}/types"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules/{scheduleId}/types"
+  },
+  {
+    "method": "PUT",
+    "path": "/report_schedules/{scheduleId}/types"
+  },
+  {
     "method": "POST",
     "path": "/reports"
   },

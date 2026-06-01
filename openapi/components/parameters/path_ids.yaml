@@ -70,6 +70,15 @@ ReportIdParam:
     type: string
     pattern: '^rpt_\w+$'
 
+ReportScheduleIdParam:
+  name: scheduleId
+  in: path
+  required: true
+  description: Unique identifier for the report schedule.
+  schema:
+    type: string
+    pattern: '^rpt_sch_\w+$'
+
 ReversalIdParam:
   name: reversalId
   in: path

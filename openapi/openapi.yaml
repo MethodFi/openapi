@@ -87,6 +87,8 @@ tags:
   description: Reversals for payments
 - name: Reports
   description: Downloadable reports
+- name: Report Schedules
+  description: Scheduled, recurring report generation and delivery
 - name: Secrets
   description: Secure secret storage
 - name: Teams
@@ -240,6 +242,16 @@ paths:
     $ref: paths/reports.yaml#/individual
   /reports/{reportId}/download:
     $ref: paths/reports.yaml#/download
+  /report_schedules:
+    $ref: paths/report_schedules.yaml#/collection
+  /report_schedules/{scheduleId}:
+    $ref: paths/report_schedules.yaml#/individual
+  /report_schedules/{scheduleId}/types:
+    $ref: paths/report_schedules.yaml#/types
+  /report_schedules/{scheduleId}/delivery_methods:
+    $ref: paths/report_schedules.yaml#/deliveryMethods
+  /report_schedules/{scheduleId}/recipients:
+    $ref: paths/report_schedules.yaml#/recipients
   /secrets:
     $ref: paths/secrets.yaml#/collection
   /secrets/{id}:

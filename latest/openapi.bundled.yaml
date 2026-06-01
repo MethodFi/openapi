@@ -126,6 +126,8 @@ tags:
     description: Reversals for payments
   - name: Reports
     description: Downloadable reports
+  - name: Report Schedules
+    description: Scheduled, recurring report generation and delivery
   - name: Secrets
     description: Secure secret storage
   - name: Teams
@@ -4438,6 +4440,521 @@ paths:
           $ref: '#/components/responses/RateLimited'
         '500':
           $ref: '#/components/responses/InternalError'
+  /report_schedules:
+    get:
+      operationId: listReportSchedules
+      summary: List all report schedules
+      description: Returns all the active report schedules for the authenticated team, or an empty array if none have been created.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+      responses:
+        '200':
+          description: A list of report schedules.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      operationId: createReportSchedule
+      summary: Create a report schedule
+      description: Creates a new report schedule. Once created, the first run is queued immediately for the next scheduled date.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/idempotency_key'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleCreateRequest'
+            example:
+              types:
+                - ach.pull.nightly
+              delivery_methods:
+                - webhook
+                - email
+              recipients:
+                - example@methodfi.com
+              cron: 0 8 * * *
+      responses:
+        '200':
+          description: The newly created report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{scheduleId}:
+    get:
+      operationId: retrieveReportSchedule
+      summary: Retrieve a report schedule
+      description: Returns a single report schedule by its identifier.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+      responses:
+        '200':
+          description: The requested report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    patch:
+      operationId: updateReportSchedule
+      summary: Update a report schedule
+      description: Updates the cron expression of an existing report schedule. The next run is re-queued based on the new cadence.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+        - $ref: '#/components/parameters/idempotency_key'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleUpdateRequest'
+            example:
+              cron: 0 9 * * 1-5
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteReportSchedule
+      summary: Delete a report schedule
+      description: Deletes a report schedule. The schedule's status is set to `inactive` and no further reports are generated or delivered.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+        - $ref: '#/components/parameters/idempotency_key'
+      responses:
+        '200':
+          description: The deleted report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleDeleteResponse'
+              example:
+                success: true
+                data: null
+                message: null
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{scheduleId}/types:
+    post:
+      operationId: addReportScheduleType
+      summary: Add a type
+      description: Adds a single report type to an existing report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleAddTypeRequest'
+            example:
+              type: payments.created.previous
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      operationId: replaceReportScheduleTypes
+      summary: Replace types
+      description: Replaces the full set of report types on an existing report schedule. The array must contain at least one type.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleReplaceTypesRequest'
+            example:
+              types:
+                - ach.pull.nightly
+                - payments.failed.previous_day
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: removeReportScheduleType
+      summary: Remove a type
+      description: Removes a single report type from an existing report schedule. A schedule must always retain at least one type.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+        - name: type
+          in: query
+          required: true
+          description: The report type to remove from the schedule.
+          schema:
+            $ref: '#/components/schemas/ReportScheduleReportType'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{scheduleId}/delivery_methods:
+    post:
+      operationId: addReportScheduleDeliveryMethod
+      summary: Add a delivery method
+      description: Adds a single delivery method to an existing report schedule. Adding `email` requires the schedule to already have at least one recipient.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleAddDeliveryMethodRequest'
+            example:
+              delivery_method: email
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      operationId: replaceReportScheduleDeliveryMethods
+      summary: Replace delivery methods
+      description: Replaces the full set of delivery methods on an existing report schedule. The array must contain at least one delivery method.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleReplaceDeliveryMethodsRequest'
+            example:
+              delivery_methods:
+                - webhook
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: removeReportScheduleDeliveryMethod
+      summary: Remove a delivery method
+      description: Removes a single delivery method from an existing report schedule. A schedule must always retain at least one delivery method.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+        - name: delivery_method
+          in: query
+          required: true
+          description: The delivery method to remove from the schedule.
+          schema:
+            $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{scheduleId}/recipients:
+    post:
+      operationId: addReportScheduleRecipient
+      summary: Add a recipient
+      description: Adds a single recipient email address to an existing report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleAddRecipientRequest'
+            example:
+              recipient: reports@methodfi.com
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      operationId: replaceReportScheduleRecipients
+      summary: Replace recipients
+      description: Replaces the full set of recipients on an existing report schedule. The array must contain at least one email address.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleReplaceRecipientsRequest'
+            example:
+              recipients:
+                - reports@methodfi.com
+                - ops@methodfi.com
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: removeReportScheduleRecipient
+      summary: Remove a recipient
+      description: Removes a recipient from an existing report schedule. Provide a `recipient` to remove a single email address, or omit it to clear all recipients. All recipients can only be cleared when the schedule does not use the `email` delivery method.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/ReportScheduleIdParam'
+        - name: recipient
+          in: query
+          required: false
+          description: The email address to remove from the schedule. If omitted, all recipients are cleared.
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
   /secrets:
     get:
       operationId: listSecrets
@@ -6157,6 +6674,14 @@ components:
       schema:
         type: string
         pattern: ^rvs_\w+$
+    ReportScheduleIdParam:
+      name: scheduleId
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
     WebhookIdParam:
       name: webhookId
       in: path
@@ -11838,6 +12363,210 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/Report'
+    ReportScheduleReportType:
+      type: string
+      description: A type of report that can be scheduled.
+      enum:
+        - payments.created.current
+        - payments.created.previous
+        - payments.created.previous_day
+        - payments.updated.current
+        - payments.updated.previous
+        - payments.failed.previous_day
+        - ach.pull.upcoming
+        - ach.pull.previous
+        - ach.pull.nightly
+        - ach.reversals.nightly
+        - ach.debit.daily
+        - entities.created.previous_day
+        - reserve_fbo_balance.created.previous_day
+    ReportScheduleDeliveryMethod:
+      type: string
+      description: How a scheduled report is delivered.
+      enum:
+        - webhook
+        - email
+    ReportScheduleStatus:
+      type: string
+      description: Current status of the report schedule.
+      enum:
+        - active
+        - inactive
+    ReportSchedule:
+      type: object
+      description: A Report Schedule automates report generation and delivery on a recurring cron cadence.
+      required:
+        - id
+        - types
+        - delivery_methods
+        - recipients
+        - cron
+        - status
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the report schedule.
+          pattern: ^rpt_sch_\w+$
+          example: rpt_sch_Gqjh8pzeUfzH6
+        types:
+          type: array
+          description: The types of report that are generated on this schedule.
+          items:
+            $ref: '#/components/schemas/ReportScheduleReportType'
+        delivery_methods:
+          type: array
+          description: How scheduled reports are delivered.
+          items:
+            $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+        recipients:
+          type:
+            - array
+            - 'null'
+          description: The email addresses that emailed reports are sent to. Required when `delivery_methods` includes `email`.
+          items:
+            type: string
+            format: email
+        cron:
+          type: string
+          description: The cadence at which the schedule runs, provided as a cron expression.
+          example: 0 8 * * *
+        status:
+          $ref: '#/components/schemas/ReportScheduleStatus'
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the report schedule was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the report schedule was last updated.
+    ReportScheduleListResponse:
+      allOf:
+        - $ref: '#/components/schemas/ListEnvelope'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReportSchedule'
+    ReportScheduleCreateRequest:
+      type: object
+      description: Request body for creating a report schedule.
+      required:
+        - types
+        - delivery_methods
+      properties:
+        types:
+          type: array
+          minItems: 1
+          description: The types of report to generate on this schedule.
+          items:
+            $ref: '#/components/schemas/ReportScheduleReportType'
+        delivery_methods:
+          type: array
+          minItems: 1
+          description: How scheduled reports are delivered. Can be `email`, `webhook`, or both.
+          items:
+            $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+        recipients:
+          type: array
+          minItems: 1
+          description: The email addresses that emailed reports are sent to. Required when `delivery_methods` includes `email`.
+          items:
+            type: string
+            format: email
+        cron:
+          type: string
+          description: The cadence at which the schedule runs, provided as a cron expression. Defaults to `0 8 * * 1-5` (weekdays at 8:00am CST).
+          example: 0 8 * * *
+    ReportScheduleResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ReportSchedule'
+    ReportScheduleDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessEnvelope'
+        - type: object
+          properties:
+            data:
+              type:
+                - object
+                - 'null'
+              example: null
+    ReportScheduleUpdateRequest:
+      type: object
+      description: Request body for updating a report schedule's cron expression.
+      required:
+        - cron
+      properties:
+        cron:
+          type: string
+          description: The cadence at which the schedule runs, provided as a cron expression.
+          example: 0 9 * * 1-5
+    ReportScheduleReplaceTypesRequest:
+      type: object
+      description: Request body for replacing the full set of report types on a schedule.
+      required:
+        - types
+      properties:
+        types:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ReportScheduleReportType'
+    ReportScheduleAddTypeRequest:
+      type: object
+      description: Request body for adding a single report type to a schedule.
+      required:
+        - type
+      properties:
+        type:
+          $ref: '#/components/schemas/ReportScheduleReportType'
+    ReportScheduleReplaceDeliveryMethodsRequest:
+      type: object
+      description: Request body for replacing the full set of delivery methods on a schedule.
+      required:
+        - delivery_methods
+      properties:
+        delivery_methods:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+    ReportScheduleAddDeliveryMethodRequest:
+      type: object
+      description: Request body for adding a single delivery method to a schedule.
+      required:
+        - delivery_method
+      properties:
+        delivery_method:
+          $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+    ReportScheduleReplaceRecipientsRequest:
+      type: object
+      description: Request body for replacing the full set of recipients on a schedule.
+      required:
+        - recipients
+      properties:
+        recipients:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: email
+    ReportScheduleAddRecipientRequest:
+      type: object
+      description: Request body for adding a single recipient to a schedule.
+      required:
+        - recipient
+      properties:
+        recipient:
+          type: string
+          format: email
     SecretStatus:
       type: string
       enum:
