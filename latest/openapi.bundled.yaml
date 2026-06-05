@@ -8065,10 +8065,10 @@ components:
           type: string
           format: date-time
           description: Timestamp when the sensitive record was last updated.
-    AccountBase:
+    Account:
       type: object
       description: |
-        An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity. Accounts are polymorphic on the `type` field.
+        An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity. The `type` field indicates which nested details object (`ach`, `liability`, `clearing`, or `debit_card`) is populated. `type` is null for accounts that are disabled before a type was determined.
       required:
         - id
         - holder_id
@@ -8091,13 +8091,16 @@ components:
           pattern: ^ent_\w+$
           example: ent_au22b1fbFJbp8
         type:
-          type: string
-          description: The type of account.
+          type:
+            - string
+            - 'null'
+          description: The type of account. Null for accounts that are disabled before a type was determined.
           enum:
             - ach
             - liability
             - clearing
             - debit_card
+            - null
         status:
           type: string
           description: Current status of the account.
@@ -8134,6 +8137,21 @@ components:
         restricted_products:
           type: array
           description: Products restricted from this account.
+          items:
+            type: string
+        subscriptions:
+          type: array
+          description: Subscriptions currently active for this account. Only present for liability accounts.
+          items:
+            type: string
+        available_subscriptions:
+          type: array
+          description: Subscriptions available to be enrolled for this account. Only present for liability accounts.
+          items:
+            type: string
+        restricted_subscriptions:
+          type: array
+          description: Subscriptions restricted from this account. Only present for liability accounts.
           items:
             type: string
         latest_verification_session:
@@ -8208,76 +8226,6 @@ components:
           type: string
           format: date-time
           description: Timestamp when the account was last updated.
-    AccountACHResource:
-      allOf:
-        - $ref: '#/components/schemas/AccountBase'
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-                - ach
-    AccountLiabilityResource:
-      allOf:
-        - $ref: '#/components/schemas/AccountBase'
-        - type: object
-          required:
-            - subscriptions
-            - available_subscriptions
-            - restricted_subscriptions
-          properties:
-            type:
-              type: string
-              enum:
-                - liability
-            subscriptions:
-              type: array
-              description: Subscriptions currently active for this account.
-              items:
-                type: string
-            available_subscriptions:
-              type: array
-              description: Subscriptions available to be enrolled for this account.
-              items:
-                type: string
-            restricted_subscriptions:
-              type: array
-              description: Subscriptions restricted from this account.
-              items:
-                type: string
-    AccountClearingResource:
-      allOf:
-        - $ref: '#/components/schemas/AccountBase'
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-                - clearing
-    AccountDebitCardResource:
-      allOf:
-        - $ref: '#/components/schemas/AccountBase'
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-                - debit_card
-    Account:
-      description: |
-        An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity.
-      oneOf:
-        - $ref: '#/components/schemas/AccountACHResource'
-        - $ref: '#/components/schemas/AccountLiabilityResource'
-        - $ref: '#/components/schemas/AccountClearingResource'
-        - $ref: '#/components/schemas/AccountDebitCardResource'
-      discriminator:
-        propertyName: type
-        mapping:
-          ach: '#/components/schemas/AccountACHResource'
-          liability: '#/components/schemas/AccountLiabilityResource'
-          clearing: '#/components/schemas/AccountClearingResource'
-          debit_card: '#/components/schemas/AccountDebitCardResource'
     AccountListResponse:
       allOf:
         - $ref: '#/components/schemas/ListEnvelope'

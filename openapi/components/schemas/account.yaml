@@ -1,22 +1,6 @@
 Account:
-  description: 'An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity.
-
-    '
-  oneOf:
-  - $ref: '#/AccountACHResource'
-  - $ref: '#/AccountLiabilityResource'
-  - $ref: '#/AccountClearingResource'
-  - $ref: '#/AccountDebitCardResource'
-  discriminator:
-    propertyName: type
-    mapping:
-      ach: '#/AccountACHResource'
-      liability: '#/AccountLiabilityResource'
-      clearing: '#/AccountClearingResource'
-      debit_card: '#/AccountDebitCardResource'
-AccountBase:
   type: object
-  description: 'An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity. Accounts are polymorphic on the `type` field.
+  description: 'An Account represents a financial account (ACH, liability, clearing, or debit card) associated with an Entity. The `type` field indicates which nested details object (`ach`, `liability`, `clearing`, or `debit_card`) is populated. `type` is null for accounts that are disabled before a type was determined.
 
     '
   required:
@@ -41,13 +25,16 @@ AccountBase:
       pattern: ^ent_\w+$
       example: ent_au22b1fbFJbp8
     type:
-      type: string
-      description: The type of account.
+      type:
+      - string
+      - 'null'
+      description: The type of account. Null for accounts that are disabled before a type was determined.
       enum:
       - ach
       - liability
       - clearing
       - debit_card
+      - null
     status:
       type: string
       description: Current status of the account.
@@ -84,6 +71,21 @@ AccountBase:
     restricted_products:
       type: array
       description: Products restricted from this account.
+      items:
+        type: string
+    subscriptions:
+      type: array
+      description: Subscriptions currently active for this account. Only present for liability accounts.
+      items:
+        type: string
+    available_subscriptions:
+      type: array
+      description: Subscriptions available to be enrolled for this account. Only present for liability accounts.
+      items:
+        type: string
+    restricted_subscriptions:
+      type: array
+      description: Subscriptions restricted from this account. Only present for liability accounts.
       items:
         type: string
     latest_verification_session:
@@ -166,61 +168,6 @@ AccountBase:
       type: string
       format: date-time
       description: Timestamp when the account was last updated.
-AccountACHResource:
-  allOf:
-  - $ref: '#/AccountBase'
-  - type: object
-    properties:
-      type:
-        type: string
-        enum:
-        - ach
-AccountLiabilityResource:
-  allOf:
-  - $ref: '#/AccountBase'
-  - type: object
-    required:
-    - subscriptions
-    - available_subscriptions
-    - restricted_subscriptions
-    properties:
-      type:
-        type: string
-        enum:
-        - liability
-      subscriptions:
-        type: array
-        description: Subscriptions currently active for this account.
-        items:
-          type: string
-      available_subscriptions:
-        type: array
-        description: Subscriptions available to be enrolled for this account.
-        items:
-          type: string
-      restricted_subscriptions:
-        type: array
-        description: Subscriptions restricted from this account.
-        items:
-          type: string
-AccountClearingResource:
-  allOf:
-  - $ref: '#/AccountBase'
-  - type: object
-    properties:
-      type:
-        type: string
-        enum:
-        - clearing
-AccountDebitCardResource:
-  allOf:
-  - $ref: '#/AccountBase'
-  - type: object
-    properties:
-      type:
-        type: string
-        enum:
-        - debit_card
 AccountACH:
   type:
   - object
