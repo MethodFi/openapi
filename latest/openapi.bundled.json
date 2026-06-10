@@ -10408,6 +10408,7 @@
         ],
         "properties": {
           "mch_id": {
+            "title": "AccountLiabilityExpandableMerchant",
             "description": "The merchant ID associated with this liability.",
             "oneOf": [
               {
@@ -12620,6 +12621,7 @@
             }
           },
           "latest_verification_session": {
+            "title": "AccountExpandableLatestVerificationSession",
             "description": "The latest verification session ID. This field is expandable. When expanded, returns the full AccountVerificationSession object.\n",
             "oneOf": [
               {
@@ -12635,6 +12637,7 @@
             ]
           },
           "balance": {
+            "title": "AccountExpandableBalance",
             "description": "The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.\n",
             "oneOf": [
               {
@@ -12650,6 +12653,7 @@
             ]
           },
           "payoff": {
+            "title": "AccountExpandablePayoff",
             "description": "The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.\n",
             "oneOf": [
               {
@@ -12665,6 +12669,7 @@
             ]
           },
           "payment_instrument": {
+            "title": "AccountExpandablePaymentInstrument",
             "description": "The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.\n",
             "oneOf": [
               {
@@ -12680,6 +12685,7 @@
             ]
           },
           "card_brand": {
+            "title": "AccountExpandableCardBrand",
             "description": "The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.\n",
             "oneOf": [
               {
@@ -12695,6 +12701,7 @@
             ]
           },
           "update": {
+            "title": "AccountExpandableUpdate",
             "description": "The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.\n",
             "oneOf": [
               {
@@ -12710,6 +12717,7 @@
             ]
           },
           "attribute": {
+            "title": "AccountExpandableAttribute",
             "description": "The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.\n",
             "oneOf": [
               {
@@ -12725,6 +12733,7 @@
             ]
           },
           "sensitive": {
+            "title": "AccountExpandableSensitive",
             "description": "The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.\n",
             "oneOf": [
               {
@@ -14592,6 +14601,7 @@
             "description": "Whether the identity information matched."
           },
           "latest_verification_session": {
+            "title": "EntityIdentityExpandableLatestVerificationSession",
             "description": "ID of the latest identity verification session. Expandable via `identity_latest_verification_session`.",
             "oneOf": [
               {
@@ -14623,6 +14633,7 @@
             "description": "Whether the phone has been verified."
           },
           "latest_verification_session": {
+            "title": "EntityPhoneExpandableLatestVerificationSession",
             "description": "ID of the latest phone verification session. Expandable via `phone_latest_verification_session`.",
             "oneOf": [
               {
@@ -14744,6 +14755,7 @@
           "accounts": {
             "type": "array",
             "items": {
+              "title": "EntityConnectExpandableAccount",
               "oneOf": [
                 {
                   "type": "string",
@@ -15429,6 +15441,7 @@
                 "$ref": "#/components/schemas/EntityVerification"
               },
               "connect": {
+                "title": "EntityExpandableConnect",
                 "description": "Expandable. The entity connect session ID or expanded connect object.",
                 "example": "cxn_iENwGBMDnr7sJ",
                 "oneOf": [
@@ -15445,6 +15458,7 @@
                 ]
               },
               "credit_score": {
+                "title": "EntityExpandableCreditScore",
                 "description": "Expandable. The entity credit score ID or expanded credit score object.",
                 "example": "crs_pn4ca33GRnrJm",
                 "oneOf": [
@@ -15461,6 +15475,7 @@
                 ]
               },
               "attribute": {
+                "title": "EntityExpandableAttribute",
                 "description": "Expandable. The entity attribute ID or expanded attribute object.",
                 "example": "attr_QwMjMDEwMTY1",
                 "oneOf": [
@@ -15477,6 +15492,7 @@
                 ]
               },
               "vehicle": {
+                "title": "EntityExpandableVehicle",
                 "description": "Expandable. The entity vehicle ID or expanded vehicle object.",
                 "example": "vhl_JMDEwMTY1Qw4c",
                 "oneOf": [
@@ -17358,6 +17374,7 @@
             "description": "Trace identifier for the destination side of the payment."
           },
           "source": {
+            "title": "PaymentExpandableSource",
             "description": "The source account ID. This field is expandable. When expanded, returns the full Account object.\n",
             "anyOf": [
               {
@@ -17373,6 +17390,7 @@
             ]
           },
           "destination": {
+            "title": "PaymentExpandableDestination",
             "description": "The destination account ID. This field is expandable. When expanded, returns the full Account object.\n",
             "anyOf": [
               {
