@@ -89,6 +89,7 @@ Account:
       items:
         type: string
     latest_verification_session:
+      title: AccountExpandableLatestVerificationSession
       description: 'The latest verification session ID. This field is expandable. When expanded, returns the full AccountVerificationSession object.
 
         '
@@ -98,6 +99,7 @@ Account:
       - type: 'null'
       - $ref: '#/AccountVerificationSession'
     balance:
+      title: AccountExpandableBalance
       description: 'The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.
 
         '
@@ -107,6 +109,7 @@ Account:
       - type: 'null'
       - $ref: '#/AccountBalance'
     payoff:
+      title: AccountExpandablePayoff
       description: 'The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.
 
         '
@@ -116,6 +119,7 @@ Account:
       - type: 'null'
       - $ref: '#/AccountPayoff'
     payment_instrument:
+      title: AccountExpandablePaymentInstrument
       description: 'The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.
 
         '
@@ -125,6 +129,7 @@ Account:
       - type: 'null'
       - $ref: '#/AccountPaymentInstrument'
     card_brand:
+      title: AccountExpandableCardBrand
       description: 'The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.
 
         '
@@ -134,6 +139,7 @@ Account:
       - type: 'null'
       - $ref: '#/AccountCardBrand'
     update:
+      title: AccountExpandableUpdate
       description: 'The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.
 
         '
@@ -143,6 +149,7 @@ Account:
       - type: 'null'
       - $ref: '#/AccountUpdate'
     attribute:
+      title: AccountExpandableAttribute
       description: 'The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.
 
         '
@@ -152,6 +159,7 @@ Account:
       - type: 'null'
       - $ref: '#/AccountAttribute'
     sensitive:
+      title: AccountExpandableSensitive
       description: 'The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.
 
         '
@@ -201,6 +209,7 @@ AccountLiability:
   - name
   properties:
     mch_id:
+      title: AccountLiabilityExpandableMerchant
       description: The merchant ID associated with this liability.
       oneOf:
       - type: string

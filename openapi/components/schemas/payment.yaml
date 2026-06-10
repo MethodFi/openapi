@@ -46,6 +46,7 @@ Payment:
       - 'null'
       description: Trace identifier for the destination side of the payment.
     source:
+      title: PaymentExpandableSource
       description: 'The source account ID. This field is expandable. When expanded, returns the full Account object.
 
         '
@@ -55,6 +56,7 @@ Payment:
       - type: 'null'
       - $ref: account.yaml#/Account
     destination:
+      title: PaymentExpandableDestination
       description: 'The destination account ID. This field is expandable. When expanded, returns the full Account object.
 
         '

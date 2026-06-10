@@ -6530,6 +6530,7 @@ components:
         - name
       properties:
         mch_id:
+          title: AccountLiabilityExpandableMerchant
           description: The merchant ID associated with this liability.
           oneOf:
             - type: string
@@ -8155,6 +8156,7 @@ components:
           items:
             type: string
         latest_verification_session:
+          title: AccountExpandableLatestVerificationSession
           description: |
             The latest verification session ID. This field is expandable. When expanded, returns the full AccountVerificationSession object.
           oneOf:
@@ -8163,6 +8165,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountVerificationSession'
         balance:
+          title: AccountExpandableBalance
           description: |
             The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.
           oneOf:
@@ -8171,6 +8174,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountBalance'
         payoff:
+          title: AccountExpandablePayoff
           description: |
             The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.
           oneOf:
@@ -8179,6 +8183,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountPayoff'
         payment_instrument:
+          title: AccountExpandablePaymentInstrument
           description: |
             The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.
           oneOf:
@@ -8187,6 +8192,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountPaymentInstrument'
         card_brand:
+          title: AccountExpandableCardBrand
           description: |
             The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.
           oneOf:
@@ -8195,6 +8201,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountCardBrand'
         update:
+          title: AccountExpandableUpdate
           description: |
             The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.
           oneOf:
@@ -8203,6 +8210,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountUpdate'
         attribute:
+          title: AccountExpandableAttribute
           description: |
             The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.
           oneOf:
@@ -8211,6 +8219,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountAttribute'
         sensitive:
+          title: AccountExpandableSensitive
           description: |
             The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.
           oneOf:
@@ -9474,6 +9483,7 @@ components:
           type: boolean
           description: Whether the identity information matched.
         latest_verification_session:
+          title: EntityIdentityExpandableLatestVerificationSession
           description: ID of the latest identity verification session. Expandable via `identity_latest_verification_session`.
           oneOf:
             - type: string
@@ -9492,6 +9502,7 @@ components:
           type: boolean
           description: Whether the phone has been verified.
         latest_verification_session:
+          title: EntityPhoneExpandableLatestVerificationSession
           description: ID of the latest phone verification session. Expandable via `phone_latest_verification_session`.
           oneOf:
             - type: string
@@ -9579,6 +9590,7 @@ components:
         accounts:
           type: array
           items:
+            title: EntityConnectExpandableAccount
             oneOf:
               - type: string
                 pattern: ^acc_\w+$
@@ -10065,6 +10077,7 @@ components:
             verification:
               $ref: '#/components/schemas/EntityVerification'
             connect:
+              title: EntityExpandableConnect
               description: Expandable. The entity connect session ID or expanded connect object.
               example: cxn_iENwGBMDnr7sJ
               oneOf:
@@ -10073,6 +10086,7 @@ components:
                 - type: 'null'
                 - $ref: '#/components/schemas/EntityConnect'
             credit_score:
+              title: EntityExpandableCreditScore
               description: Expandable. The entity credit score ID or expanded credit score object.
               example: crs_pn4ca33GRnrJm
               oneOf:
@@ -10081,6 +10095,7 @@ components:
                 - type: 'null'
                 - $ref: '#/components/schemas/EntityCreditScore'
             attribute:
+              title: EntityExpandableAttribute
               description: Expandable. The entity attribute ID or expanded attribute object.
               example: attr_QwMjMDEwMTY1
               oneOf:
@@ -10089,6 +10104,7 @@ components:
                 - type: 'null'
                 - $ref: '#/components/schemas/EntityAttribute'
             vehicle:
+              title: EntityExpandableVehicle
               description: Expandable. The entity vehicle ID or expanded vehicle object.
               example: vhl_JMDEwMTY1Qw4c
               oneOf:
@@ -11382,6 +11398,7 @@ components:
             - 'null'
           description: Trace identifier for the destination side of the payment.
         source:
+          title: PaymentExpandableSource
           description: |
             The source account ID. This field is expandable. When expanded, returns the full Account object.
           anyOf:
@@ -11390,6 +11407,7 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/Account'
         destination:
+          title: PaymentExpandableDestination
           description: |
             The destination account ID. This field is expandable. When expanded, returns the full Account object.
           anyOf:

@@ -89,6 +89,7 @@ EntityIndividualResource:
       verification:
         $ref: '#/EntityVerification'
       connect:
+        title: EntityExpandableConnect
         description: Expandable. The entity connect session ID or expanded connect object.
         example: cxn_iENwGBMDnr7sJ
         oneOf:
@@ -97,6 +98,7 @@ EntityIndividualResource:
         - type: 'null'
         - $ref: '#/EntityConnect'
       credit_score:
+        title: EntityExpandableCreditScore
         description: Expandable. The entity credit score ID or expanded credit score object.
         example: crs_pn4ca33GRnrJm
         oneOf:
@@ -105,6 +107,7 @@ EntityIndividualResource:
         - type: 'null'
         - $ref: '#/EntityCreditScore'
       attribute:
+        title: EntityExpandableAttribute
         description: Expandable. The entity attribute ID or expanded attribute object.
         example: attr_QwMjMDEwMTY1
         oneOf:
@@ -113,6 +116,7 @@ EntityIndividualResource:
         - type: 'null'
         - $ref: '#/EntityAttribute'
       vehicle:
+        title: EntityExpandableVehicle
         description: Expandable. The entity vehicle ID or expanded vehicle object.
         example: vhl_JMDEwMTY1Qw4c
         oneOf:
@@ -269,6 +273,7 @@ EntityVerificationIdentity:
       type: boolean
       description: Whether the identity information matched.
     latest_verification_session:
+      title: EntityIdentityExpandableLatestVerificationSession
       description: ID of the latest identity verification session. Expandable via `identity_latest_verification_session`.
       oneOf:
       - type: string
@@ -287,6 +292,7 @@ EntityVerificationPhone:
       type: boolean
       description: Whether the phone has been verified.
     latest_verification_session:
+      title: EntityPhoneExpandableLatestVerificationSession
       description: ID of the latest phone verification session. Expandable via `phone_latest_verification_session`.
       oneOf:
       - type: string
@@ -651,6 +657,7 @@ EntityConnect:
     accounts:
       type: array
       items:
+        title: EntityConnectExpandableAccount
         oneOf:
         - type: string
           pattern: ^acc_\w+$
