@@ -6367,10 +6367,16 @@
             }
           },
           {
-            "$ref": "#/components/parameters/PageParam"
-          },
-          {
-            "$ref": "#/components/parameters/PageLimitParam"
+            "name": "page_limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of items per page.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            }
           },
           {
             "$ref": "#/components/parameters/PageCursorParam"
@@ -6386,20 +6392,8 @@
           "200": {
             "description": "A paginated list of transactions for the managed account.",
             "headers": {
-              "Pagination-Page": {
-                "$ref": "#/components/headers/Pagination-Page"
-              },
-              "Pagination-Page-Count": {
-                "$ref": "#/components/headers/Pagination-Page-Count"
-              },
               "Pagination-Page-Limit": {
                 "$ref": "#/components/headers/Pagination-Page-Limit"
-              },
-              "Pagination-Total-Count": {
-                "$ref": "#/components/headers/Pagination-Total-Count"
-              },
-              "Pagination-Page-Cursor-Prev": {
-                "$ref": "#/components/headers/Pagination-Page-Cursor-Prev"
               },
               "Pagination-Page-Cursor-Next": {
                 "$ref": "#/components/headers/Pagination-Page-Cursor-Next"
@@ -17056,13 +17050,10 @@
         "description": "A Managed Account is a Method-managed financial account used for fund operations.",
         "required": [
           "id",
-          "type",
-          "status",
-          "routing_number",
-          "account_number",
-          "balance",
-          "created_at",
-          "updated_at"
+          "routing",
+          "number",
+          "current_balance",
+          "available_balance"
         ],
         "properties": {
           "id": {
@@ -17071,44 +17062,21 @@
             "pattern": "^macc_\\w+$",
             "example": "macc_3mDnkR8Ft6Bx7"
           },
-          "type": {
+          "routing": {
             "type": "string",
-            "description": "The type of managed account."
-          },
-          "status": {
-            "type": "string",
-            "description": "Current status of the managed account."
-          },
-          "routing_number": {
-            "type": [
-              "string",
-              "null"
-            ],
             "description": "Bank routing number for the managed account."
           },
-          "account_number": {
-            "type": [
-              "string",
-              "null"
-            ],
+          "number": {
+            "type": "string",
             "description": "Bank account number for the managed account."
           },
-          "balance": {
-            "type": [
-              "number",
-              "null"
-            ],
+          "current_balance": {
+            "type": "integer",
             "description": "Current balance of the managed account in cents."
           },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the managed account was created."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the managed account was last updated."
+          "available_balance": {
+            "type": "integer",
+            "description": "Available balance of the managed account in cents."
           }
         }
       },
@@ -17150,52 +17118,29 @@
         "description": "A transaction on a managed account.",
         "required": [
           "id",
-          "managed_account_id",
-          "amount",
-          "type",
-          "status",
           "description",
-          "created_at",
-          "updated_at"
+          "date",
+          "amount"
         ],
         "properties": {
           "id": {
             "type": "string",
-            "description": "Unique identifier for the transaction."
+            "description": "Unique identifier for the transaction.",
+            "pattern": "^macc_txn_\\w+$",
+            "example": "macc_txn_aTJMbnCjw34yQ"
           },
-          "managed_account_id": {
+          "description": {
             "type": "string",
-            "description": "Identifier of the managed account this transaction belongs to.",
-            "pattern": "^macc_\\w+$"
+            "description": "Human-readable description of the transaction."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date the transaction occurred (YYYY-MM-DD)."
           },
           "amount": {
             "type": "number",
-            "description": "Transaction amount in cents."
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of transaction."
-          },
-          "status": {
-            "type": "string",
-            "description": "Current status of the transaction."
-          },
-          "description": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Human-readable description of the transaction."
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the transaction was created."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the transaction was last updated."
+            "description": "Transaction amount in cents. Positive for inbound/credit transactions, negative for outbound/debit transactions."
           }
         }
       },
