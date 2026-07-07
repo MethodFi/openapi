@@ -1,0 +1,558 @@
+collection:
+  get:
+    operationId: listReportSchedules
+    summary: List all report schedules
+    description: Returns all active report schedules for the team.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    responses:
+      '200':
+        description: A list of report schedules.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createReportSchedule
+    summary: Create a report schedule
+    description: Creates a new recurring report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleCreateRequest
+    responses:
+      '200':
+        description: The created report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrieveReportSchedule
+    summary: Retrieve a report schedule
+    description: Returns a single report schedule by its identifier.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    responses:
+      '200':
+        description: The requested report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  patch:
+    operationId: updateReportScheduleCron
+    summary: Update a report schedule's cron
+    description: Updates the cron expression of a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleCronRequest
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deleteReportSchedule
+    summary: Delete a report schedule
+    description: Deactivates a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    responses:
+      '200':
+        description: The deactivated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+types:
+  post:
+    operationId: addReportScheduleTypes
+    summary: Add report schedule types
+    description: Adds one or more report types to a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleTypesRequest
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  put:
+    operationId: updateReportScheduleTypes
+    summary: Replace report schedule types
+    description: Replaces the report types on a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleTypesRequest
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deleteReportScheduleTypes
+    summary: Remove report schedule types
+    description: Removes one or more report types from a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    - name: types
+      in: query
+      required: true
+      description: The report types to remove.
+      schema:
+        type: array
+        items:
+          $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleType
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+delivery_methods:
+  post:
+    operationId: addReportScheduleDeliveryMethods
+    summary: Add report schedule delivery methods
+    description: Adds one or more delivery methods to a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleDeliveryMethodsRequest
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  put:
+    operationId: updateReportScheduleDeliveryMethods
+    summary: Replace report schedule delivery methods
+    description: Replaces the delivery methods on a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleDeliveryMethodsRequest
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deleteReportScheduleDeliveryMethods
+    summary: Remove report schedule delivery methods
+    description: Removes one or more delivery methods from a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    - name: delivery_methods
+      in: query
+      required: true
+      description: The delivery methods to remove.
+      schema:
+        type: array
+        items:
+          $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleDeliveryMethod
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+recipients:
+  post:
+    operationId: addReportScheduleRecipients
+    summary: Add report schedule recipients
+    description: Adds one or more email recipients to a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleRecipientsRequest
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  put:
+    operationId: updateReportScheduleRecipients
+    summary: Replace report schedule recipients
+    description: Replaces the email recipients on a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleRecipientsRequest
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  delete:
+    operationId: deleteReportScheduleRecipients
+    summary: Remove report schedule recipients
+    description: Removes one or more email recipients from a report schedule.
+    tags:
+    - Report Schedules
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: schedule_id
+      in: path
+      required: true
+      description: Unique identifier for the report schedule.
+      schema:
+        type: string
+        pattern: ^rpt_sch_\w+$
+    - name: recipients
+      in: query
+      required: true
+      description: The email recipients to remove.
+      schema:
+        type: array
+        items:
+          type: string
+    responses:
+      '200':
+        description: The updated report schedule.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/report_schedule.yaml#/ReportScheduleResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

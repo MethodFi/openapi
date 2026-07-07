@@ -87,6 +87,51 @@ ManagedAccountTransaction:
       type: string
       format: date-time
       description: Timestamp when the transaction was last updated.
+SimulatedManagedAccountTransaction:
+  type: object
+  description: A simulated transaction created on a managed account in the sandbox environment.
+  required:
+  - id
+  - amount
+  - description
+  - date
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the simulated transaction.
+      pattern: ^macc_txn_\w+$
+    amount:
+      type: number
+      description: Signed transaction amount in cents.
+    description:
+      type: string
+      description: Human-readable description of the transaction.
+    date:
+      type: string
+      description: Date of the transaction in `YYYY-MM-DD` format.
+SimulateManagedAccountTransactionRequest:
+  type: object
+  description: Request body for simulating a managed account transaction.
+  required:
+  - type
+  - amount
+  properties:
+    type:
+      type: string
+      description: The type of transaction to simulate.
+      enum:
+      - deposit
+      - withdraw
+    amount:
+      type: integer
+      description: Positive transaction amount in cents.
+SimulatedManagedAccountTransactionResponse:
+  allOf:
+  - $ref: common.yaml#/SuccessEnvelope
+  - type: object
+    properties:
+      data:
+        $ref: '#/SimulatedManagedAccountTransaction'
 ManagedAccountResponse:
   allOf:
   - $ref: common.yaml#/SuccessEnvelope

@@ -475,10 +475,6 @@ paths:
                   liability: null
                   clearing: null
                   debit_card: null
-                  capabilities: []
-                  available_capabilities:
-                    - payments:send
-                    - payments:receive
                   error: null
                   metadata:
                     customer_reference: acct-001
@@ -3692,6 +3688,82 @@ paths:
           $ref: '#/components/responses/RateLimited'
         '500':
           $ref: '#/components/responses/InternalError'
+  /files/{id}:
+    get:
+      operationId: retrieveFile
+      summary: Retrieve a file
+      description: Returns a single file by its identifier.
+      tags:
+        - Files
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier for the file.
+          schema:
+            type: string
+            pattern: ^file_\w+$
+      responses:
+        '200':
+          description: The requested file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /files/{file_id}/download:
+    get:
+      operationId: downloadFile
+      summary: Download a file
+      description: Streams the file contents as a binary attachment.
+      tags:
+        - Files
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: file_id
+          in: path
+          required: true
+          description: Unique identifier for the file.
+          schema:
+            type: string
+            pattern: ^file_\w+$
+      responses:
+        '200':
+          description: The file content.
+          headers:
+            Content-Disposition:
+              description: Attachment filename for the downloaded file.
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
   /forwarding_requests:
     post:
       operationId: createForwardingRequest
@@ -4434,6 +4506,564 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules:
+    get:
+      operationId: listReportSchedules
+      summary: List all report schedules
+      description: Returns all active report schedules for the team.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+      responses:
+        '200':
+          description: A list of report schedules.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      operationId: createReportSchedule
+      summary: Create a report schedule
+      description: Creates a new recurring report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - $ref: '#/components/parameters/idempotency_key'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleCreateRequest'
+      responses:
+        '200':
+          description: The created report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{schedule_id}:
+    get:
+      operationId: retrieveReportSchedule
+      summary: Retrieve a report schedule
+      description: Returns a single report schedule by its identifier.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      responses:
+        '200':
+          description: The requested report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    patch:
+      operationId: updateReportScheduleCron
+      summary: Update a report schedule's cron
+      description: Updates the cron expression of a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleCronRequest'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteReportSchedule
+      summary: Delete a report schedule
+      description: Deactivates a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      responses:
+        '200':
+          description: The deactivated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{schedule_id}/types:
+    post:
+      operationId: addReportScheduleTypes
+      summary: Add report schedule types
+      description: Adds one or more report types to a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleTypesRequest'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      operationId: updateReportScheduleTypes
+      summary: Replace report schedule types
+      description: Replaces the report types on a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleTypesRequest'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteReportScheduleTypes
+      summary: Remove report schedule types
+      description: Removes one or more report types from a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+        - name: types
+          in: query
+          required: true
+          description: The report types to remove.
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ReportScheduleType'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{schedule_id}/delivery_methods:
+    post:
+      operationId: addReportScheduleDeliveryMethods
+      summary: Add report schedule delivery methods
+      description: Adds one or more delivery methods to a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleDeliveryMethodsRequest'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      operationId: updateReportScheduleDeliveryMethods
+      summary: Replace report schedule delivery methods
+      description: Replaces the delivery methods on a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleDeliveryMethodsRequest'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteReportScheduleDeliveryMethods
+      summary: Remove report schedule delivery methods
+      description: Removes one or more delivery methods from a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+        - name: delivery_methods
+          in: query
+          required: true
+          description: The delivery methods to remove.
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /report_schedules/{schedule_id}/recipients:
+    post:
+      operationId: addReportScheduleRecipients
+      summary: Add report schedule recipients
+      description: Adds one or more email recipients to a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleRecipientsRequest'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      operationId: updateReportScheduleRecipients
+      summary: Replace report schedule recipients
+      description: Replaces the email recipients on a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleRecipientsRequest'
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteReportScheduleRecipients
+      summary: Remove report schedule recipients
+      description: Removes one or more email recipients from a report schedule.
+      tags:
+        - Report Schedules
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: schedule_id
+          in: path
+          required: true
+          description: Unique identifier for the report schedule.
+          schema:
+            type: string
+            pattern: ^rpt_sch_\w+$
+        - name: recipients
+          in: query
+          required: true
+          description: The email recipients to remove.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: The updated report schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportScheduleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
         '429':
           $ref: '#/components/responses/RateLimited'
         '500':
@@ -5492,6 +6122,53 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /simulate/managed_accounts/{macc_id}/transactions:
+    post:
+      operationId: simulateManagedAccountTransaction
+      summary: Simulate a managed account transaction
+      description: |
+        Creates a simulated deposit or withdrawal transaction on a managed account in the sandbox environment.
+        Use this to test managed account funding flows during development.
+
+        **Development only** - This endpoint is only available in the sandbox environment.
+      tags:
+        - Simulate Managed Accounts
+      security:
+        - SecretKey: []
+      parameters:
+        - $ref: '#/components/parameters/method_version'
+        - name: macc_id
+          in: path
+          required: true
+          description: Unique identifier for the managed account.
+          schema:
+            type: string
+            pattern: ^macc_\w+$
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateManagedAccountTransactionRequest'
+      responses:
+        '200':
+          description: The simulated transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulatedManagedAccountTransactionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
         '500':
           $ref: '#/components/responses/InternalError'
   /opal/token:
@@ -10928,6 +11605,172 @@ components:
         - entity_attribute.credit_health_soft_inquiries_value.increased
         - entity_attribute.credit_health_hard_inquiries_value.decreased
         - entity_attribute.credit_health_hard_inquiries_value.increased
+        - entity_attribute.delinquency_flag_credit_cards.set
+        - entity_attribute.delinquency_flag_credit_cards.cleared
+        - entity_attribute.revolving_credit_card_balance_total.increased
+        - entity_attribute.revolving_credit_card_balance_total.decreased
+        - entity_attribute.personal_loan_balance_total.increased
+        - entity_attribute.personal_loan_balance_total.decreased
+        - entity_attribute.revolving_credit_card_balance_change_30d.increased
+        - entity_attribute.revolving_credit_card_balance_change_30d.decreased
+        - entity_attribute.revolving_credit_card_balance_change_60d.increased
+        - entity_attribute.revolving_credit_card_balance_change_60d.decreased
+        - entity_attribute.revolving_credit_card_balance_change_90d.increased
+        - entity_attribute.revolving_credit_card_balance_change_90d.decreased
+        - entity_attribute.personal_loan_balance_change_30d.increased
+        - entity_attribute.personal_loan_balance_change_30d.decreased
+        - entity_attribute.personal_loan_balance_change_60d.increased
+        - entity_attribute.personal_loan_balance_change_60d.decreased
+        - entity_attribute.personal_loan_balance_change_90d.increased
+        - entity_attribute.personal_loan_balance_change_90d.decreased
+        - entity_attribute.usage_pattern.changed
+        - account_attribute.usage_pattern.changed
+        - entity_attribute.delinquency_flag_credit_cards.changed
+        - entity_attribute.weighted_average_apr_credit_card.increased
+        - entity_attribute.weighted_average_apr_credit_card.decreased
+        - entity_attribute.weighted_average_apr_personal_loan.increased
+        - entity_attribute.weighted_average_apr_personal_loan.decreased
+        - entity_attribute.credit_card_utilization.increased
+        - entity_attribute.credit_card_utilization.decreased
+        - entity_attribute.personal_loan_utilization.increased
+        - entity_attribute.personal_loan_utilization.decreased
+        - entity_attribute.overall_utilization.increased
+        - entity_attribute.overall_utilization.decreased
+        - entity_attribute.revolving_credit_card_utilization_trend_30d.increased
+        - entity_attribute.revolving_credit_card_utilization_trend_30d.decreased
+        - entity_attribute.personal_loan_utilization_trend_30d.increased
+        - entity_attribute.personal_loan_utilization_trend_30d.decreased
+        - entity_attribute.credit_limit_total.increased
+        - entity_attribute.credit_limit_total.decreased
+        - entity_attribute.personal_loan_amount_total.increased
+        - entity_attribute.personal_loan_amount_total.decreased
+        - entity_attribute.mortgage_loan_amount_total.increased
+        - entity_attribute.mortgage_loan_amount_total.decreased
+        - entity_attribute.overall_loan_amount_total.increased
+        - entity_attribute.overall_loan_amount_total.decreased
+        - entity_attribute.personal_loan_monthly_installments_estimate.increased
+        - entity_attribute.personal_loan_monthly_installments_estimate.decreased
+        - entity_attribute.next_payment_minimum_total_credit_cards.increased
+        - entity_attribute.next_payment_minimum_total_credit_cards.decreased
+        - entity_attribute.payment_to_minimum_ratio_avg_credit_cards.increased
+        - entity_attribute.payment_to_minimum_ratio_avg_credit_cards.decreased
+        - entity_attribute.revolving_credit_card_utilization_trend_90d.increased
+        - entity_attribute.revolving_credit_card_utilization_trend_90d.decreased
+        - entity_attribute.revolving_credit_card_utilization_delta_30d.increased
+        - entity_attribute.revolving_credit_card_utilization_delta_30d.decreased
+        - entity_attribute.revolving_credit_card_utilization_delta_60d.increased
+        - entity_attribute.revolving_credit_card_utilization_delta_60d.decreased
+        - entity_attribute.revolving_credit_card_utilization_delta_90d.increased
+        - entity_attribute.revolving_credit_card_utilization_delta_90d.decreased
+        - entity_attribute.available_credit_limit_total.increased
+        - entity_attribute.available_credit_limit_total.decreased
+        - entity_attribute.personal_loan_utilization_trend_90d.increased
+        - entity_attribute.personal_loan_utilization_trend_90d.decreased
+        - entity_attribute.personal_loan_utilization_delta_30d.increased
+        - entity_attribute.personal_loan_utilization_delta_30d.decreased
+        - entity_attribute.personal_loan_utilization_delta_60d.increased
+        - entity_attribute.personal_loan_utilization_delta_60d.decreased
+        - entity_attribute.personal_loan_utilization_delta_90d.increased
+        - entity_attribute.personal_loan_utilization_delta_90d.decreased
+        - entity_attribute.available_loan_amount_personal_loans.increased
+        - entity_attribute.available_loan_amount_personal_loans.decreased
+        - entity_attribute.mortgage_balance_total.increased
+        - entity_attribute.mortgage_balance_total.decreased
+        - entity_attribute.mortgage_balance_change_30d.increased
+        - entity_attribute.mortgage_balance_change_30d.decreased
+        - entity_attribute.mortgage_balance_change_60d.increased
+        - entity_attribute.mortgage_balance_change_60d.decreased
+        - entity_attribute.mortgage_balance_change_90d.increased
+        - entity_attribute.mortgage_balance_change_90d.decreased
+        - entity_attribute.weighted_average_apr_mortgage.increased
+        - entity_attribute.weighted_average_apr_mortgage.decreased
+        - entity_attribute.mortgage_utilization_trend_30d.increased
+        - entity_attribute.mortgage_utilization_trend_30d.decreased
+        - entity_attribute.mortgage_utilization_trend_90d.increased
+        - entity_attribute.mortgage_utilization_trend_90d.decreased
+        - entity_attribute.mortgage_utilization_delta_30d.increased
+        - entity_attribute.mortgage_utilization_delta_30d.decreased
+        - entity_attribute.mortgage_utilization_delta_60d.increased
+        - entity_attribute.mortgage_utilization_delta_60d.decreased
+        - entity_attribute.mortgage_utilization_delta_90d.increased
+        - entity_attribute.mortgage_utilization_delta_90d.decreased
+        - entity_attribute.heloc_balance_total.increased
+        - entity_attribute.heloc_balance_total.decreased
+        - entity_attribute.heloc_utilization.increased
+        - entity_attribute.heloc_utilization.decreased
+        - account_attribute.heloc_utilization.increased
+        - account_attribute.heloc_utilization.decreased
+        - entity_attribute.installment_balance_total.increased
+        - entity_attribute.installment_balance_total.decreased
+        - entity_attribute.installment_balance_change_30d.increased
+        - entity_attribute.installment_balance_change_30d.decreased
+        - entity_attribute.installment_balance_change_60d.increased
+        - entity_attribute.installment_balance_change_60d.decreased
+        - entity_attribute.installment_balance_change_90d.increased
+        - entity_attribute.installment_balance_change_90d.decreased
+        - entity_attribute.overall_utilization_trend_30d.increased
+        - entity_attribute.overall_utilization_trend_30d.decreased
+        - entity_attribute.overall_utilization_trend_90d.increased
+        - entity_attribute.overall_utilization_trend_90d.decreased
+        - entity_attribute.overall_utilization_delta_30d.increased
+        - entity_attribute.overall_utilization_delta_30d.decreased
+        - entity_attribute.overall_utilization_delta_60d.increased
+        - entity_attribute.overall_utilization_delta_60d.decreased
+        - entity_attribute.overall_utilization_delta_90d.increased
+        - entity_attribute.overall_utilization_delta_90d.decreased
+        - entity_attribute.available_credit_total.increased
+        - entity_attribute.available_credit_total.decreased
+        - entity_attribute.any_delinquent_flag.set
+        - entity_attribute.any_delinquent_flag.cleared
+        - account_attribute.any_delinquent_flag.set
+        - account_attribute.any_delinquent_flag.cleared
+        - entity_attribute.serious_delinquent_flag.set
+        - entity_attribute.serious_delinquent_flag.cleared
+        - account_attribute.serious_delinquent_flag.set
+        - account_attribute.serious_delinquent_flag.cleared
+        - entity_attribute.delinquency_recently_cured_flag.set
+        - entity_attribute.delinquency_recently_cured_flag.cleared
+        - account_attribute.delinquency_recently_cured_flag.set
+        - account_attribute.delinquency_recently_cured_flag.cleared
+        - entity_attribute.delinquency_worst_dpd_bucket.changed
+        - account_attribute.delinquency_worst_dpd_bucket.changed
+        - entity_attribute.delinquency_accounts_count.increased
+        - entity_attribute.delinquency_accounts_count.decreased
+        - entity_attribute.delinquent_balance_total.increased
+        - entity_attribute.delinquent_balance_total.decreased
+        - entity_attribute.delinquency_progression_flag.set
+        - entity_attribute.delinquency_progression_flag.cleared
+        - account_attribute.delinquency_progression_flag.set
+        - account_attribute.delinquency_progression_flag.cleared
+        - entity_attribute.delinquent_outcome.changed
+        - account_attribute.delinquent_outcome.changed
+        - entity_attribute.other_balance_total.increased
+        - entity_attribute.other_balance_total.decreased
+        - entity_attribute.other_balance_change_30d.increased
+        - entity_attribute.other_balance_change_30d.decreased
+        - entity_attribute.other_balance_change_60d.increased
+        - entity_attribute.other_balance_change_60d.decreased
+        - entity_attribute.other_balance_change_90d.increased
+        - entity_attribute.other_balance_change_90d.decreased
+        - account_attribute.utilization.increased
+        - account_attribute.utilization.decreased
+        - account_attribute.utilization_trend_30d.increased
+        - account_attribute.utilization_trend_30d.decreased
+        - account_attribute.utilization_trend_90d.increased
+        - account_attribute.utilization_trend_90d.decreased
+        - account_attribute.utilization_delta_30d.increased
+        - account_attribute.utilization_delta_30d.decreased
+        - account_attribute.utilization_delta_60d.increased
+        - account_attribute.utilization_delta_60d.decreased
+        - account_attribute.utilization_delta_90d.increased
+        - account_attribute.utilization_delta_90d.decreased
+        - account_attribute.monthly_installments_estimate.increased
+        - account_attribute.monthly_installments_estimate.decreased
+        - account_attribute.delinquency_flag.changed
+        - account_attribute.available_credit_limit.increased
+        - account_attribute.available_credit_limit.decreased
+        - account_attribute.available_loan_amount.increased
+        - account_attribute.available_loan_amount.decreased
     JsonObject:
       type: object
       description: Arbitrary JSON object.
@@ -11014,6 +11857,56 @@ components:
           created_at: '2026-01-15T18:30:00.000Z'
           updated_at: '2026-01-15T18:30:00.000Z'
         message: null
+    File:
+      type: object
+      description: A File is a downloadable artifact generated by Method, such as a raw credit report or credit report PDF.
+      required:
+        - id
+        - type
+        - mime_type
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the file.
+          pattern: ^file_\w+$
+          example: file_3mDnkR8Ft6Bx7
+        type:
+          type: string
+          description: The type of file.
+          enum:
+            - raw_credit_report
+            - credit_report_pdf
+        mime_type:
+          type: string
+          description: MIME type of the file content.
+        download_url:
+          type:
+            - string
+            - 'null'
+          description: Pre-signed URL for downloading the file. Only populated when a download URL has been minted.
+        download_expires_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: Timestamp when the download URL expires.
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the file was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the file was last updated.
+    FileResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/File'
     ForwardingRequestCreateRequest:
       type: object
       required:
@@ -11811,6 +12704,171 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/Report'
+    ReportScheduleType:
+      type: string
+      description: The type of report.
+      enum:
+        - payments.created.current
+        - payments.created.previous
+        - payments.created.previous_day
+        - payments.updated.current
+        - payments.updated.previous
+        - payments.failed.previous_day
+        - ach.pull.upcoming
+        - ach.pull.previous
+        - ach.pull.nightly
+        - ach.reversals.nightly
+        - ach.debit.daily
+        - entities.created.previous_day
+        - reserve_fbo_balance.created.previous_day
+    ReportScheduleDeliveryMethod:
+      type: string
+      description: A delivery method for a report schedule.
+      enum:
+        - webhook
+        - email
+    ReportScheduleStatus:
+      type: string
+      description: Current status of the report schedule.
+      enum:
+        - active
+        - inactive
+    ReportSchedule:
+      type: object
+      description: A Report Schedule defines a recurring schedule for generating and delivering reports.
+      required:
+        - id
+        - types
+        - delivery_methods
+        - cron
+        - status
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the report schedule.
+          pattern: ^rpt_sch_\w+$
+          example: rpt_sch_3mDnkR8Ft6Bx7
+        types:
+          type: array
+          description: The types of reports generated by this schedule.
+          items:
+            $ref: '#/components/schemas/ReportScheduleType'
+        delivery_methods:
+          type: array
+          description: The methods used to deliver the generated reports.
+          items:
+            $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+        recipients:
+          type:
+            - array
+            - 'null'
+          description: Email recipients for reports delivered via email.
+          items:
+            type: string
+        cron:
+          type: string
+          description: Cron expression defining when reports are generated.
+          example: 0 8 * * 1-5
+        status:
+          $ref: '#/components/schemas/ReportScheduleStatus'
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the report schedule was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the report schedule was last updated.
+    ReportScheduleListResponse:
+      allOf:
+        - $ref: '#/components/schemas/ListEnvelope'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReportSchedule'
+    ReportScheduleCreateRequest:
+      type: object
+      description: Request body for creating a report schedule.
+      required:
+        - types
+        - delivery_methods
+      properties:
+        types:
+          type: array
+          description: The types of reports to generate.
+          items:
+            $ref: '#/components/schemas/ReportScheduleType'
+        delivery_methods:
+          type: array
+          description: The methods used to deliver the generated reports.
+          items:
+            $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+        recipients:
+          type:
+            - array
+            - 'null'
+          description: Email recipients for reports delivered via email.
+          items:
+            type: string
+        cron:
+          type:
+            - string
+            - 'null'
+          description: Cron expression defining when reports are generated. Defaults to `0 8 * * 1-5` when omitted.
+    ReportScheduleResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ReportSchedule'
+    ReportScheduleCronRequest:
+      type: object
+      description: Request body for updating a report schedule's cron expression.
+      required:
+        - cron
+      properties:
+        cron:
+          type: string
+          description: Cron expression defining when reports are generated.
+          example: 0 8 * * 1-5
+    ReportScheduleTypesRequest:
+      type: object
+      description: Request body for adding or replacing report schedule types.
+      required:
+        - types
+      properties:
+        types:
+          type: array
+          description: The types of reports to add or set.
+          items:
+            $ref: '#/components/schemas/ReportScheduleType'
+    ReportScheduleDeliveryMethodsRequest:
+      type: object
+      description: Request body for adding or replacing report schedule delivery methods.
+      required:
+        - delivery_methods
+      properties:
+        delivery_methods:
+          type: array
+          description: The delivery methods to add or set.
+          items:
+            $ref: '#/components/schemas/ReportScheduleDeliveryMethod'
+    ReportScheduleRecipientsRequest:
+      type: object
+      description: Request body for adding or replacing report schedule recipients.
+      required:
+        - recipients
+      properties:
+        recipients:
+          type: array
+          description: The email recipients to add or set.
+          items:
+            type: string
     SecretStatus:
       type: string
       enum:
@@ -12293,6 +13351,51 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/WebhookStatus'
+    SimulateManagedAccountTransactionRequest:
+      type: object
+      description: Request body for simulating a managed account transaction.
+      required:
+        - type
+        - amount
+      properties:
+        type:
+          type: string
+          description: The type of transaction to simulate.
+          enum:
+            - deposit
+            - withdraw
+        amount:
+          type: integer
+          description: Positive transaction amount in cents.
+    SimulatedManagedAccountTransaction:
+      type: object
+      description: A simulated transaction created on a managed account in the sandbox environment.
+      required:
+        - id
+        - amount
+        - description
+        - date
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the simulated transaction.
+          pattern: ^macc_txn_\w+$
+        amount:
+          type: number
+          description: Signed transaction amount in cents.
+        description:
+          type: string
+          description: Human-readable description of the transaction.
+        date:
+          type: string
+          description: Date of the transaction in `YYYY-MM-DD` format.
+    SimulatedManagedAccountTransactionResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/SimulatedManagedAccountTransaction'
     OpalSessionMode:
       type: string
       description: The mode that determines which flows are configured for the session.

@@ -212,6 +212,10 @@ paths:
     $ref: paths/events.yaml#/collection
   /events/{evtId}:
     $ref: paths/events.yaml#/individual
+  /files/{id}:
+    $ref: paths/files.yaml#/individual
+  /files/{file_id}/download:
+    $ref: paths/files.yaml#/download
   /forwarding_requests:
     $ref: paths/forwarding_requests.yaml#/create
   /forwarding_requests/{id}:
@@ -240,6 +244,16 @@ paths:
     $ref: paths/reports.yaml#/individual
   /reports/{reportId}/download:
     $ref: paths/reports.yaml#/download
+  /report_schedules:
+    $ref: paths/report_schedules.yaml#/collection
+  /report_schedules/{schedule_id}:
+    $ref: paths/report_schedules.yaml#/individual
+  /report_schedules/{schedule_id}/types:
+    $ref: paths/report_schedules.yaml#/types
+  /report_schedules/{schedule_id}/delivery_methods:
+    $ref: paths/report_schedules.yaml#/delivery_methods
+  /report_schedules/{schedule_id}/recipients:
+    $ref: paths/report_schedules.yaml#/recipients
   /secrets:
     $ref: paths/secrets.yaml#/collection
   /secrets/{id}:
@@ -274,6 +288,8 @@ paths:
     $ref: paths/simulate/payments.yaml#/update_status
   /simulate/payments/payment_instruments/{pmt_inst_id}:
     $ref: paths/simulate/payments.yaml#/payment_instrument
+  /simulate/managed_accounts/{macc_id}/transactions:
+    $ref: paths/simulate/managed_accounts.yaml#/transactions
   /opal/token:
     $ref: paths/opal.yaml#/token
   /elements/token:

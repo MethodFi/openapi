@@ -328,6 +328,14 @@
     "path": "/events/{evtId}"
   },
   {
+    "method": "GET",
+    "path": "/files/{file_id}/download"
+  },
+  {
+    "method": "GET",
+    "path": "/files/{id}"
+  },
+  {
     "method": "POST",
     "path": "/forwarding_requests"
   },
@@ -400,6 +408,62 @@
     "path": "/ping"
   },
   {
+    "method": "GET",
+    "path": "/report_schedules"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{schedule_id}"
+  },
+  {
+    "method": "GET",
+    "path": "/report_schedules/{schedule_id}"
+  },
+  {
+    "method": "PATCH",
+    "path": "/report_schedules/{schedule_id}"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{schedule_id}/delivery_methods"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules/{schedule_id}/delivery_methods"
+  },
+  {
+    "method": "PUT",
+    "path": "/report_schedules/{schedule_id}/delivery_methods"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{schedule_id}/recipients"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules/{schedule_id}/recipients"
+  },
+  {
+    "method": "PUT",
+    "path": "/report_schedules/{schedule_id}/recipients"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{schedule_id}/types"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules/{schedule_id}/types"
+  },
+  {
+    "method": "PUT",
+    "path": "/report_schedules/{schedule_id}/types"
+  },
+  {
     "method": "POST",
     "path": "/reports"
   },
@@ -454,6 +518,10 @@
   {
     "method": "POST",
     "path": "/simulate/events"
+  },
+  {
+    "method": "POST",
+    "path": "/simulate/managed_accounts/{macc_id}/transactions"
   },
   {
     "method": "POST",

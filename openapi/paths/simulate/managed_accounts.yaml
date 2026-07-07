@@ -1,0 +1,47 @@
+transactions:
+  post:
+    operationId: simulateManagedAccountTransaction
+    summary: Simulate a managed account transaction
+    description: |
+      Creates a simulated deposit or withdrawal transaction on a managed account in the sandbox environment.
+      Use this to test managed account funding flows during development.
+
+      **Development only** - This endpoint is only available in the sandbox environment.
+    tags:
+      - Simulate Managed Accounts
+    security:
+      - SecretKey: []
+    parameters:
+      - $ref: '../../components/parameters/method_version.yaml'
+      - name: macc_id
+        in: path
+        required: true
+        description: Unique identifier for the managed account.
+        schema:
+          type: string
+          pattern: '^macc_\w+$'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/managed_account.yaml#/SimulateManagedAccountTransactionRequest'
+    responses:
+      '200':
+        description: The simulated transaction.
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/managed_account.yaml#/SimulatedManagedAccountTransactionResponse'
+      '400':
+        $ref: '../../components/responses/error.yaml#/BadRequest'
+      '401':
+        $ref: '../../components/responses/error.yaml#/Unauthorized'
+      '404':
+        $ref: '../../components/responses/error.yaml#/NotFound'
+      '422':
+        $ref: '../../components/responses/error.yaml#/UnprocessableEntity'
+      '429':
+        $ref: '../../components/responses/error.yaml#/RateLimited'
+      '500':
+        $ref: '../../components/responses/error.yaml#/InternalError'

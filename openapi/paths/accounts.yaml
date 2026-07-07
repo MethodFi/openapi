@@ -211,10 +211,6 @@ collection:
                 liability: null
                 clearing: null
                 debit_card: null
-                capabilities: []
-                available_capabilities:
-                  - payments:send
-                  - payments:receive
                 error: null
                 metadata:
                   customer_reference: acct-001

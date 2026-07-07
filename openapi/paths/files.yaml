@@ -1,0 +1,76 @@
+individual:
+  get:
+    operationId: retrieveFile
+    summary: Retrieve a file
+    description: Returns a single file by its identifier.
+    tags:
+    - Files
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: id
+      in: path
+      required: true
+      description: Unique identifier for the file.
+      schema:
+        type: string
+        pattern: ^file_\w+$
+    responses:
+      '200':
+        description: The requested file.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/file.yaml#/FileResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+download:
+  get:
+    operationId: downloadFile
+    summary: Download a file
+    description: Streams the file contents as a binary attachment.
+    tags:
+    - Files
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: file_id
+      in: path
+      required: true
+      description: Unique identifier for the file.
+      schema:
+        type: string
+        pattern: ^file_\w+$
+    responses:
+      '200':
+        description: The file content.
+        headers:
+          Content-Disposition:
+            description: Attachment filename for the downloaded file.
+            schema:
+              type: string
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
