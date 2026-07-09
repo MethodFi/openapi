@@ -20,10 +20,10 @@ ManagedAccount:
       type: string
       description: Bank account number for the managed account.
     current_balance:
-      type: integer
+      type: number
       description: Current balance of the managed account in cents.
     available_balance:
-      type: integer
+      type: number
       description: Available balance of the managed account in cents.
 ManagedAccountTransaction:
   type: object
