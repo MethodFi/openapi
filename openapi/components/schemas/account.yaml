@@ -99,75 +99,19 @@ Account:
       - type: 'null'
       - $ref: '#/AccountVerificationSession'
     balance:
-      title: AccountExpandableBalance
-      description: 'The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.
-
-        '
-      oneOf:
-      - type: string
-        pattern: ^bal_\w+$
-      - type: 'null'
-      - $ref: '#/AccountBalance'
+      $ref: '#/AccountExpandableBalance'
     payoff:
-      title: AccountExpandablePayoff
-      description: 'The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.
-
-        '
-      oneOf:
-      - type: string
-        pattern: ^pyf_\w+$
-      - type: 'null'
-      - $ref: '#/AccountPayoff'
+      $ref: '#/AccountExpandablePayoff'
     payment_instrument:
-      title: AccountExpandablePaymentInstrument
-      description: 'The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.
-
-        '
-      oneOf:
-      - type: string
-        pattern: ^pmt_inst_\w+$
-      - type: 'null'
-      - $ref: '#/AccountPaymentInstrument'
+      $ref: '#/AccountExpandablePaymentInstrument'
     card_brand:
-      title: AccountExpandableCardBrand
-      description: 'The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.
-
-        '
-      oneOf:
-      - type: string
-        pattern: ^cbrd_\w+$
-      - type: 'null'
-      - $ref: '#/AccountCardBrand'
+      $ref: '#/AccountExpandableCardBrand'
     update:
-      title: AccountExpandableUpdate
-      description: 'The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.
-
-        '
-      oneOf:
-      - type: string
-        pattern: ^upd_\w+$
-      - type: 'null'
-      - $ref: '#/AccountUpdate'
+      $ref: '#/AccountExpandableUpdate'
     attribute:
-      title: AccountExpandableAttribute
-      description: 'The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.
-
-        '
-      oneOf:
-      - type: string
-        pattern: ^acc_attr_\w+$
-      - type: 'null'
-      - $ref: '#/AccountAttribute'
+      $ref: '#/AccountExpandableAttribute'
     sensitive:
-      title: AccountExpandableSensitive
-      description: 'The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.
-
-        '
-      oneOf:
-      - type: string
-        pattern: ^astv_\w+$
-      - type: 'null'
-      - $ref: '#/AccountSensitive'
+      $ref: '#/AccountExpandableSensitive'
     created_at:
       type: string
       format: date-time
@@ -176,6 +120,76 @@ Account:
       type: string
       format: date-time
       description: Timestamp when the account was last updated.
+AccountExpandableBalance:
+  title: AccountExpandableBalance
+  description: 'The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.
+
+    '
+  oneOf:
+  - type: string
+    pattern: ^bal_\w+$
+  - type: 'null'
+  - $ref: '#/AccountBalance'
+AccountExpandablePayoff:
+  title: AccountExpandablePayoff
+  description: 'The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.
+
+    '
+  oneOf:
+  - type: string
+    pattern: ^pyf_\w+$
+  - type: 'null'
+  - $ref: '#/AccountPayoff'
+AccountExpandablePaymentInstrument:
+  title: AccountExpandablePaymentInstrument
+  description: 'The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.
+
+    '
+  oneOf:
+  - type: string
+    pattern: ^pmt_inst_\w+$
+  - type: 'null'
+  - $ref: '#/AccountPaymentInstrument'
+AccountExpandableCardBrand:
+  title: AccountExpandableCardBrand
+  description: 'The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.
+
+    '
+  oneOf:
+  - type: string
+    pattern: ^cbrd_\w+$
+  - type: 'null'
+  - $ref: '#/AccountCardBrand'
+AccountExpandableUpdate:
+  title: AccountExpandableUpdate
+  description: 'The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.
+
+    '
+  oneOf:
+  - type: string
+    pattern: ^upd_\w+$
+  - type: 'null'
+  - $ref: '#/AccountUpdate'
+AccountExpandableAttribute:
+  title: AccountExpandableAttribute
+  description: 'The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.
+
+    '
+  oneOf:
+  - type: string
+    pattern: ^acc_attr_\w+$
+  - type: 'null'
+  - $ref: '#/AccountAttribute'
+AccountExpandableSensitive:
+  title: AccountExpandableSensitive
+  description: 'The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.
+
+    '
+  oneOf:
+  - type: string
+    pattern: ^astv_\w+$
+  - type: 'null'
+  - $ref: '#/AccountSensitive'
 AccountACH:
   type:
   - object
