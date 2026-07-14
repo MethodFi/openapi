@@ -89,41 +89,13 @@ EntityIndividualResource:
       verification:
         $ref: '#/EntityVerification'
       connect:
-        title: EntityExpandableConnect
-        description: Expandable. The entity connect session ID or expanded connect object.
-        example: cxn_iENwGBMDnr7sJ
-        oneOf:
-        - type: string
-          pattern: ^cxn_\w+$
-        - type: 'null'
-        - $ref: '#/EntityConnect'
+        $ref: '#/EntityExpandableConnect'
       credit_score:
-        title: EntityExpandableCreditScore
-        description: Expandable. The entity credit score ID or expanded credit score object.
-        example: crs_pn4ca33GRnrJm
-        oneOf:
-        - type: string
-          pattern: ^crs_\w+$
-        - type: 'null'
-        - $ref: '#/EntityCreditScore'
+        $ref: '#/EntityExpandableCreditScore'
       attribute:
-        title: EntityExpandableAttribute
-        description: Expandable. The entity attribute ID or expanded attribute object.
-        example: attr_QwMjMDEwMTY1
-        oneOf:
-        - type: string
-          pattern: ^attr_\w+$
-        - type: 'null'
-        - $ref: '#/EntityAttribute'
+        $ref: '#/EntityExpandableAttribute'
       vehicle:
-        title: EntityExpandableVehicle
-        description: Expandable. The entity vehicle ID or expanded vehicle object.
-        example: vhl_JMDEwMTY1Qw4c
-        oneOf:
-        - type: string
-          pattern: ^vhl_\w+$
-        - type: 'null'
-        - $ref: '#/EntityVehicle'
+        $ref: '#/EntityExpandableVehicle'
       products:
         type: array
         items:
@@ -149,6 +121,42 @@ EntityIndividualResource:
         items:
           type: string
         description: Subscriptions restricted for this entity.
+EntityExpandableConnect:
+  title: EntityExpandableConnect
+  description: Expandable. The entity connect session ID or expanded connect object.
+  example: cxn_iENwGBMDnr7sJ
+  oneOf:
+  - type: string
+    pattern: ^cxn_\w+$
+  - type: 'null'
+  - $ref: '#/EntityConnect'
+EntityExpandableCreditScore:
+  title: EntityExpandableCreditScore
+  description: Expandable. The entity credit score ID or expanded credit score object.
+  example: crs_pn4ca33GRnrJm
+  oneOf:
+  - type: string
+    pattern: ^crs_\w+$
+  - type: 'null'
+  - $ref: '#/EntityCreditScore'
+EntityExpandableAttribute:
+  title: EntityExpandableAttribute
+  description: Expandable. The entity attribute ID or expanded attribute object.
+  example: attr_QwMjMDEwMTY1
+  oneOf:
+  - type: string
+    pattern: ^attr_\w+$
+  - type: 'null'
+  - $ref: '#/EntityAttribute'
+EntityExpandableVehicle:
+  title: EntityExpandableVehicle
+  description: Expandable. The entity vehicle ID or expanded vehicle object.
+  example: vhl_JMDEwMTY1Qw4c
+  oneOf:
+  - type: string
+    pattern: ^vhl_\w+$
+  - type: 'null'
+  - $ref: '#/EntityVehicle'
 EntityCorporationResource:
   allOf:
   - $ref: '#/EntityBase'

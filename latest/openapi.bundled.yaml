@@ -7076,6 +7076,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the balance was last updated.
+    AccountExpandableBalance:
+      title: AccountExpandableBalance
+      description: |
+        The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.
+      oneOf:
+        - type: string
+          pattern: ^bal_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/AccountBalance'
     PayoffResourceError:
       type:
         - object
@@ -7164,6 +7173,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the payoff was last updated.
+    AccountExpandablePayoff:
+      title: AccountExpandablePayoff
+      description: |
+        The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.
+      oneOf:
+        - type: string
+          pattern: ^pyf_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/AccountPayoff'
     ResourceError:
       type:
         - object
@@ -7269,6 +7287,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the payment instrument was last updated.
+    AccountExpandablePaymentInstrument:
+      title: AccountExpandablePaymentInstrument
+      description: |
+        The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.
+      oneOf:
+        - type: string
+          pattern: ^pmt_inst_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/AccountPaymentInstrument'
     AccountCardBrand:
       type: object
       description: Card brand information for an account.
@@ -7377,6 +7404,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the card brand was last updated.
+    AccountExpandableCardBrand:
+      title: AccountExpandableCardBrand
+      description: |
+        The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.
+      oneOf:
+        - type: string
+          pattern: ^cbrd_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/AccountCardBrand'
     UpdateResourceError:
       type:
         - object
@@ -7937,6 +7973,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the update was last updated.
+    AccountExpandableUpdate:
+      title: AccountExpandableUpdate
+      description: |
+        The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.
+      oneOf:
+        - type: string
+          pattern: ^upd_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/AccountUpdate'
     AccountAttribute:
       type: object
       description: An attribute record for an account containing financial data attributes.
@@ -7978,6 +8023,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the attribute was last updated.
+    AccountExpandableAttribute:
+      title: AccountExpandableAttribute
+      description: |
+        The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.
+      oneOf:
+        - type: string
+          pattern: ^acc_attr_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/AccountAttribute'
     AccountSensitiveResourceError:
       type:
         - object
@@ -8065,6 +8119,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the sensitive record was last updated.
+    AccountExpandableSensitive:
+      title: AccountExpandableSensitive
+      description: |
+        The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.
+      oneOf:
+        - type: string
+          pattern: ^astv_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/AccountSensitive'
     Account:
       type: object
       description: |
@@ -8164,68 +8227,19 @@ components:
             - type: 'null'
             - $ref: '#/components/schemas/AccountVerificationSession'
         balance:
-          title: AccountExpandableBalance
-          description: |
-            The latest balance ID. This field is expandable. When expanded, returns the full AccountBalance object.
-          oneOf:
-            - type: string
-              pattern: ^bal_\w+$
-            - type: 'null'
-            - $ref: '#/components/schemas/AccountBalance'
+          $ref: '#/components/schemas/AccountExpandableBalance'
         payoff:
-          title: AccountExpandablePayoff
-          description: |
-            The latest payoff ID. This field is expandable. When expanded, returns the full AccountPayoff object.
-          oneOf:
-            - type: string
-              pattern: ^pyf_\w+$
-            - type: 'null'
-            - $ref: '#/components/schemas/AccountPayoff'
+          $ref: '#/components/schemas/AccountExpandablePayoff'
         payment_instrument:
-          title: AccountExpandablePaymentInstrument
-          description: |
-            The latest payment instrument ID. This field is expandable. When expanded, returns the full AccountPaymentInstrument object.
-          oneOf:
-            - type: string
-              pattern: ^pmt_inst_\w+$
-            - type: 'null'
-            - $ref: '#/components/schemas/AccountPaymentInstrument'
+          $ref: '#/components/schemas/AccountExpandablePaymentInstrument'
         card_brand:
-          title: AccountExpandableCardBrand
-          description: |
-            The latest card brand ID. This field is expandable. When expanded, returns the full AccountCardBrand object.
-          oneOf:
-            - type: string
-              pattern: ^cbrd_\w+$
-            - type: 'null'
-            - $ref: '#/components/schemas/AccountCardBrand'
+          $ref: '#/components/schemas/AccountExpandableCardBrand'
         update:
-          title: AccountExpandableUpdate
-          description: |
-            The latest update ID. This field is expandable. When expanded, returns the full AccountUpdate object.
-          oneOf:
-            - type: string
-              pattern: ^upd_\w+$
-            - type: 'null'
-            - $ref: '#/components/schemas/AccountUpdate'
+          $ref: '#/components/schemas/AccountExpandableUpdate'
         attribute:
-          title: AccountExpandableAttribute
-          description: |
-            The latest attribute ID. This field is expandable. When expanded, returns the full AccountAttribute object.
-          oneOf:
-            - type: string
-              pattern: ^acc_attr_\w+$
-            - type: 'null'
-            - $ref: '#/components/schemas/AccountAttribute'
+          $ref: '#/components/schemas/AccountExpandableAttribute'
         sensitive:
-          title: AccountExpandableSensitive
-          description: |
-            The latest sensitive ID. This field is expandable. When expanded, returns the full AccountSensitive object.
-          oneOf:
-            - type: string
-              pattern: ^astv_\w+$
-            - type: 'null'
-            - $ref: '#/components/schemas/AccountSensitive'
+          $ref: '#/components/schemas/AccountExpandableSensitive'
         created_at:
           type: string
           format: date-time
@@ -9624,6 +9638,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the connect session was last updated.
+    EntityExpandableConnect:
+      title: EntityExpandableConnect
+      description: Expandable. The entity connect session ID or expanded connect object.
+      example: cxn_iENwGBMDnr7sJ
+      oneOf:
+        - type: string
+          pattern: ^cxn_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/EntityConnect'
     EntityCreditScoreFactor:
       type: object
       properties:
@@ -9752,6 +9775,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the credit score was last updated.
+    EntityExpandableCreditScore:
+      title: EntityExpandableCreditScore
+      description: Expandable. The entity credit score ID or expanded credit score object.
+      example: crs_pn4ca33GRnrJm
+      oneOf:
+        - type: string
+          pattern: ^crs_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/EntityCreditScore'
     EntityAttributeData:
       type:
         - object
@@ -9972,6 +10004,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the attribute was last updated.
+    EntityExpandableAttribute:
+      title: EntityExpandableAttribute
+      description: Expandable. The entity attribute ID or expanded attribute object.
+      example: attr_QwMjMDEwMTY1
+      oneOf:
+        - type: string
+          pattern: ^attr_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/EntityAttribute'
     EntityVehicle:
       type: object
       required:
@@ -10056,6 +10097,15 @@ components:
           type: string
           format: date-time
           description: Timestamp when the vehicle record was last updated.
+    EntityExpandableVehicle:
+      title: EntityExpandableVehicle
+      description: Expandable. The entity vehicle ID or expanded vehicle object.
+      example: vhl_JMDEwMTY1Qw4c
+      oneOf:
+        - type: string
+          pattern: ^vhl_\w+$
+        - type: 'null'
+        - $ref: '#/components/schemas/EntityVehicle'
     EntityIndividualResource:
       allOf:
         - $ref: '#/components/schemas/EntityBase'
@@ -10076,41 +10126,13 @@ components:
             verification:
               $ref: '#/components/schemas/EntityVerification'
             connect:
-              title: EntityExpandableConnect
-              description: Expandable. The entity connect session ID or expanded connect object.
-              example: cxn_iENwGBMDnr7sJ
-              oneOf:
-                - type: string
-                  pattern: ^cxn_\w+$
-                - type: 'null'
-                - $ref: '#/components/schemas/EntityConnect'
+              $ref: '#/components/schemas/EntityExpandableConnect'
             credit_score:
-              title: EntityExpandableCreditScore
-              description: Expandable. The entity credit score ID or expanded credit score object.
-              example: crs_pn4ca33GRnrJm
-              oneOf:
-                - type: string
-                  pattern: ^crs_\w+$
-                - type: 'null'
-                - $ref: '#/components/schemas/EntityCreditScore'
+              $ref: '#/components/schemas/EntityExpandableCreditScore'
             attribute:
-              title: EntityExpandableAttribute
-              description: Expandable. The entity attribute ID or expanded attribute object.
-              example: attr_QwMjMDEwMTY1
-              oneOf:
-                - type: string
-                  pattern: ^attr_\w+$
-                - type: 'null'
-                - $ref: '#/components/schemas/EntityAttribute'
+              $ref: '#/components/schemas/EntityExpandableAttribute'
             vehicle:
-              title: EntityExpandableVehicle
-              description: Expandable. The entity vehicle ID or expanded vehicle object.
-              example: vhl_JMDEwMTY1Qw4c
-              oneOf:
-                - type: string
-                  pattern: ^vhl_\w+$
-                - type: 'null'
-                - $ref: '#/components/schemas/EntityVehicle'
+              $ref: '#/components/schemas/EntityExpandableVehicle'
             products:
               type: array
               items:
