@@ -986,18 +986,20 @@ AccountProduct:
   type: object
   description: A product associated with an account.
   required:
-  - id
   - name
   - status
   - status_error
-  - capabilities
-  - reportable
+  - is_subscribable
+  - latest_request_id
+  - latest_successful_request_id
   - created_at
   - updated_at
   properties:
     id:
-      type: string
-      description: Unique identifier for the product.
+      type:
+      - string
+      - 'null'
+      description: Unique identifier for the product, if applicable.
       pattern: ^prd_\w+$
       example: prd_aTJMbnCjw34yQ
     name:
@@ -1012,14 +1014,19 @@ AccountProduct:
       - restricted
     status_error:
       $ref: errors/account_errors.yaml#/ProductResourceError
-    capabilities:
-      type: array
-      description: Capabilities provided by this product.
-      items:
-        type: string
-    reportable:
+    is_subscribable:
       type: boolean
-      description: Whether this product generates reportable data.
+      description: Whether this product can be subscribed to for ongoing updates.
+    latest_request_id:
+      type:
+      - string
+      - 'null'
+      description: ID of the latest request made for this product.
+    latest_successful_request_id:
+      type:
+      - string
+      - 'null'
+      description: ID of the latest successful request made for this product.
     created_at:
       type: string
       format: date-time
@@ -1053,7 +1060,6 @@ AccountSensitive:
   - account_id
   - status
   - type
-  - fields
   - created_at
   - updated_at
   properties:
@@ -1076,18 +1082,37 @@ AccountSensitive:
     type:
       type: string
       description: The type of sensitive data.
-    fields:
-      type: array
-      description: List of sensitive data fields retrieved.
-      items:
-        type: object
-        properties:
-          name:
-            type: string
-            description: Name of the field.
-          value:
-            type: string
-            description: Value of the field.
+    credit_card:
+      type:
+      - object
+      - 'null'
+      description: Card details. Present when type is credit_card.
+      properties:
+        number:
+          type:
+          - string
+          - 'null'
+          description: The card number.
+        exp_month:
+          type:
+          - string
+          - 'null'
+          description: Card expiration month.
+        exp_year:
+          type:
+          - string
+          - 'null'
+          description: Card expiration year.
+        cvv:
+          type:
+          - string
+          - 'null'
+          description: Card CVV.
+        billing_zip_code:
+          type:
+          - string
+          - 'null'
+          description: Billing zip code.
     error:
       $ref: errors/account_errors.yaml#/AccountSensitiveResourceError
     created_at:
@@ -1155,6 +1180,13 @@ AccountSubscription:
       - string
       - 'null'
       description: ID of the latest request triggered by this subscription.
+    payload:
+      type:
+      - object
+      - 'null'
+      description: Configuration payload provided when the subscription was created, if any.
+      allOf:
+      - $ref: common.yaml#/JsonObject
     created_at:
       type: string
       format: date-time
@@ -1277,6 +1309,11 @@ AccountTransaction:
       - string
       - 'null'
       description: The transaction descriptor.
+    merchant_category_code:
+      type:
+      - string
+      - 'null'
+      description: The merchant category code (MCC) for this transaction.
     transacted_at:
       type:
       - string
@@ -1361,6 +1398,12 @@ AccountUpdate:
       - personal_loan
       - student_loan
       - student_loans
+      - collection
+      - credit_builder
+      - insurance
+      - loan
+      - medical
+      - utility
       - bnpl
       - fintech
     source:
@@ -1795,6 +1838,300 @@ AccountUpdate:
           - number
           - 'null'
         interest_rate_source:
+          type:
+          - string
+          - 'null'
+    collection:
+      type:
+      - object
+      - 'null'
+      description: Collection account update data. Present when `type` is `collection`.
+      properties:
+        sub_type:
+          type:
+          - string
+          - 'null'
+        opened_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        closed_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        balance:
+          type:
+          - integer
+          - 'null'
+          description: Current balance in cents.
+        last_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Last payment amount in cents.
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_minimum_amount:
+          type:
+          - integer
+          - 'null'
+          description: Minimum payment due in cents.
+        interest_rate_type:
+          type:
+          - string
+          - 'null'
+    credit_builder:
+      type:
+      - object
+      - 'null'
+      description: Credit builder update data. Present when `type` is `credit_builder`.
+      properties:
+        sub_type:
+          type:
+          - string
+          - 'null'
+        opened_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        closed_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        balance:
+          type:
+          - integer
+          - 'null'
+          description: Current balance in cents.
+        last_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Last payment amount in cents.
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_minimum_amount:
+          type:
+          - integer
+          - 'null'
+          description: Minimum payment due in cents.
+        interest_rate_type:
+          type:
+          - string
+          - 'null'
+    insurance:
+      type:
+      - object
+      - 'null'
+      description: Insurance update data. Present when `type` is `insurance`.
+      properties:
+        sub_type:
+          type:
+          - string
+          - 'null'
+        opened_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        closed_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        balance:
+          type:
+          - integer
+          - 'null'
+          description: Current balance in cents.
+        last_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Last payment amount in cents.
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_minimum_amount:
+          type:
+          - integer
+          - 'null'
+          description: Minimum payment due in cents.
+        interest_rate_type:
+          type:
+          - string
+          - 'null'
+    loan:
+      type:
+      - object
+      - 'null'
+      description: Loan update data. Present when `type` is `loan`.
+      properties:
+        sub_type:
+          type:
+          - string
+          - 'null'
+        opened_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        closed_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        balance:
+          type:
+          - integer
+          - 'null'
+          description: Current balance in cents.
+        last_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Last payment amount in cents.
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_minimum_amount:
+          type:
+          - integer
+          - 'null'
+          description: Minimum payment due in cents.
+        interest_rate_type:
+          type:
+          - string
+          - 'null'
+    medical:
+      type:
+      - object
+      - 'null'
+      description: Medical update data. Present when `type` is `medical`.
+      properties:
+        sub_type:
+          type:
+          - string
+          - 'null'
+        opened_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        closed_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        balance:
+          type:
+          - integer
+          - 'null'
+          description: Current balance in cents.
+        last_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Last payment amount in cents.
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_minimum_amount:
+          type:
+          - integer
+          - 'null'
+          description: Minimum payment due in cents.
+        interest_rate_type:
+          type:
+          - string
+          - 'null'
+    utility:
+      type:
+      - object
+      - 'null'
+      description: Utility update data. Present when `type` is `utility`.
+      properties:
+        sub_type:
+          type:
+          - string
+          - 'null'
+        opened_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        closed_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        balance:
+          type:
+          - integer
+          - 'null'
+          description: Current balance in cents.
+        last_payment_amount:
+          type:
+          - integer
+          - 'null'
+          description: Last payment amount in cents.
+        last_payment_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        next_payment_minimum_amount:
+          type:
+          - integer
+          - 'null'
+          description: Minimum payment due in cents.
+        interest_rate_type:
           type:
           - string
           - 'null'

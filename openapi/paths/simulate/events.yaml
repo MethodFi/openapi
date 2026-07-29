@@ -20,14 +20,14 @@ post:
           type: object
           required:
             - type
-            - resource_id
+            - entity_id
           properties:
             type:
               type: string
               description: The event type to simulate (e.g., `payment.update`).
-            resource_id:
+            entity_id:
               type: string
-              description: The identifier of the resource to associate with the event.
+              description: The identifier of the entity to associate with the event.
   responses:
     '200':
       description: The simulated event.

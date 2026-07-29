@@ -113,7 +113,7 @@ individual:
   delete:
     operationId: closeAccountPaymentInstrument
     summary: Close an account payment instrument
-    description: Closes an account payment instrument. This endpoint is only available starting with API version `2025-12-01`.
+    description: Closes an account payment instrument. This endpoint is only available starting with API version `2026-03-30`.
     tags:
     - Account Payment Instruments
     security:

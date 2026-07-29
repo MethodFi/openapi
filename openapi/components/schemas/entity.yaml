@@ -655,14 +655,18 @@ EntityConnect:
       - pending
       - failed
     accounts:
-      type: array
+      type:
+      - array
+      - 'null'
       items:
         title: EntityConnectExpandableAccount
         oneOf:
         - type: string
           pattern: ^acc_\w+$
         - $ref: account.yaml#/Account
-      description: Expandable. List of account IDs connected through this session.
+      description: >-
+        Expandable. List of account IDs connected through this session. Null
+        while the connect session is still pending.
     requested_products:
       type:
       - array
@@ -677,6 +681,13 @@ EntityConnect:
       description: Subscriptions requested for this connect session.
       items:
         type: string
+    files:
+      type:
+      - array
+      - 'null'
+      description: Files associated with this connect session (e.g. manual connect uploads).
+      items:
+        $ref: common.yaml#/JsonObject
     error:
       type:
       - object
@@ -861,11 +872,11 @@ EntityIdentity:
                 - string
                 - 'null'
                 description: State.
-              zip:
+              postal_code:
                 type:
                 - string
                 - 'null'
-                description: ZIP code.
+                description: Postal code.
           ssn:
             type:
             - string

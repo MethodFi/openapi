@@ -60,7 +60,7 @@ payment_instrument:
       Use this to test payment instrument flows during development.
 
       **Development only** - This endpoint is only available in the sandbox environment.
-      This endpoint is available starting with API version `2025-12-01`.
+      This endpoint is available starting with API version `2026-03-30`.
     tags:
       - Simulate Payments
     security:
