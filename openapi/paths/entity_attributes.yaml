@@ -39,7 +39,10 @@ collection:
   post:
     operationId: createEntityAttributes
     summary: Create entity attributes
-    description: Creates a new attribute retrieval for the specified entity.
+    description: >-
+      Creates a new attribute retrieval for the specified entity. As of API version
+      `2026-03-30`, this endpoint no longer accepts an `attributes` selector in the
+      request body — all available attributes are requested automatically.
     tags:
     - Entity Attributes
     security:
@@ -48,18 +51,6 @@ collection:
     - $ref: ../components/parameters/method_version.yaml
     - $ref: ../components/parameters/idempotency_key.yaml
     - $ref: ../components/parameters/path_ids.yaml#/EntityIdParam
-    requestBody:
-      required: false
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              attributes:
-                type: array
-                description: Specific attributes to request.
-                items:
-                  type: string
     responses:
       '200':
         description: The created entity attribute.

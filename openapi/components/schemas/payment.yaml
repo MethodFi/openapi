@@ -126,6 +126,12 @@ Payment:
       - 'null'
       format: date
       description: The expected or actual settlement date for the destination side of the payment.
+    destination_posted_date:
+      type:
+      - string
+      - 'null'
+      format: date
+      description: The date the destination side of the payment was posted.
     source_status:
       type:
       - string
@@ -167,6 +173,11 @@ Payment:
       - clearing
     error:
       $ref: errors/payment_errors.yaml#/PaymentResourceError
+    idempotency_key:
+      type:
+      - string
+      - 'null'
+      description: The idempotency key provided when the payment was created, if any.
     metadata:
       $ref: common.yaml#/Metadata
     created_at:

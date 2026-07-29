@@ -2,12 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Method API",
-    "version": "2025-12-01",
+    "version": "2026-03-30",
     "license": {
       "name": "Proprietary",
       "url": "https://methodfi.com"
     },
-    "description": "The Method API enables you to retrieve financial data, create payments, and manage\nentities and accounts programmatically. This specification covers the public API\nsurface for version `2025-12-01`.\n\n## Authentication\n\nMost API requests require a Bearer token in the `Authorization` header.\nUse your secret key (`sk_...`) for server-side requests and public key (`pk_...`)\nfor client-side Element requests. Public Message-Level Encryption key discovery\nendpoints are documented separately and do not require authentication.\n\n## Versioning\n\nThe API version is selected via the `Method-Version` header. This spec targets\nversion `2025-12-01`. The SDK sets this header automatically.\n\n## Response Envelope\n\nMost JSON responses are wrapped in a standard envelope:\n\n```json\n{\n  \"success\": true,\n  \"data\": { ... },\n  \"message\": null\n}\n```\n\nThe `/.well-known/jwks.json` endpoint is an exception and returns a bare JWK set.\n\n## Pagination\n\nList endpoints return pagination metadata in response headers:\n`Pagination-Page`, `Pagination-Page-Count`, `Pagination-Page-Limit`,\n`Pagination-Total-Count`, `Pagination-Page-Cursor-Prev`, `Pagination-Page-Cursor-Next`.\n\n## Expandable Fields\n\nCertain resource fields can be expanded from IDs to full objects using the\n`expand` query parameter. Maximum nesting depth is 4 levels.\n",
+    "description": "The Method API enables you to retrieve financial data, create payments, and manage\nentities and accounts programmatically. This specification covers the public API\nsurface for version `2026-03-30`.\n\n## Authentication\n\nMost API requests require a Bearer token in the `Authorization` header.\nUse your secret key (`sk_...`) for server-side requests and public key (`pk_...`)\nfor client-side Element requests. Public Message-Level Encryption key discovery\nendpoints are documented separately and do not require authentication.\n\n## Versioning\n\nThe API version is selected via the `Method-Version` header. This spec targets\nversion `2026-03-30`. The SDK sets this header automatically.\n\n## Response Envelope\n\nMost JSON responses are wrapped in a standard envelope:\n\n```json\n{\n  \"success\": true,\n  \"data\": { ... },\n  \"message\": null\n}\n```\n\nThe `/.well-known/jwks.json` endpoint is an exception and returns a bare JWK set.\n\n## Pagination\n\nList endpoints return pagination metadata in response headers:\n`Pagination-Page`, `Pagination-Page-Count`, `Pagination-Page-Limit`,\n`Pagination-Total-Count`, `Pagination-Page-Cursor-Prev`, `Pagination-Page-Cursor-Next`.\n\n## Expandable Fields\n\nCertain resource fields can be expanded from IDs to full objects using the\n`expand` query parameter. Maximum nesting depth is 4 levels.\n",
     "contact": {
       "name": "Method Financial",
       "url": "https://methodfi.com",
@@ -17,15 +17,18 @@
   "servers": [
     {
       "url": "https://production.methodfi.com",
-      "description": "Production"
+      "description": "Production",
+      "x-fern-server-name": "Production"
     },
     {
       "url": "https://sandbox.methodfi.com",
-      "description": "Sandbox"
+      "description": "Sandbox",
+      "x-fern-server-name": "Sandbox"
     },
     {
       "url": "https://dev.methodfi.com",
-      "description": "Development"
+      "description": "Development",
+      "x-fern-server-name": "Development"
     }
   ],
   "security": [
@@ -347,23 +350,24 @@
                       "description": "Always `true` for successful responses."
                     },
                     "data": {
-                      "type": "string",
-                      "enum": [
-                        "pong"
-                      ]
+                      "type": "null"
                     },
                     "message": {
                       "type": [
                         "string",
                         "null"
+                      ],
+                      "enum": [
+                        "pong",
+                        null
                       ]
                     }
                   }
                 },
                 "example": {
                   "success": true,
-                  "data": "pong",
-                  "message": null
+                  "data": null,
+                  "message": "pong"
                 }
               }
             }
@@ -1725,7 +1729,7 @@
       "delete": {
         "operationId": "closeAccountPaymentInstrument",
         "summary": "Close an account payment instrument",
-        "description": "Closes an account payment instrument. This endpoint is only available starting with API version `2025-12-01`.",
+        "description": "Closes an account payment instrument. This endpoint is only available starting with API version `2026-03-30`.",
         "tags": [
           "Account Payment Instruments"
         ],
@@ -3789,7 +3793,7 @@
       "post": {
         "operationId": "createEntityAttributes",
         "summary": "Create entity attributes",
-        "description": "Creates a new attribute retrieval for the specified entity.",
+        "description": "Creates a new attribute retrieval for the specified entity. As of API version `2026-03-30`, this endpoint no longer accepts an `attributes` selector in the request body — all available attributes are requested automatically.",
         "tags": [
           "Entity Attributes"
         ],
@@ -3809,25 +3813,6 @@
             "$ref": "#/components/parameters/EntityIdParam"
           }
         ],
-        "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "attributes": {
-                    "type": "array",
-                    "description": "Specific attributes to request.",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "The created entity attribute.",
@@ -7627,7 +7612,7 @@
       "get": {
         "operationId": "retrieveTeam",
         "summary": "Retrieve the current team",
-        "description": "Returns the team associated with the current API key.",
+        "description": "Returns the team hierarchy (the team associated with the current API key, plus any parent/child teams) as a list.",
         "tags": [
           "Teams"
         ],
@@ -7643,11 +7628,11 @@
         ],
         "responses": {
           "200": {
-            "description": "The current team.",
+            "description": "The team hierarchy for the current API key.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TeamResponse"
+                  "$ref": "#/components/schemas/TeamListResponse"
                 }
               }
             }
@@ -8790,16 +8775,16 @@
                 "type": "object",
                 "required": [
                   "type",
-                  "resource_id"
+                  "entity_id"
                 ],
                 "properties": {
                   "type": {
                     "type": "string",
                     "description": "The event type to simulate (e.g., `payment.update`)."
                   },
-                  "resource_id": {
+                  "entity_id": {
                     "type": "string",
-                    "description": "The identifier of the resource to associate with the event."
+                    "description": "The identifier of the entity to associate with the event."
                   }
                 }
               }
@@ -8910,7 +8895,7 @@
       "post": {
         "operationId": "simulatePostPaymentViaPaymentInstrument",
         "summary": "Simulate a payment via payment instrument",
-        "description": "Simulates posting a payment through a payment instrument in the sandbox environment.\nUse this to test payment instrument flows during development.\n\n**Development only** - This endpoint is only available in the sandbox environment.\nThis endpoint is available starting with API version `2025-12-01`.\n",
+        "description": "Simulates posting a payment through a payment instrument in the sandbox environment.\nUse this to test payment instrument flows during development.\n\n**Development only** - This endpoint is only available in the sandbox environment.\nThis endpoint is available starting with API version `2026-03-30`.\n",
         "tags": [
           "Simulate Payments"
         ],
@@ -9555,13 +9540,13 @@
         "name": "Method-Version",
         "in": "header",
         "required": true,
-        "description": "API version to use for this request. This spec targets `2025-12-01`.\nThe SDK sets this header automatically.\n",
+        "description": "API version to use for this request. This spec targets `2026-03-30`.\nThe SDK sets this header automatically.\n",
         "schema": {
           "type": "string",
           "enum": [
-            "2025-12-01"
+            "2026-03-30"
           ],
-          "default": "2025-12-01"
+          "default": "2026-03-30"
         }
       },
       "expand_accounts": {
@@ -11694,6 +11679,12 @@
               "personal_loan",
               "student_loan",
               "student_loans",
+              "collection",
+              "credit_builder",
+              "insurance",
+              "loan",
+              "medical",
+              "utility",
               "bnpl",
               "fintech"
             ]
@@ -12322,6 +12313,426 @@
               }
             }
           },
+          "collection": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Collection account update data. Present when `type` is `collection`.",
+            "properties": {
+              "sub_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "opened_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "closed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "balance": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Current balance in cents."
+              },
+              "last_payment_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Last payment amount in cents."
+              },
+              "last_payment_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_due_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_minimum_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Minimum payment due in cents."
+              },
+              "interest_rate_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "credit_builder": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Credit builder update data. Present when `type` is `credit_builder`.",
+            "properties": {
+              "sub_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "opened_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "closed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "balance": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Current balance in cents."
+              },
+              "last_payment_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Last payment amount in cents."
+              },
+              "last_payment_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_due_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_minimum_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Minimum payment due in cents."
+              },
+              "interest_rate_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "insurance": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Insurance update data. Present when `type` is `insurance`.",
+            "properties": {
+              "sub_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "opened_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "closed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "balance": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Current balance in cents."
+              },
+              "last_payment_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Last payment amount in cents."
+              },
+              "last_payment_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_due_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_minimum_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Minimum payment due in cents."
+              },
+              "interest_rate_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "loan": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Loan update data. Present when `type` is `loan`.",
+            "properties": {
+              "sub_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "opened_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "closed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "balance": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Current balance in cents."
+              },
+              "last_payment_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Last payment amount in cents."
+              },
+              "last_payment_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_due_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_minimum_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Minimum payment due in cents."
+              },
+              "interest_rate_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "medical": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Medical update data. Present when `type` is `medical`.",
+            "properties": {
+              "sub_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "opened_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "closed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "balance": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Current balance in cents."
+              },
+              "last_payment_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Last payment amount in cents."
+              },
+              "last_payment_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_due_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_minimum_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Minimum payment due in cents."
+              },
+              "interest_rate_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "utility": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Utility update data. Present when `type` is `utility`.",
+            "properties": {
+              "sub_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "opened_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "closed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "balance": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Current balance in cents."
+              },
+              "last_payment_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Last payment amount in cents."
+              },
+              "last_payment_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_due_date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "next_payment_minimum_amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Minimum payment due in cents."
+              },
+              "interest_rate_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
           "bnpl": {
             "type": [
               "object",
@@ -12535,7 +12946,6 @@
           "account_id",
           "status",
           "type",
-          "fields",
           "created_at",
           "updated_at"
         ],
@@ -12564,20 +12974,47 @@
             "type": "string",
             "description": "The type of sensitive data."
           },
-          "fields": {
-            "type": "array",
-            "description": "List of sensitive data fields retrieved.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Name of the field."
-                },
-                "value": {
-                  "type": "string",
-                  "description": "Value of the field."
-                }
+          "credit_card": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Card details. Present when type is credit_card.",
+            "properties": {
+              "number": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The card number."
+              },
+              "exp_month": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Card expiration month."
+              },
+              "exp_year": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Card expiration year."
+              },
+              "cvv": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Card CVV."
+              },
+              "billing_zip_code": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Billing zip code."
               }
             }
           },
@@ -13367,19 +13804,22 @@
         "type": "object",
         "description": "A product associated with an account.",
         "required": [
-          "id",
           "name",
           "status",
           "status_error",
-          "capabilities",
-          "reportable",
+          "is_subscribable",
+          "latest_request_id",
+          "latest_successful_request_id",
           "created_at",
           "updated_at"
         ],
         "properties": {
           "id": {
-            "type": "string",
-            "description": "Unique identifier for the product.",
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Unique identifier for the product, if applicable.",
             "pattern": "^prd_\\w+$",
             "example": "prd_aTJMbnCjw34yQ"
           },
@@ -13399,16 +13839,23 @@
           "status_error": {
             "$ref": "#/components/schemas/ProductResourceError"
           },
-          "capabilities": {
-            "type": "array",
-            "description": "Capabilities provided by this product.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "reportable": {
+          "is_subscribable": {
             "type": "boolean",
-            "description": "Whether this product generates reportable data."
+            "description": "Whether this product can be subscribed to for ongoing updates."
+          },
+          "latest_request_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ID of the latest request made for this product."
+          },
+          "latest_successful_request_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ID of the latest successful request made for this product."
           },
           "created_at": {
             "type": "string",
@@ -13505,6 +13952,11 @@
           }
         ]
       },
+      "JsonObject": {
+        "type": "object",
+        "description": "Arbitrary JSON object.",
+        "additionalProperties": true
+      },
       "AccountSubscription": {
         "type": "object",
         "description": "A subscription for an account.",
@@ -13541,6 +13993,18 @@
               "null"
             ],
             "description": "ID of the latest request triggered by this subscription."
+          },
+          "payload": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Configuration payload provided when the subscription was created, if any.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              }
+            ]
           },
           "created_at": {
             "type": "string",
@@ -13714,6 +14178,13 @@
               "null"
             ],
             "description": "The transaction descriptor."
+          },
+          "merchant_category_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The merchant category code (MCC) for this transaction."
           },
           "transacted_at": {
             "type": [
@@ -14768,7 +15239,10 @@
             ]
           },
           "accounts": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "title": "EntityConnectExpandableAccount",
               "oneOf": [
@@ -14781,7 +15255,7 @@
                 }
               ]
             },
-            "description": "Expandable. List of account IDs connected through this session."
+            "description": "Expandable. List of account IDs connected through this session. Null while the connect session is still pending."
           },
           "requested_products": {
             "type": [
@@ -14801,6 +15275,16 @@
             "description": "Subscriptions requested for this connect session.",
             "items": {
               "type": "string"
+            }
+          },
+          "files": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "description": "Files associated with this connect session (e.g. manual connect uploads).",
+            "items": {
+              "$ref": "#/components/schemas/JsonObject"
             }
           },
           "error": {
@@ -16146,12 +16630,12 @@
                       ],
                       "description": "State."
                     },
-                    "zip": {
+                    "postal_code": {
                       "type": [
                         "string",
                         "null"
                       ],
-                      "description": "ZIP code."
+                      "description": "Postal code."
                     }
                   }
                 },
@@ -16732,11 +17216,6 @@
           "entity_attribute.credit_health_hard_inquiries_value.decreased",
           "entity_attribute.credit_health_hard_inquiries_value.increased"
         ]
-      },
-      "JsonObject": {
-        "type": "object",
-        "description": "Arbitrary JSON object.",
-        "additionalProperties": true
       },
       "Event": {
         "type": "object",
@@ -17458,6 +17937,14 @@
             "format": "date",
             "description": "The expected or actual settlement date for the destination side of the payment."
           },
+          "destination_posted_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "The date the destination side of the payment was posted."
+          },
           "source_status": {
             "type": [
               "string",
@@ -17514,6 +18001,13 @@
           },
           "error": {
             "$ref": "#/components/schemas/PaymentResourceError"
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The idempotency key provided when the payment was created, if any."
           },
           "metadata": {
             "$ref": "#/components/schemas/Metadata"
@@ -17953,6 +18447,18 @@
           "status": {
             "$ref": "#/components/schemas/SecretStatus"
           },
+          "error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Error details if the secret encountered an error.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResourceError"
+              }
+            ]
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -18013,55 +18519,21 @@
           }
         ]
       },
-      "TeamProduct": {
+      "TeamContact": {
         "type": "object",
+        "description": "A contact associated with a team.",
         "properties": {
-          "type": {
+          "name": {
             "type": "string",
-            "description": "The product type."
+            "description": "Name of the contact."
           },
-          "enabled": {
-            "type": "boolean",
-            "description": "Whether this product is enabled for the team."
-          }
-        }
-      },
-      "TeamKey": {
-        "type": "object",
-        "properties": {
-          "id": {
+          "email": {
             "type": "string",
-            "description": "Unique identifier for the key."
+            "description": "Email address of the contact."
           },
           "type": {
             "type": "string",
-            "description": "The key type.",
-            "enum": [
-              "secret",
-              "public"
-            ]
-          },
-          "deleted": {
-            "type": "boolean",
-            "description": "Whether this key has been deleted."
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the key was created."
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the key was last updated."
-          },
-          "last_used_at": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time",
-            "description": "Timestamp when the key was last used, if ever."
+            "description": "The contact's role/type (e.g. `Admin`)."
           }
         }
       },
@@ -18073,11 +18545,11 @@
           "parent_id",
           "name",
           "legal_name",
-          "logo",
-          "api_version",
+          "ein",
+          "contacts",
+          "address",
           "status",
-          "products",
-          "keys",
+          "logo",
           "created_at",
           "updated_at"
         ],
@@ -18104,17 +18576,58 @@
             "description": "Legal business name of the team.",
             "example": "My Company Inc."
           },
-          "logo": {
+          "ein": {
             "type": [
               "string",
               "null"
             ],
-            "description": "URL of the team logo."
+            "description": "Employer Identification Number for the team."
           },
-          "api_version": {
-            "type": "string",
-            "description": "The API version the team is configured to use.",
-            "example": "2025-12-01"
+          "contacts": {
+            "type": "array",
+            "description": "Contacts associated with the team.",
+            "items": {
+              "$ref": "#/components/schemas/TeamContact"
+            }
+          },
+          "address": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The team's registered address.",
+            "properties": {
+              "line1": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "zipcode": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "country": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
           },
           "status": {
             "type": "string",
@@ -18126,19 +18639,12 @@
               "pending_disablement"
             ]
           },
-          "products": {
-            "type": "array",
-            "description": "List of products enabled for this team.",
-            "items": {
-              "$ref": "#/components/schemas/TeamProduct"
-            }
-          },
-          "keys": {
-            "type": "array",
-            "description": "API keys associated with this team.",
-            "items": {
-              "$ref": "#/components/schemas/TeamKey"
-            }
+          "logo": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "URL of the team logo."
           },
           "created_at": {
             "type": "string",
@@ -18149,6 +18655,68 @@
             "type": "string",
             "format": "date-time",
             "description": "Timestamp when the team was last updated."
+          }
+        }
+      },
+      "TeamListResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ListEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Team"
+                }
+              }
+            }
+          }
+        ],
+        "example": {
+          "success": true,
+          "data": [
+            {
+              "id": "team_PmL8JBBnQNpYZ",
+              "parent_id": null,
+              "name": "My Team",
+              "legal_name": "My Company Inc.",
+              "ein": "1234567",
+              "contacts": [
+                {
+                  "name": "Jane Doe",
+                  "email": "jane@example.com",
+                  "type": "Admin"
+                }
+              ],
+              "address": {
+                "line1": null,
+                "city": null,
+                "state": null,
+                "zipcode": null,
+                "country": null
+              },
+              "status": "active",
+              "logo": null,
+              "created_at": "2026-01-15T18:30:00.000Z",
+              "updated_at": "2026-01-15T18:30:00.000Z"
+            }
+          ],
+          "message": null
+        }
+      },
+      "TeamCreateRequest": {
+        "type": "object",
+        "description": "Request body for creating a child team.",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name for the new child team."
           }
         }
       },
@@ -18165,51 +18733,7 @@
               }
             }
           }
-        ],
-        "example": {
-          "success": true,
-          "data": {
-            "id": "team_PmL8JBBnQNpYZ",
-            "parent_id": null,
-            "name": "My Team",
-            "legal_name": "My Company Inc.",
-            "logo": null,
-            "api_version": "2025-12-01",
-            "status": "active",
-            "products": [
-              {
-                "type": "payments",
-                "enabled": true
-              }
-            ],
-            "keys": [
-              {
-                "id": "key_123",
-                "type": "secret",
-                "deleted": false,
-                "created_at": "2026-01-15T18:30:00.000Z",
-                "updated_at": "2026-01-15T18:30:00.000Z",
-                "last_used_at": null
-              }
-            ],
-            "created_at": "2026-01-15T18:30:00.000Z",
-            "updated_at": "2026-01-15T18:30:00.000Z"
-          },
-          "message": null
-        }
-      },
-      "TeamCreateRequest": {
-        "type": "object",
-        "description": "Request body for creating a child team.",
-        "required": [
-          "name"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Display name for the new child team."
-          }
-        }
+        ]
       },
       "TeamEncryptionKeyRequest": {
         "type": "object",
@@ -18229,7 +18753,11 @@
         "description": "An MLE (Message-Level Encryption) public key for the team.",
         "required": [
           "id",
+          "type",
           "jwk",
+          "well_known_endpoint",
+          "contact",
+          "status",
           "created_at",
           "updated_at"
         ],
@@ -18238,10 +18766,40 @@
             "type": "string",
             "description": "Unique identifier for the public key."
           },
+          "type": {
+            "type": "string",
+            "description": "How the public key is distributed.",
+            "enum": [
+              "direct",
+              "well_known"
+            ]
+          },
           "jwk": {
-            "type": "object",
-            "description": "JSON Web Key (JWK) representation of the public key.",
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "JSON Web Key (JWK) representation of the public key. Present when type is direct.",
             "additionalProperties": true
+          },
+          "well_known_endpoint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The well-known JWKS endpoint URL. Present when type is well_known."
+          },
+          "contact": {
+            "type": "string",
+            "description": "Contact email for this public key registration."
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the public key.",
+            "enum": [
+              "active",
+              "deleted"
+            ]
           },
           "created_at": {
             "type": "string",
@@ -18277,13 +18835,30 @@
         "type": "object",
         "description": "Request body for creating an MLE public key.",
         "required": [
-          "jwk"
+          "type",
+          "contact"
         ],
         "properties": {
+          "type": {
+            "type": "string",
+            "description": "How the public key should be distributed.",
+            "enum": [
+              "direct",
+              "well_known"
+            ]
+          },
+          "contact": {
+            "type": "string",
+            "description": "Contact email for this public key registration."
+          },
           "jwk": {
             "type": "object",
-            "description": "JSON Web Key (JWK) to register.",
+            "description": "JSON Web Key (JWK) to register. Required when type is direct.",
             "additionalProperties": true
+          },
+          "well_known_endpoint": {
+            "type": "string",
+            "description": "The well-known JWKS endpoint URL. Required when type is well_known."
           }
         }
       },

@@ -2,7 +2,9 @@ root:
   get:
     operationId: retrieveTeam
     summary: Retrieve the current team
-    description: Returns the team associated with the current API key.
+    description: >-
+      Returns the team hierarchy (the team associated with the current API key,
+      plus any parent/child teams) as a list.
     tags:
     - Teams
     security:
@@ -11,11 +13,11 @@ root:
     - $ref: ../components/parameters/method_version.yaml
     responses:
       '200':
-        description: The current team.
+        description: The team hierarchy for the current API key.
         content:
           application/json:
             schema:
-              $ref: ../components/schemas/team.yaml#/TeamResponse
+              $ref: ../components/schemas/team.yaml#/TeamListResponse
       '400':
         $ref: ../components/responses/error.yaml#/BadRequest
       '401':

@@ -22,17 +22,18 @@ get:
                 type: boolean
                 description: Always `true` for successful responses.
               data:
-                type: string
-                enum:
-                - pong
+                type: 'null'
               message:
                 type:
                 - string
                 - 'null'
+                enum:
+                - pong
+                - null
           example:
             success: true
-            data: pong
-            message: null
+            data: null
+            message: pong
     '401':
       $ref: ../components/responses/error.yaml#/Unauthorized
     '429':
