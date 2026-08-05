@@ -67,6 +67,32 @@ collection:
                 description: Subscriptions to request during the connect session.
                 items:
                   type: string
+              bureau:
+                type: string
+                description: >-
+                  The credit bureau to pull the raw credit report from. Required
+                  when `artifacts` is set. Method configures which bureaus are
+                  permitted for your team; pulling from both bureaus requires two
+                  separate requests.
+                enum:
+                - equifax
+                - transunion
+              artifacts:
+                type: array
+                description: >-
+                  Credit report artifacts to generate for this connect session.
+                  Each artifact is returned as a file in the `files` array of the
+                  response and can be downloaded through the Files API. Requires
+                  `bureau`. Raw credit report access is a restricted feature
+                  enabled per team.
+                items:
+                  type: string
+                  enum:
+                  - raw_credit_report
+                  - credit_report_pdf
+            dependentRequired:
+              artifacts:
+              - bureau
     responses:
       '200':
         description: The created entity connect session.

@@ -1,0 +1,79 @@
+individual:
+  get:
+    operationId: retrieveFile
+    summary: Retrieve a file
+    description: >-
+      Returns a single file by its identifier, including a temporary pre-signed
+      `download_url`. A fresh URL is generated on every retrieve.
+    tags:
+    - Files
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/FileIdParam
+    responses:
+      '200':
+        description: The requested file.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/file.yaml#/FileResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+download:
+  get:
+    operationId: downloadFile
+    summary: Download a file
+    description: >-
+      Returns the raw contents of the file as an attachment. Use this endpoint
+      for direct access to the file. To obtain a pre-signed link instead, use
+      the retrieve endpoint and read `download_url`.
+    tags:
+    - Files
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/path_ids.yaml#/FileIdParam
+    responses:
+      '200':
+        description: >-
+          The raw file contents. The `Content-Type` header matches the file's
+          `mime_type`.
+        headers:
+          Content-Disposition:
+            description: Attachment filename for the downloaded file.
+            schema:
+              type: string
+        content:
+          application/json:
+            schema:
+              type: string
+              format: binary
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
