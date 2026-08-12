@@ -34,6 +34,15 @@ WebhookIdParam:
     type: string
     pattern: '^whk_\w+$'
 
+FileIdParam:
+  name: fileId
+  in: path
+  required: true
+  description: Unique identifier for the file.
+  schema:
+    type: string
+    pattern: '^file_\w+$'
+
 EventIdParam:
   name: evtId
   in: path

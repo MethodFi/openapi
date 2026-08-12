@@ -328,6 +328,14 @@
     "path": "/events/{evtId}"
   },
   {
+    "method": "GET",
+    "path": "/files/{fileId}"
+  },
+  {
+    "method": "GET",
+    "path": "/files/{fileId}/download"
+  },
+  {
     "method": "POST",
     "path": "/forwarding_requests"
   },

@@ -643,6 +643,7 @@ EntityConnect:
   - accounts
   - requested_products
   - requested_subscriptions
+  - files
   - created_at
   - updated_at
   properties:
@@ -690,12 +691,13 @@ EntityConnect:
       items:
         type: string
     files:
-      type:
-      - array
-      - 'null'
-      description: Files associated with this connect session (e.g. manual connect uploads).
+      type: array
+      description: >-
+        Credit report artifacts generated for this connect session. Only
+        populated when `artifacts` are requested on creation. Retrieve or
+        download a file's contents through the Files API.
       items:
-        $ref: common.yaml#/JsonObject
+        $ref: '#/EntityConnectFile'
     error:
       type:
       - object
@@ -711,6 +713,40 @@ EntityConnect:
       type: string
       format: date-time
       description: Timestamp when the connect session was last updated.
+EntityConnectFile:
+  type: object
+  description: >-
+    A reference to a file generated for a connect session, along with the
+    contextual metadata describing how it was produced.
+  required:
+  - id
+  - type
+  - bureau
+  - mime_type
+  properties:
+    id:
+      type: string
+      description: >-
+        Unique identifier for the file. Retrieve the file through the Files API
+        to obtain a download URL.
+      pattern: ^file_\w+$
+      example: file_jZWkPMhXPeYAn
+    type:
+      type: string
+      description: The type of artifact this file contains.
+      enum:
+      - raw_credit_report
+      - credit_report_pdf
+    bureau:
+      type: string
+      description: The credit bureau the file was generated from.
+      enum:
+      - transunion
+      - equifax
+    mime_type:
+      type: string
+      description: The content type of the file, e.g. `application/json` or `application/pdf`.
+      example: application/json
 EntityCreditScore:
   type: object
   required:
