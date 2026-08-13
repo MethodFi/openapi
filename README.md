@@ -1,6 +1,6 @@
 # Method API OpenAPI Specification
 
-Machine-readable [OpenAPI 3.1.0](https://spec.openapis.org/oas/v3.1.0) specification for the [Method API](https://docs.methodfi.com). Targets API version `2025-12-01`.
+Machine-readable [OpenAPI 3.1.0](https://spec.openapis.org/oas/v3.1.0) specification for the [Method API](https://docs.methodfi.com). Targets API version `2026-03-30`.
 
 ## Directory Structure
 

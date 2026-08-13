@@ -1,0 +1,132 @@
+collection:
+  get:
+    operationId: listPreauths
+    summary: List PreauthSignals assessments
+    description: Returns a paginated list of PreauthSignals assessments for the team.
+    tags:
+    - Preauth
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/pagination.yaml#/PageParam
+    - $ref: ../components/parameters/pagination.yaml#/PageLimitParam
+    - $ref: ../components/parameters/pagination.yaml#/PageCursorParam
+    - $ref: ../components/parameters/pagination.yaml#/FromDateParam
+    - $ref: ../components/parameters/pagination.yaml#/ToDateParam
+    responses:
+      '200':
+        description: A list of PreauthSignals assessments.
+        headers:
+          $ref: ../components/responses/pagination_headers.yaml#/PaginationHeaders
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/preauth.yaml#/PreauthListResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+  post:
+    operationId: createPreauth
+    summary: Create PreauthSignals assessment
+    description: >-
+      Computes a PreauthSignals assessment for a given card or account. Provide either an
+      `account_id` for an authenticated Method Account, or a `card` object with raw card
+      identifiers. Exactly one of the two is required; supplying both returns a `400`
+      error. Optionally include `purchase` context to improve the prediction.
+    tags:
+    - Preauth
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/preauth.yaml#/PreauthCreateRequest
+          examples:
+            by_card:
+              summary: Assess raw card identifiers with purchase context
+              value:
+                card:
+                  bin6: '411111'
+                  last4: '1234'
+                  first_name: Jane
+                  last_name: Doe
+                  phone: '+15555555555'
+                  zip: '10001'
+                purchase:
+                  amount: 9999
+                  mcc: '4511'
+                  ip_address: 203.0.113.42
+                  txn_time: '2026-05-28T14:00:00Z'
+            by_account:
+              summary: Assess an authenticated Method Account
+              value:
+                account_id: acc_4m9amk4KFiaQX
+    responses:
+      '200':
+        description: The PreauthSignals assessment.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/preauth.yaml#/PreauthResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '422':
+        $ref: ../components/responses/error.yaml#/UnprocessableEntity
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
+individual:
+  get:
+    operationId: retrievePreauth
+    summary: Retrieve a PreauthSignals assessment
+    description: Returns a single PreauthSignals assessment by its identifier.
+    tags:
+    - Preauth
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - name: preauthId
+      in: path
+      required: true
+      description: Unique identifier for the PreauthSignals assessment.
+      schema:
+        type: string
+        pattern: ^preauth_\w+$
+    responses:
+      '200':
+        description: The requested PreauthSignals assessment.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/preauth.yaml#/PreauthResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '404':
+        $ref: ../components/responses/error.yaml#/NotFound
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError

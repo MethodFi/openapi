@@ -364,6 +364,10 @@
     "path": "/merchants/{mchId}"
   },
   {
+    "method": "GET",
+    "path": "/opal/events"
+  },
+  {
     "method": "DELETE",
     "path": "/opal/token"
   },
@@ -406,6 +410,38 @@
   {
     "method": "GET",
     "path": "/ping"
+  },
+  {
+    "method": "GET",
+    "path": "/preauth"
+  },
+  {
+    "method": "POST",
+    "path": "/preauth"
+  },
+  {
+    "method": "GET",
+    "path": "/preauth/{preauthId}"
+  },
+  {
+    "method": "GET",
+    "path": "/report_schedules"
+  },
+  {
+    "method": "POST",
+    "path": "/report_schedules"
+  },
+  {
+    "method": "DELETE",
+    "path": "/report_schedules/{reportScheduleId}"
+  },
+  {
+    "method": "GET",
+    "path": "/report_schedules/{reportScheduleId}"
+  },
+  {
+    "method": "PUT",
+    "path": "/report_schedules/{reportScheduleId}"
   },
   {
     "method": "POST",
