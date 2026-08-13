@@ -46,7 +46,11 @@ collection:
   post:
     operationId: createAccountAttribute
     summary: Create an account attribute
-    description: Creates a new attribute request for the specified account.
+    description: >-
+      Creates a new attribute request to compute the account's attributes. The attributes
+      returned depend on the account's liability type. This operation is asynchronous: the
+      response returns immediately with `status` set and `attributes` null, and the final
+      result is available by polling the retrieve endpoint or subscribing to webhooks.
     tags:
     - Account Attributes
     security:
@@ -55,6 +59,15 @@ collection:
     - $ref: ../components/parameters/method_version.yaml
     - $ref: ../components/parameters/idempotency_key.yaml
     - $ref: ../components/parameters/path_ids.yaml#/AccountIdParam
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml#/AccountAttributeCreateRequest
+          example:
+            bundles:
+            - statement
     responses:
       '200':
         description: The newly created account attribute.

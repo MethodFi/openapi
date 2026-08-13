@@ -9,6 +9,7 @@ ForwardingRequest:
   - status
   - status_history
   - created_at
+  - updated_at
   properties:
     id:
       type: string
@@ -37,6 +38,10 @@ ForwardingRequest:
       type: string
       format: date-time
       description: Timestamp when the forwarding request was created.
+    updated_at:
+      type: string
+      format: date-time
+      description: Timestamp when the forwarding request was last updated.
 ForwardingRequestStatus:
   type: string
   enum:

@@ -996,7 +996,7 @@
       "post": {
         "operationId": "createAccountAttribute",
         "summary": "Create an account attribute",
-        "description": "Creates a new attribute request for the specified account.",
+        "description": "Creates a new attribute request to compute the account's attributes. The attributes returned depend on the account's liability type. This operation is asynchronous: the response returns immediately with `status` set and `attributes` null, and the final result is available by polling the retrieve endpoint or subscribing to webhooks.",
         "tags": [
           "Account Attributes"
         ],
@@ -1016,6 +1016,21 @@
             "$ref": "#/components/parameters/AccountIdParam"
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountAttributeCreateRequest"
+              },
+              "example": {
+                "bundles": [
+                  "statement"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The newly created account attribute.",
@@ -14388,6 +14403,29 @@
           }
         ]
       },
+      "AccountAttributeCreateRequest": {
+        "type": "object",
+        "description": "Optional request body for creating an account attribute request. Both fields are optional; a request with no body computes the full set of attributes for the account type. Provide `requested_attributes`, `bundles`, or both to scope the response's `attributes` object to just the requested attributes.",
+        "properties": {
+          "requested_attributes": {
+            "type": "array",
+            "description": "A list of specific attribute names to compute. When omitted, the full set of attributes for the account type is returned.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bundles": {
+            "type": "array",
+            "description": "A list of attribute bundles to compute. Currently supported: `statement`, which returns `next_payment_due_date` and `next_payment_minimum_amount`.",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "statement"
+            ]
+          }
+        }
+      },
       "AccountAttributeResponse": {
         "allOf": [
           {
@@ -18425,7 +18463,8 @@
           "duration_ms",
           "status",
           "status_history",
-          "created_at"
+          "created_at",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -18464,6 +18503,11 @@
             "type": "string",
             "format": "date-time",
             "description": "Timestamp when the forwarding request was created."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the forwarding request was last updated."
           }
         }
       },
