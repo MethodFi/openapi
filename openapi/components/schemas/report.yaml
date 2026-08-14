@@ -1,3 +1,46 @@
+ReportType:
+  type: string
+  description: The type of report, determining the data it contains and the window it covers.
+  enum:
+  # Payments created
+  - payments.created.current
+  - payments.created.previous
+  - payments.created.previous_day
+  # Payments updated
+  - payments.updated.current
+  - payments.updated.previous
+  # Payments failed
+  - payments.failed.previous_day
+  # Payments outstanding, itemized
+  - payments.outstanding_itemized.daily
+  - payments.outstanding_itemized.total
+  - payments.outstanding_itemized.pull_daily
+  - payments.outstanding_itemized.pull_total
+  - payments.outstanding_itemized.push_daily
+  - payments.outstanding_itemized.push_total
+  # Payments outstanding, summary
+  - payments.outstanding_summary.daily
+  - payments.outstanding_summary.total
+  - payments.outstanding_summary.pull_daily
+  - payments.outstanding_summary.pull_total
+  - payments.outstanding_summary.push_daily
+  - payments.outstanding_summary.push_total
+  # ACH
+  - ach.pull.upcoming
+  - ach.pull.previous
+  - ach.pull.nightly
+  - ach.reversals.nightly
+  - ach.debit.daily
+  # Reversals
+  - reversals.pull_funded.previous_day
+  - reversals.push_funded.previous_day
+  # Entities
+  - entities.created.previous_day
+  # Balances
+  - reserve_fbo_balance.created.previous_day
+  - team_fbo_balance.created.previous_day
+  example: payments.created.current
+
 Report:
   type: object
   description: A Report is a downloadable file containing aggregated data about payments, entities, or other resources.
@@ -16,22 +59,7 @@ Report:
       pattern: ^rpt_\w+$
       example: rpt_cj2mkA3hFyHT5
     type:
-      type: string
-      description: The type of report.
-      enum:
-      - payments.created.current
-      - payments.created.previous
-      - payments.created.previous_day
-      - payments.updated.current
-      - payments.updated.previous
-      - payments.failed.previous_day
-      - ach.pull.upcoming
-      - ach.pull.previous
-      - ach.pull.nightly
-      - ach.reversals.nightly
-      - ach.debit.daily
-      - entities.created.previous_day
-      - reserve_fbo_balance.created.previous_day
+      $ref: '#/ReportType'
     url:
       type:
       - string
@@ -60,22 +88,7 @@ ReportCreateRequest:
   - type
   properties:
     type:
-      type: string
-      description: The type of report to generate.
-      enum:
-      - payments.created.current
-      - payments.created.previous
-      - payments.created.previous_day
-      - payments.updated.current
-      - payments.updated.previous
-      - payments.failed.previous_day
-      - ach.pull.upcoming
-      - ach.pull.previous
-      - ach.pull.nightly
-      - ach.reversals.nightly
-      - ach.debit.daily
-      - entities.created.previous_day
-      - reserve_fbo_balance.created.previous_day
+      $ref: '#/ReportType'
 ReportResponse:
   allOf:
   - $ref: common.yaml#/SuccessEnvelope

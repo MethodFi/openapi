@@ -170,8 +170,16 @@
       "description": "Reversals for payments"
     },
     {
+      "name": "Preauth",
+      "description": "PreauthSignals transaction success assessments"
+    },
+    {
       "name": "Reports",
       "description": "Downloadable reports"
+    },
+    {
+      "name": "Report Schedules",
+      "description": "Recurring report generation schedules"
     },
     {
       "name": "Secrets",
@@ -988,7 +996,7 @@
       "post": {
         "operationId": "createAccountAttribute",
         "summary": "Create an account attribute",
-        "description": "Creates a new attribute request for the specified account.",
+        "description": "Creates a new attribute request to compute the account's attributes. The attributes returned depend on the account's liability type. This operation is asynchronous: the response returns immediately with `status` set and `attributes` null, and the final result is available by polling the retrieve endpoint or subscribing to webhooks.",
         "tags": [
           "Account Attributes"
         ],
@@ -1008,6 +1016,21 @@
             "$ref": "#/components/parameters/AccountIdParam"
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountAttributeCreateRequest"
+              },
+              "example": {
+                "bundles": [
+                  "statement"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The newly created account attribute.",
@@ -7267,6 +7290,260 @@
         }
       }
     },
+    "/preauth": {
+      "get": {
+        "operationId": "listPreauths",
+        "summary": "List PreauthSignals assessments",
+        "description": "Returns a paginated list of PreauthSignals assessments for the team.",
+        "tags": [
+          "Preauth"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PageLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/PageCursorParam"
+          },
+          {
+            "$ref": "#/components/parameters/FromDateParam"
+          },
+          {
+            "$ref": "#/components/parameters/ToDateParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of PreauthSignals assessments.",
+            "headers": {
+              "Pagination-Page": {
+                "description": "Current page number.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Pagination-Page-Count": {
+                "description": "Total number of pages.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Pagination-Page-Limit": {
+                "description": "Number of items per page.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Pagination-Total-Count": {
+                "description": "Total number of items across all pages.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Pagination-Page-Cursor-Prev": {
+                "description": "Cursor for the previous page, if available.",
+                "schema": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "Pagination-Page-Cursor-Next": {
+                "description": "Cursor for the next page, if available.",
+                "schema": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreauthListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPreauth",
+        "summary": "Create PreauthSignals assessment",
+        "description": "Computes a PreauthSignals assessment for a given card or account. Provide either an `account_id` for an authenticated Method Account, or a `card` object with raw card identifiers. Exactly one of the two is required; supplying both returns a `400` error. Optionally include `purchase` context to improve the prediction.",
+        "tags": [
+          "Preauth"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency_key"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreauthCreateRequest"
+              },
+              "examples": {
+                "by_card": {
+                  "summary": "Assess raw card identifiers with purchase context",
+                  "value": {
+                    "card": {
+                      "bin6": "411111",
+                      "last4": "1234",
+                      "first_name": "Jane",
+                      "last_name": "Doe",
+                      "phone": "+15555555555",
+                      "zip": "10001"
+                    },
+                    "purchase": {
+                      "amount": 9999,
+                      "mcc": "4511",
+                      "ip_address": "203.0.113.42",
+                      "txn_time": "2026-05-28T14:00:00Z"
+                    }
+                  }
+                },
+                "by_account": {
+                  "summary": "Assess an authenticated Method Account",
+                  "value": {
+                    "account_id": "acc_4m9amk4KFiaQX"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The PreauthSignals assessment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreauthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/preauth/{preauthId}": {
+      "get": {
+        "operationId": "retrievePreauth",
+        "summary": "Retrieve a PreauthSignals assessment",
+        "description": "Returns a single PreauthSignals assessment by its identifier.",
+        "tags": [
+          "Preauth"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          },
+          {
+            "name": "preauthId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the PreauthSignals assessment.",
+            "schema": {
+              "type": "string",
+              "pattern": "^preauth_\\w+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested PreauthSignals assessment.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreauthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
     "/reports": {
       "post": {
         "operationId": "createReport",
@@ -7440,6 +7717,346 @@
           },
           "404": {
             "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/report_schedules": {
+      "get": {
+        "operationId": "listReportSchedules",
+        "summary": "List report schedules",
+        "description": "Returns the report schedules configured for the team.",
+        "tags": [
+          "Report Schedules"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of report schedules.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportScheduleListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createReportSchedule",
+        "summary": "Create a report schedule",
+        "description": "Creates a new active report schedule for a single supported Report `type`. Once created, the schedule runs on Method's standard cadence for that type. A team may have only one active schedule per `type`; creating a duplicate returns an error.",
+        "tags": [
+          "Report Schedules"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency_key"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportScheduleCreateRequest"
+              },
+              "example": {
+                "type": "payments.created.previous_day",
+                "email_recipients": [
+                  "reports@example.com"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The newly created report schedule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportScheduleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/report_schedules/{reportScheduleId}": {
+      "get": {
+        "operationId": "retrieveReportSchedule",
+        "summary": "Retrieve a report schedule",
+        "description": "Returns the report schedule associated with the identifier.",
+        "tags": [
+          "Report Schedules"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          },
+          {
+            "name": "reportScheduleId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the report schedule.",
+            "schema": {
+              "type": "string",
+              "pattern": "^rpt_sch_\\w+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested report schedule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportScheduleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateReportSchedule",
+        "summary": "Update a report schedule",
+        "description": "Updates the `email_recipients` of an existing report schedule. The schedule `type` and cadence cannot be changed.",
+        "tags": [
+          "Report Schedules"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency_key"
+          },
+          {
+            "name": "reportScheduleId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the report schedule.",
+            "schema": {
+              "type": "string",
+              "pattern": "^rpt_sch_\\w+$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportScheduleUpdateRequest"
+              },
+              "example": {
+                "email_recipients": [
+                  "ops@example.com",
+                  "reports@example.com"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated report schedule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportScheduleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteReportSchedule",
+        "summary": "Delete a report schedule",
+        "description": "Deletes a report schedule, stopping all future runs. Returns an empty response.",
+        "tags": [
+          "Report Schedules"
+        ],
+        "security": [
+          {
+            "SecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency_key"
+          },
+          {
+            "name": "reportScheduleId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier for the report schedule.",
+            "schema": {
+              "type": "string",
+              "pattern": "^rpt_sch_\\w+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report schedule deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "data",
+                    "message"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "null",
+                      "example": null
+                    },
+                    "message": {
+                      "type": [
+                        "null",
+                        "string"
+                      ],
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
@@ -9256,6 +9873,64 @@
                 "example": {
                   "success": true,
                   "data": null,
+                  "message": null
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/opal/events": {
+      "get": {
+        "operationId": "listOpalEvents",
+        "summary": "List Opal session events",
+        "description": "Returns the events recorded during the Opal session associated with the authenticated token. Event types follow the `<mode>.<object>.<action>` pattern.",
+        "tags": [
+          "Opal"
+        ],
+        "security": [
+          {
+            "OpalToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/method_version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The events recorded for the current Opal session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpalEventListResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "type": "card_connect.flow.started",
+                      "mode": "card_connect",
+                      "object": "flow",
+                      "action": "started",
+                      "timestamp": "2026-03-14T19:02:11.482Z",
+                      "data": null
+                    }
+                  ],
                   "message": null
                 }
               }
@@ -13728,6 +14403,29 @@
           }
         ]
       },
+      "AccountAttributeCreateRequest": {
+        "type": "object",
+        "description": "Optional request body for creating an account attribute request. Both fields are optional; a request with no body computes the full set of attributes for the account type. Provide `requested_attributes`, `bundles`, or both to scope the response's `attributes` object to just the requested attributes.",
+        "properties": {
+          "requested_attributes": {
+            "type": "array",
+            "description": "A list of specific attribute names to compute. When omitted, the full set of attributes for the account type is returned.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bundles": {
+            "type": "array",
+            "description": "A list of attribute bundles to compute. Currently supported: `statement`, which returns `next_payment_due_date` and `next_payment_minimum_amount`.",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "statement"
+            ]
+          }
+        }
+      },
       "AccountAttributeResponse": {
         "allOf": [
           {
@@ -17765,7 +18463,8 @@
           "duration_ms",
           "status",
           "status_history",
-          "created_at"
+          "created_at",
+          "updated_at"
         ],
         "properties": {
           "id": {
@@ -17804,6 +18503,11 @@
             "type": "string",
             "format": "date-time",
             "description": "Timestamp when the forwarding request was created."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the forwarding request was last updated."
           }
         }
       },
@@ -18573,6 +19277,294 @@
           }
         }
       },
+      "Preauth": {
+        "type": "object",
+        "description": "A PreauthSignals assessment returns the predicted likelihood that a transaction will succeed, alongside verified ownership of the card and recommended retry timing. `verified_ownership` and `card_standing` are derived from the identifiers supplied in the request and are available to all teams. `success_likelihood` and `optimal_retry_date` depend on additional underlying data; when a team is not provisioned for that data both fields return `null`, which is a normal response state rather than an error.",
+        "required": [
+          "id",
+          "account_id",
+          "status",
+          "verified_ownership",
+          "card_standing",
+          "success_likelihood",
+          "optimal_retry_date",
+          "metadata",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the PreauthSignals assessment.",
+            "pattern": "^preauth_\\w+$",
+            "example": "preauth_qV7kRaFm4JNxw"
+          },
+          "account_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The ID of the associated Method Account. Returned whether the account was passed in the request or generated from raw card input.",
+            "example": "acc_4m9amk4KFiaQX"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current processing status of the assessment.",
+            "enum": [
+              "pending",
+              "in_progress",
+              "completed",
+              "failed"
+            ],
+            "example": "completed"
+          },
+          "verified_ownership": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The result of matching the provided card details to a known cardholder identity. Derived from the request identifiers alone.",
+            "enum": [
+              "match",
+              "no_match",
+              "fuzzy_match",
+              "identity_not_found",
+              "unknown",
+              null
+            ],
+            "example": "match"
+          },
+          "card_standing": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Current status of the card account at the issuer.",
+            "enum": [
+              "open",
+              "closed",
+              null
+            ],
+            "example": "open"
+          },
+          "success_likelihood": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The predicted probability that a charge will succeed under the provided conditions, expressed as a decimal from 0.00 to 1.00. Returns `null` when the team is not provisioned for the required underlying data.",
+            "minimum": 0,
+            "maximum": 1,
+            "example": 0.87
+          },
+          "optimal_retry_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "The recommended date on which to attempt or retry the charge. Returns `null` when the team is not provisioned for the required underlying data.",
+            "example": "2026-06-02"
+          },
+          "error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "An object representing an error that occurred while processing this request.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResourceError"
+              }
+            ]
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the assessment was created."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the assessment was last updated."
+          }
+        },
+        "example": {
+          "id": "preauth_qV7kRaFm4JNxw",
+          "account_id": "acc_4m9amk4KFiaQX",
+          "status": "completed",
+          "verified_ownership": "match",
+          "card_standing": "open",
+          "success_likelihood": 0.87,
+          "optimal_retry_date": "2026-06-02",
+          "error": null,
+          "metadata": null,
+          "created_at": "2026-05-28T14:00:00.000Z",
+          "updated_at": "2026-05-28T14:00:00.180Z"
+        }
+      },
+      "PreauthListResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ListEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Preauth"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "PreauthCard": {
+        "type": "object",
+        "description": "Raw card identifiers for an unauthenticated card. `bin6`, `last4`, `first_name`, `last_name`, and `phone` are the inputs used to resolve `verified_ownership`; supplying more of them improves match accuracy.",
+        "required": [
+          "bin6",
+          "last4"
+        ],
+        "properties": {
+          "bin6": {
+            "type": "string",
+            "description": "First six digits of the card number (the bank identification number).",
+            "pattern": "^\\d{6}$",
+            "example": "411111"
+          },
+          "last4": {
+            "type": "string",
+            "description": "Last four digits of the card number.",
+            "pattern": "^\\d{4}$",
+            "example": "1234"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Cardholder first name.",
+            "example": "Jane"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Cardholder last name.",
+            "example": "Doe"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Cardholder phone number in E.164 format.",
+            "example": "+15555555555"
+          },
+          "zip": {
+            "type": "string",
+            "description": "Cardholder billing postal code.",
+            "example": "10001"
+          }
+        }
+      },
+      "PreauthPurchase": {
+        "type": "object",
+        "description": "Optional context describing the transaction being assessed. Supplying purchase context improves the accuracy of `success_likelihood`.",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "description": "The amount of the transaction in cents (for example, $99.99 = 9999).",
+            "minimum": 1,
+            "example": 9999
+          },
+          "mcc": {
+            "type": "string",
+            "description": "Merchant category code for the transaction.",
+            "example": "4511"
+          },
+          "ip_address": {
+            "type": "string",
+            "description": "IP address of the device initiating the transaction.",
+            "example": "203.0.113.42"
+          },
+          "txn_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp at which the transaction is attempted.",
+            "example": "2026-05-28T14:00:00Z"
+          }
+        }
+      },
+      "PreauthCreateRequest": {
+        "type": "object",
+        "description": "Request to compute a PreauthSignals assessment. Exactly one of `account_id` or `card` must be provided; supplying both returns a `400` error.",
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "description": "The ID of an authenticated Method Account to assess.",
+            "pattern": "^acc_\\w+$",
+            "example": "acc_4m9amk4KFiaQX"
+          },
+          "card": {
+            "$ref": "#/components/schemas/PreauthCard"
+          },
+          "purchase": {
+            "$ref": "#/components/schemas/PreauthPurchase"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          }
+        }
+      },
+      "PreauthResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/Preauth"
+              }
+            }
+          }
+        ]
+      },
+      "ReportType": {
+        "type": "string",
+        "description": "The type of report, determining the data it contains and the window it covers.",
+        "enum": [
+          "payments.created.current",
+          "payments.created.previous",
+          "payments.created.previous_day",
+          "payments.updated.current",
+          "payments.updated.previous",
+          "payments.failed.previous_day",
+          "payments.outstanding_itemized.daily",
+          "payments.outstanding_itemized.total",
+          "payments.outstanding_itemized.pull_daily",
+          "payments.outstanding_itemized.pull_total",
+          "payments.outstanding_itemized.push_daily",
+          "payments.outstanding_itemized.push_total",
+          "payments.outstanding_summary.daily",
+          "payments.outstanding_summary.total",
+          "payments.outstanding_summary.pull_daily",
+          "payments.outstanding_summary.pull_total",
+          "payments.outstanding_summary.push_daily",
+          "payments.outstanding_summary.push_total",
+          "ach.pull.upcoming",
+          "ach.pull.previous",
+          "ach.pull.nightly",
+          "ach.reversals.nightly",
+          "ach.debit.daily",
+          "reversals.pull_funded.previous_day",
+          "reversals.push_funded.previous_day",
+          "entities.created.previous_day",
+          "reserve_fbo_balance.created.previous_day",
+          "team_fbo_balance.created.previous_day"
+        ],
+        "example": "payments.created.current"
+      },
       "ReportCreateRequest": {
         "type": "object",
         "description": "Request body for creating a report.",
@@ -18581,23 +19573,7 @@
         ],
         "properties": {
           "type": {
-            "type": "string",
-            "description": "The type of report to generate.",
-            "enum": [
-              "payments.created.current",
-              "payments.created.previous",
-              "payments.created.previous_day",
-              "payments.updated.current",
-              "payments.updated.previous",
-              "payments.failed.previous_day",
-              "ach.pull.upcoming",
-              "ach.pull.previous",
-              "ach.pull.nightly",
-              "ach.reversals.nightly",
-              "ach.debit.daily",
-              "entities.created.previous_day",
-              "reserve_fbo_balance.created.previous_day"
-            ]
+            "$ref": "#/components/schemas/ReportType"
           }
         }
       },
@@ -18621,23 +19597,7 @@
             "example": "rpt_cj2mkA3hFyHT5"
           },
           "type": {
-            "type": "string",
-            "description": "The type of report.",
-            "enum": [
-              "payments.created.current",
-              "payments.created.previous",
-              "payments.created.previous_day",
-              "payments.updated.current",
-              "payments.updated.previous",
-              "payments.failed.previous_day",
-              "ach.pull.upcoming",
-              "ach.pull.previous",
-              "ach.pull.nightly",
-              "ach.reversals.nightly",
-              "ach.debit.daily",
-              "entities.created.previous_day",
-              "reserve_fbo_balance.created.previous_day"
-            ]
+            "$ref": "#/components/schemas/ReportType"
           },
           "url": {
             "type": [
@@ -18683,6 +19643,153 @@
             }
           }
         ]
+      },
+      "ReportScheduleType": {
+        "type": "string",
+        "description": "The Report type generated by the schedule. Method owns the run cadence for each supported type; the cadence is not configurable. All supported types currently run on business days at 8:00am America/Chicago. Non-business-day runs are skipped and resume on the next scheduled business day.",
+        "enum": [
+          "ach.pull.nightly",
+          "ach.reversals.nightly",
+          "entities.created.previous_day",
+          "payments.created.previous_day",
+          "payments.failed.previous_day",
+          "reversals.pull_funded.previous_day",
+          "reversals.push_funded.previous_day"
+        ],
+        "example": "payments.created.previous_day"
+      },
+      "ReportSchedule": {
+        "type": "object",
+        "description": "A Report Schedule automates recurring generation of a single Report `type`. Each scheduled run creates a Report exactly as `POST /reports` does, so it follows normal Report persistence and triggers the standard `report.create` webhook. When `email_recipients` are configured, Method also emails the CSV for the generated Report. A team may have only one active schedule per `type`.",
+        "required": [
+          "id",
+          "type",
+          "email_recipients",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the report schedule.",
+            "pattern": "^rpt_sch_\\w+$",
+            "example": "rpt_sch_Gqjh8pzeUfzH6"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ReportScheduleType"
+          },
+          "email_recipients": {
+            "type": "array",
+            "description": "Email addresses that receive the generated Report CSV after each run. An empty array means no email is sent; the Report is still created.",
+            "items": {
+              "type": "string",
+              "format": "email"
+            },
+            "example": [
+              "reports@example.com"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the report schedule. `active` schedules run on their cadence.",
+            "example": "active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the report schedule was created."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the report schedule was last updated."
+          }
+        },
+        "example": {
+          "id": "rpt_sch_Gqjh8pzeUfzH6",
+          "type": "payments.created.previous_day",
+          "email_recipients": [
+            "reports@example.com"
+          ],
+          "status": "active",
+          "created_at": "2026-06-01T13:21:10.386Z",
+          "updated_at": "2026-06-01T13:21:10.386Z"
+        }
+      },
+      "ReportScheduleListResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ListEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ReportSchedule"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ReportScheduleCreateRequest": {
+        "type": "object",
+        "description": "Request body for creating a report schedule. Creating a second schedule for a `type` that already has an active schedule returns an error.",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/ReportScheduleType"
+          },
+          "email_recipients": {
+            "type": "array",
+            "description": "Email addresses that receive the generated Report CSV after each run.",
+            "items": {
+              "type": "string",
+              "format": "email"
+            },
+            "example": [
+              "reports@example.com"
+            ]
+          }
+        }
+      },
+      "ReportScheduleResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SuccessEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/ReportSchedule"
+              }
+            }
+          }
+        ]
+      },
+      "ReportScheduleUpdateRequest": {
+        "type": "object",
+        "description": "Request body for updating a report schedule. The schedule `type` and cadence cannot be changed; create a new schedule instead.",
+        "properties": {
+          "email_recipients": {
+            "type": "array",
+            "description": "Replacement list of email addresses that receive the generated Report CSV.",
+            "items": {
+              "type": "string",
+              "format": "email"
+            },
+            "example": [
+              "ops@example.com",
+              "reports@example.com"
+            ]
+          }
+        }
       },
       "SecretStatus": {
         "type": "string",
@@ -19923,6 +21030,70 @@
                   "null"
                 ],
                 "example": null
+              }
+            }
+          }
+        ]
+      },
+      "OpalEvent": {
+        "type": "object",
+        "description": "An event recorded during an Opal session, following the `<mode>.<object>.<action>` type pattern.",
+        "required": [
+          "type",
+          "mode",
+          "object",
+          "action",
+          "timestamp",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Full event type in the format `<mode>.<object>.<action>`.",
+            "example": "card_connect.flow.started"
+          },
+          "mode": {
+            "type": "string",
+            "description": "The session mode that produced this event.",
+            "example": "card_connect"
+          },
+          "object": {
+            "type": "string",
+            "description": "The object within the mode that the event relates to.",
+            "example": "flow"
+          },
+          "action": {
+            "type": "string",
+            "description": "The action that occurred on the object.",
+            "example": "started"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of when the event occurred."
+          },
+          "data": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional event-specific data payload."
+          }
+        }
+      },
+      "OpalEventListResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ListEnvelope"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/OpalEvent"
+                }
               }
             }
           }

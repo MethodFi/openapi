@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "methodfi-docs": {
+      "type": "http",
+      "url": "https://docs.methodfi.com/mcp"
+    }
+  }
+}

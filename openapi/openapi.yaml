@@ -90,8 +90,12 @@ tags:
   description: ACH and clearing payments
 - name: Payment Reversals
   description: Reversals for payments
+- name: Preauth
+  description: PreauthSignals transaction success assessments
 - name: Reports
   description: Downloadable reports
+- name: Report Schedules
+  description: Recurring report generation schedules
 - name: Secrets
   description: Secure secret storage
 - name: Teams
@@ -243,12 +247,20 @@ paths:
     $ref: paths/payment_reversals.yaml#/collection
   /payments/{paymentId}/reversals/{reversalId}:
     $ref: paths/payment_reversals.yaml#/individual
+  /preauth:
+    $ref: paths/preauth.yaml#/collection
+  /preauth/{preauthId}:
+    $ref: paths/preauth.yaml#/individual
   /reports:
     $ref: paths/reports.yaml#/create
   /reports/{reportId}:
     $ref: paths/reports.yaml#/individual
   /reports/{reportId}/download:
     $ref: paths/reports.yaml#/download
+  /report_schedules:
+    $ref: paths/report_schedules.yaml#/collection
+  /report_schedules/{reportScheduleId}:
+    $ref: paths/report_schedules.yaml#/individual
   /secrets:
     $ref: paths/secrets.yaml#/collection
   /secrets/{id}:
@@ -285,6 +297,8 @@ paths:
     $ref: paths/simulate/payments.yaml#/payment_instrument
   /opal/token:
     $ref: paths/opal.yaml#/token
+  /opal/events:
+    $ref: paths/opal.yaml#/events
   /elements/token:
     $ref: paths/elements/sk.yaml#/create_token
   /elements/token/{pk_elem_id}/results:

@@ -102,3 +102,41 @@ token:
         $ref: ../components/responses/error.yaml#/RateLimited
       '500':
         $ref: ../components/responses/error.yaml#/InternalError
+events:
+  get:
+    operationId: listOpalEvents
+    summary: List Opal session events
+    description: >-
+      Returns the events recorded during the Opal session associated with the
+      authenticated token. Event types follow the `<mode>.<object>.<action>` pattern.
+    tags:
+    - Opal
+    security:
+    - OpalToken: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    responses:
+      '200':
+        description: The events recorded for the current Opal session.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/opal.yaml#/OpalEventListResponse
+            example:
+              success: true
+              data:
+              - type: card_connect.flow.started
+                mode: card_connect
+                object: flow
+                action: started
+                timestamp: '2026-03-14T19:02:11.482Z'
+                data: null
+              message: null
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
