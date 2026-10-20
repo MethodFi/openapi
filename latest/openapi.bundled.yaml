@@ -7977,6 +7977,7 @@ components:
           enum:
             - completed
             - pending
+            - in_progress
             - failed
         type:
           type: string
