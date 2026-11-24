@@ -19,6 +19,7 @@
   "createEntitySubscription",
   "createEntityVerificationSession",
   "createForwardingRequest",
+  "createIntent",
   "createOpalToken",
   "createPayment",
   "createPreauth",

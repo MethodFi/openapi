@@ -1,0 +1,91 @@
+collection:
+  post:
+    operationId: createIntent
+    summary: Create an Intent
+    description: >-
+      **Beta.** Intent must be enabled for your team. Contact your Method CSM to request
+      access.
+
+
+      Creates a new Intent for a user journey event. If Method recognizes the user, Method
+      begins refreshing their eligible liability data in the background, so the more
+      recent data is ready sooner when the user reaches Connect and Updates.
+
+
+      Identify the user with either `identity.individual` (name plus at least one of
+      phone, date of birth, or address) or `identity.entity_id` for a user who already has
+      an Entity. Creating an Intent does not create an Entity, pull a credit report, or
+      send webhooks. The response does not indicate whether a match occurred.
+
+
+      In the Development environment, Intents are validated and stored but do not run
+      identity matching or background syncs.
+
+
+      Request errors use the following `sub_type` values: `INVALID_REQUEST` (the body
+      failed validation), `INTENTS_NOT_ENABLED` (Intents are not enabled for your team),
+      and `INVALID_ENTITY` (the `identity.entity_id` does not match an Entity on your
+      team).
+    tags:
+    - Intents
+    security:
+    - SecretKey: []
+    parameters:
+    - $ref: ../components/parameters/method_version.yaml
+    - $ref: ../components/parameters/idempotency_key.yaml
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/intent.yaml#/CreateIntentRequest
+          examples:
+            by_individual:
+              summary: Identify a new user by PII
+              value:
+                event: lending.offer_sent
+                identity:
+                  individual:
+                    first_name: Jane
+                    last_name: Doe
+                    phone: '+15125550123'
+                    email: jane@example.com
+                    dob: '1990-05-21'
+                    address:
+                      line1: 123 Main St
+                      line2: null
+                      city: Austin
+                      state: TX
+                      zip: '78701'
+                context:
+                  external_user_id: usr_8f2d1c
+                  session_id: sess_41b7e9
+                  source: email
+                metadata:
+                  campaign_id: fall_prescreen
+            by_entity:
+              summary: Identify a returning user by Entity
+              value:
+                event: user.logged_in
+                identity:
+                  entity_id: ent_au22b1fbFJbp8
+                context:
+                  external_user_id: usr_8f2d1c
+                  source: app
+    responses:
+      '200':
+        description: The newly created Intent.
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/intent.yaml#/IntentResponse
+      '400':
+        $ref: ../components/responses/error.yaml#/BadRequest
+      '401':
+        $ref: ../components/responses/error.yaml#/Unauthorized
+      '403':
+        $ref: ../components/responses/error.yaml#/Forbidden
+      '429':
+        $ref: ../components/responses/error.yaml#/RateLimited
+      '500':
+        $ref: ../components/responses/error.yaml#/InternalError
