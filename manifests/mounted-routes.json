@@ -344,6 +344,10 @@
     "path": "/forwarding_requests/{id}"
   },
   {
+    "method": "POST",
+    "path": "/intents"
+  },
+  {
     "method": "GET",
     "path": "/managed_accounts"
   },
