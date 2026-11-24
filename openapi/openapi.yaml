@@ -83,7 +83,7 @@ tags:
 - name: Forwarding Requests
   description: Request forwarding with sensitive data injection
 - name: Intents
-  description: Journey signals that let Method pre-load liability data before an Entity is created (beta)
+  description: User actions reported by your team
 - name: Managed Accounts
   description: Method-managed accounts
 - name: Merchants
@@ -232,7 +232,7 @@ paths:
   /forwarding_requests/{id}:
     $ref: paths/forwarding_requests.yaml#/individual
   /intents:
-    $ref: paths/intents.yaml#/collection
+    $ref: paths/intents.yaml
   /managed_accounts:
     $ref: paths/managed_accounts.yaml#/collection
   /managed_accounts/{macc_id}:

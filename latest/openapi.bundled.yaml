@@ -122,7 +122,7 @@ tags:
   - name: Forwarding Requests
     description: Request forwarding with sensitive data injection
   - name: Intents
-    description: Journey signals that let Method pre-load liability data before an Entity is created (beta)
+    description: User actions reported by your team
   - name: Managed Accounts
     description: Method-managed accounts
   - name: Merchants
@@ -3875,17 +3875,11 @@ paths:
   /intents:
     post:
       operationId: createIntent
-      summary: Create an Intent
+      summary: Create an intent
       description: |-
-        **Beta.** Intent must be enabled for your team. Contact your Method CSM to request access.
+        Records a user action, such as starting a loan application, along with the identity of the user who performed it. Identify the user with their PII in `identity.individual`, or with an existing entity in `identity.entity_id`.
 
-        Creates a new Intent for a user journey event. If Method recognizes the user, Method begins refreshing their eligible liability data in the background, so the more recent data is ready sooner when the user reaches Connect and Updates.
-
-        Identify the user with either `identity.individual` (name plus at least one of phone, date of birth, or address) or `identity.entity_id` for a user who already has an Entity. Creating an Intent does not create an Entity, pull a credit report, or send webhooks. The response does not indicate whether a match occurred.
-
-        In the Development environment, Intents are validated and stored but do not run identity matching or background syncs.
-
-        Request errors use the following `sub_type` values: `INVALID_REQUEST` (the body failed validation), `INTENTS_NOT_ENABLED` (Intents are not enabled for your team), and `INVALID_ENTITY` (the `identity.entity_id` does not match an Entity on your team).
+        This endpoint must be enabled for your team.
       tags:
         - Intents
       security:
@@ -3895,15 +3889,16 @@ paths:
         - $ref: '#/components/parameters/idempotency_key'
       requestBody:
         required: true
+        description: '`identity` requires exactly one of `individual` or `entity_id`. `identity.individual` requires `first_name`, `last_name`, and at least one of `phone`, `dob`, or `address`. `identity.entity_id` must be an entity that belongs to your team; otherwise the request fails with `INVALID_ENTITY`. `context` and `metadata` are optional and are returned on the intent; `identity` is not returned.'
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateIntentRequest'
             examples:
               by_individual:
-                summary: Identify a new user by PII
+                summary: Identify the user by PII
                 value:
-                  event: lending.offer_sent
+                  event: lending.application_started
                   identity:
                     individual:
                       first_name: Jane
@@ -3918,23 +3913,23 @@ paths:
                         state: TX
                         zip: '78701'
                   context:
-                    external_user_id: usr_8f2d1c
-                    session_id: sess_41b7e9
-                    source: email
+                    external_user_id: usr_8842
+                    session_id: sess_51c0
+                    source: app
                   metadata:
                     campaign_id: fall_prescreen
               by_entity:
-                summary: Identify a returning user by Entity
+                summary: Identify the user by an existing entity
                 value:
                   event: user.logged_in
                   identity:
                     entity_id: ent_au22b1fbFJbp8
                   context:
-                    external_user_id: usr_8f2d1c
+                    external_user_id: usr_8842
                     source: app
       responses:
         '200':
-          description: The newly created Intent.
+          description: The created intent.
           content:
             application/json:
               schema:
@@ -12221,11 +12216,7 @@ components:
               $ref: '#/components/schemas/ForwardingRequest'
     IntentEvent:
       type: string
-      description: |-
-        The journey event that the Intent represents. Method adds new events over time to support more use cases.
-        - `user.signed_up`: The user created an account in your product. - `user.logged_in`: The user signed in to your product. - `user.session_started`: The user started a new session in your product. - `user.onboarding_started`: The user started your onboarding flow. - `user.onboarding_completed`: The user completed your onboarding flow. - `user.profile_updated`: The user updated their profile information. - `lending.prequalification_started`: The user started a prequalification flow. - `lending.prequalified`: The user was prequalified for an offer. - `lending.eligible_new`: The user became newly eligible for an offer. - `lending.eligible_maintain`: The user remains eligible for an offer. Use this event
-          for ongoing eligibility checks.
-        - `lending.application_started`: The user started an application. - `lending.application_submitted`: The user submitted an application. - `lending.offer_sent`: You sent the user a prescreened or prequalified offer. - `lending.offer_viewed`: The user viewed an offer. - `lending.offer_accepted`: The user accepted an offer. - `pfm.app_opened`: The user opened your personal finance app. - `pfm.dashboard_opened`: The user opened a dashboard that displays their liabilities. - `pfm.payoff_plan_started`: The user started building a debt payoff plan. - `pfm.payoff_plan_completed`: The user completed a debt payoff plan. - `commerce.item_added_to_cart`: The user added an item to a cart. - `commerce.checkout_started`: The user started checkout. - `commerce.payment_step_opened`: The user opened the payment step of checkout. - `commerce.payment_method_selected`: The user selected a payment method.
+      description: 'The user action that produced the intent. Events are grouped by journey: `user.*` for account lifecycle activity, `pfm.*` for personal-finance experiences, `lending.*` for credit applications and offers, and `commerce.*` for checkout flows.'
       enum:
         - user.signed_up
         - user.logged_in
@@ -12233,6 +12224,10 @@ components:
         - user.onboarding_started
         - user.onboarding_completed
         - user.profile_updated
+        - pfm.app_opened
+        - pfm.dashboard_opened
+        - pfm.payoff_plan_started
+        - pfm.payoff_plan_completed
         - lending.prequalification_started
         - lending.prequalified
         - lending.eligible_new
@@ -12242,108 +12237,228 @@ components:
         - lending.offer_sent
         - lending.offer_viewed
         - lending.offer_accepted
-        - pfm.app_opened
-        - pfm.dashboard_opened
-        - pfm.payoff_plan_started
-        - pfm.payoff_plan_completed
         - commerce.item_added_to_cart
         - commerce.checkout_started
         - commerce.payment_step_opened
         - commerce.payment_method_selected
-      example: lending.offer_sent
+      example: lending.application_started
+    CreateIntentAddress:
+      type:
+        - object
+        - 'null'
+      description: Residential address of the individual. `zip` must fall within the ZIP code range of `state`.
+      required:
+        - line1
+        - city
+        - state
+        - zip
+      additionalProperties: false
+      properties:
+        line1:
+          type: string
+          description: Primary street address line.
+          minLength: 1
+          example: 123 Main St
+        line2:
+          description: Secondary address line, such as an apartment or suite. Any value is accepted.
+          example: Apt 4B
+        city:
+          type: string
+          description: City or locality.
+          minLength: 1
+          example: Austin
+        state:
+          type: string
+          description: Two-letter US state or territory code.
+          enum:
+            - AL
+            - AK
+            - AZ
+            - AR
+            - CA
+            - CZ
+            - CO
+            - CT
+            - DE
+            - DC
+            - FL
+            - GA
+            - GU
+            - HI
+            - ID
+            - IL
+            - IN
+            - IA
+            - KS
+            - KY
+            - LA
+            - ME
+            - MD
+            - MA
+            - MI
+            - MN
+            - MS
+            - MO
+            - MT
+            - NE
+            - NV
+            - NH
+            - NJ
+            - NM
+            - NY
+            - NC
+            - ND
+            - OH
+            - OK
+            - OR
+            - PA
+            - PR
+            - RI
+            - SC
+            - SD
+            - TN
+            - TX
+            - UT
+            - VT
+            - VI
+            - VA
+            - WA
+            - WV
+            - WI
+            - WY
+          example: TX
+        zip:
+          type: string
+          description: Five-digit ZIP code, optionally followed by a hyphen and a four-digit extension.
+          pattern: ^\d{5}(-\d{4})?$
+          example: '78701'
     CreateIntentIndividual:
       type: object
-      description: PII for a user who does not yet have an Entity. Provide `first_name` and `last_name` plus at least one of `phone`, `dob`, or `address`. Supplying more fields improves match accuracy.
+      description: PII for the user who performed the action. `first_name` and `last_name` are required, along with at least one of `phone`, `dob`, or `address`.
       required:
         - first_name
         - last_name
+      anyOf:
+        - required:
+            - phone
+        - required:
+            - dob
+        - required:
+            - address
+      additionalProperties: false
       properties:
         first_name:
           type: string
-          description: First name of the individual.
+          description: First name of the individual. Leading and trailing whitespace is trimmed.
+          pattern: \S
           example: Jane
         last_name:
           type: string
-          description: Last name of the individual.
+          description: Last name of the individual. Leading and trailing whitespace is trimmed.
+          pattern: \S
           example: Doe
         phone:
-          type: string
-          description: Phone number of the individual in E.164 format.
-          pattern: ^\+\d{10,15}$
+          type:
+            - string
+            - 'null'
+          description: Phone number of the individual in E.164 format. The leading `+` is optional.
+          pattern: ^\+?[1-9]\d{1,14}$
           example: '+15125550123'
         email:
-          type: string
+          type:
+            - string
+            - 'null'
           description: Email address of the individual.
           format: email
           example: jane@example.com
         dob:
-          type: string
+          type:
+            - string
+            - 'null'
+          description: Date of birth of the individual (YYYY-MM-DD). Must be on or after `1880-01-01` and at least 17 years before the current date.
           format: date
-          description: Date of birth of the individual (YYYY-MM-DD).
           example: '1990-05-21'
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: '#/components/schemas/CreateIntentAddress'
     CreateIntentIndividualIdentity:
       type: object
-      description: Identify the user by PII when they do not yet have an Entity.
+      description: Identifies the user by their PII.
       required:
         - individual
+      additionalProperties: false
       properties:
         individual:
           $ref: '#/components/schemas/CreateIntentIndividual'
     CreateIntentEntityIdentity:
       type: object
-      description: Identify the user by an existing Entity on your team. Method uses the individual linked to that Entity, so no PII is required.
+      description: Identifies the user by an existing entity that belongs to your team.
       required:
         - entity_id
+      additionalProperties: false
       properties:
         entity_id:
           type: string
-          description: The ID of an existing Entity on your team.
-          pattern: ^ent_\w+$
+          description: The ID of an existing entity that belongs to your team. The request fails with `INVALID_ENTITY` when the entity does not belong to your team. Leading and trailing whitespace is trimmed.
+          pattern: \S
           example: ent_au22b1fbFJbp8
     CreateIntentIdentity:
-      description: The user the Intent refers to. Provide exactly one of `individual` or `entity_id`.
+      description: The user who performed the action. Provide exactly one of `individual` or `entity_id`. Requests that include both, or neither, fail validation. `identity` is not returned on the intent.
       oneOf:
         - $ref: '#/components/schemas/CreateIntentIndividualIdentity'
         - $ref: '#/components/schemas/CreateIntentEntityIdentity'
-    IntentSource:
-      type: string
-      description: The channel where the event occurred.
-      enum:
-        - website
-        - app
-        - email
-        - chat
-      example: email
     CreateIntentContext:
-      type: object
-      description: Optional correlation fields to store with the Intent.
+      type:
+        - object
+        - 'null'
+      description: Optional session details to capture with the intent. Omitted fields are returned as `null`.
+      additionalProperties: false
       properties:
         external_user_id:
-          type: string
-          description: Your identifier for the user.
-          example: usr_8f2d1c
+          type:
+            - string
+            - 'null'
+          description: Your identifier for the user who performed the action.
+          minLength: 1
+          example: usr_8842
         session_id:
-          type: string
-          description: Your identifier for the user's session.
-          example: sess_41b7e9
+          type:
+            - string
+            - 'null'
+          description: Your identifier for the session in which the action occurred.
+          minLength: 1
+          example: sess_51c0
         source:
-          $ref: '#/components/schemas/IntentSource'
+          type:
+            - string
+            - 'null'
+          description: The channel through which the user performed the action.
+          enum:
+            - website
+            - app
+            - email
+            - chat
+            - null
+          example: app
         client_ip_address:
-          type: string
-          description: The IPv4 or IPv6 address of the user's client.
+          type:
+            - string
+            - 'null'
+          description: IPv4 or IPv6 address of the user's device. Must be a valid IP address; CIDR notation is also accepted.
           example: 203.0.113.42
         client_user_agent:
-          type: string
-          description: The user agent of the user's client or browser.
-          example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)
+          type:
+            - string
+            - 'null'
+          description: User agent string of the user's device.
+          minLength: 1
+          example: Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)
     CreateIntentRequest:
       type: object
-      description: Request body for creating an Intent.
+      description: Request body for creating an intent. Unknown fields are rejected.
       required:
         - event
         - identity
+      additionalProperties: false
       properties:
         event:
           $ref: '#/components/schemas/IntentEvent'
@@ -12355,7 +12470,7 @@ components:
           $ref: '#/components/schemas/Metadata'
     IntentContext:
       type: object
-      description: Correlation fields provided when the Intent was created.
+      description: Session details captured with the intent. Every field is `null` when it was not provided on the request.
       required:
         - external_user_id
         - session_id
@@ -12367,41 +12482,41 @@ components:
           type:
             - string
             - 'null'
-          description: Your identifier for the user.
-          example: usr_8f2d1c
+          description: Your identifier for the user who performed the action.
+          example: usr_8842
         session_id:
           type:
             - string
             - 'null'
-          description: Your identifier for the user's session.
-          example: sess_41b7e9
+          description: Your identifier for the session in which the action occurred.
+          example: sess_51c0
         source:
           type:
             - string
             - 'null'
-          description: The channel where the event occurred.
+          description: The channel through which the user performed the action.
           enum:
             - website
             - app
             - email
             - chat
             - null
-          example: email
+          example: app
         client_ip_address:
           type:
             - string
             - 'null'
-          description: The IPv4 or IPv6 address of the user's client.
-          example: null
+          description: IPv4 or IPv6 address of the user's device.
+          example: 203.0.113.42
         client_user_agent:
           type:
             - string
             - 'null'
-          description: The user agent of the user's client or browser.
-          example: null
+          description: User agent string of the user's device.
+          example: Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)
     Intent:
       type: object
-      description: An Intent tells Method that a user is likely to onboard before you create their Entity. If Method recognizes the user, Method begins refreshing their eligible liability data in the background. Creating an Intent does not create an Entity, pull a credit report, or send webhooks, and the object does not indicate whether a match occurred.
+      description: An intent records a user action reported by your team. The submitted `identity` is not returned on the intent.
       required:
         - id
         - event
@@ -12412,9 +12527,9 @@ components:
       properties:
         id:
           type: string
-          description: Unique identifier for the Intent.
+          description: Unique identifier for the intent.
           pattern: ^int_evt_\w+$
-          example: int_evt_aMm7rbqXxkqHR
+          example: int_evt_PmK4qT7xVbN9c
         event:
           $ref: '#/components/schemas/IntentEvent'
         context:
@@ -12424,24 +12539,23 @@ components:
         created_at:
           type: string
           format: date-time
-          description: Timestamp when the Intent was created.
+          description: Timestamp when the intent was created.
         updated_at:
           type: string
           format: date-time
-          description: Timestamp when the Intent was last updated.
+          description: Timestamp when the intent was last updated.
       example:
-        id: int_evt_aMm7rbqXxkqHR
-        event: lending.offer_sent
+        id: int_evt_PmK4qT7xVbN9c
+        event: lending.application_started
         context:
-          external_user_id: usr_8f2d1c
-          session_id: sess_41b7e9
-          source: email
-          client_ip_address: null
-          client_user_agent: null
-        metadata:
-          campaign_id: fall_prescreen
-        created_at: '2026-11-10T18:00:00.000Z'
-        updated_at: '2026-11-10T18:00:00.000Z'
+          external_user_id: usr_8842
+          session_id: sess_51c0
+          source: app
+          client_ip_address: 203.0.113.42
+          client_user_agent: Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)
+        metadata: null
+        created_at: '2026-11-16T15:00:00.000Z'
+        updated_at: '2026-11-16T15:00:00.000Z'
     IntentResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessEnvelope'
