@@ -19,7 +19,8 @@ post:
     required: true
     description: >-
       `identity` requires exactly one of `individual` or `entity_id`. `identity.individual` requires
-      `first_name`, `last_name`, and at least one of `phone`, `dob`, or `address`.
+      `first_name`, `last_name`, and a non-null value for at least one of `phone`, `dob`, or
+      `address`.
       `identity.entity_id` must be an entity that belongs to your team; otherwise the request fails
       with `INVALID_ENTITY`. `context` and `metadata` are optional and are returned on the intent;
       `identity` is not returned.

@@ -6422,7 +6422,7 @@
         ],
         "requestBody": {
           "required": true,
-          "description": "`identity` requires exactly one of `individual` or `entity_id`. `identity.individual` requires `first_name`, `last_name`, and at least one of `phone`, `dob`, or `address`. `identity.entity_id` must be an entity that belongs to your team; otherwise the request fails with `INVALID_ENTITY`. `context` and `metadata` are optional and are returned on the intent; `identity` is not returned.",
+          "description": "`identity` requires exactly one of `individual` or `entity_id`. `identity.individual` requires `first_name`, `last_name`, and a non-null value for at least one of `phone`, `dob`, or `address`. `identity.entity_id` must be an entity that belongs to your team; otherwise the request fails with `INVALID_ENTITY`. `context` and `metadata` are optional and are returned on the intent; `identity` is not returned.",
           "content": {
             "application/json": {
               "schema": {
@@ -18672,7 +18672,7 @@
           "object",
           "null"
         ],
-        "description": "Residential address of the individual. `zip` must fall within the ZIP code range of `state`.",
+        "description": "Residential address of the individual. `zip` must fall within the ZIP code range of `state`. May be `null` only when `phone` or `dob` is provided.",
         "required": [
           "line1",
           "city",
@@ -18768,74 +18768,102 @@
         }
       },
       "CreateIntentIndividual": {
-        "type": "object",
-        "description": "PII for the user who performed the action. `first_name` and `last_name` are required, along with at least one of `phone`, `dob`, or `address`.",
-        "required": [
-          "first_name",
-          "last_name"
-        ],
-        "anyOf": [
+        "description": "PII for the user who performed the action. `first_name` and `last_name` are required, along with a non-null value for at least one of `phone`, `dob`, or `address`.",
+        "allOf": [
           {
+            "type": "object",
             "required": [
-              "phone"
-            ]
+              "first_name",
+              "last_name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "first_name": {
+                "type": "string",
+                "description": "First name of the individual. Leading and trailing whitespace is trimmed.",
+                "pattern": "\\S",
+                "example": "Jane"
+              },
+              "last_name": {
+                "type": "string",
+                "description": "Last name of the individual. Leading and trailing whitespace is trimmed.",
+                "pattern": "\\S",
+                "example": "Doe"
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Phone number of the individual in E.164 format. The leading `+` is optional. May be `null` only when `dob` or `address` is provided.",
+                "pattern": "^\\+?[1-9]\\d{1,14}$",
+                "example": "+15125550123"
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Email address of the individual.",
+                "format": "email",
+                "example": "jane@example.com"
+              },
+              "dob": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Date of birth of the individual (YYYY-MM-DD). Must be on or after `1880-01-01` and at least 17 years before the current date. May be `null` only when `phone` or `address` is provided.",
+                "format": "date",
+                "example": "1990-05-21"
+              },
+              "address": {
+                "$ref": "#/components/schemas/CreateIntentAddress"
+              }
+            }
           },
           {
-            "required": [
-              "dob"
-            ]
-          },
-          {
-            "required": [
-              "address"
+            "description": "Requires a non-null value for at least one of `phone`, `dob`, or `address`.",
+            "anyOf": [
+              {
+                "required": [
+                  "phone"
+                ],
+                "properties": {
+                  "phone": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "required": [
+                  "dob"
+                ],
+                "properties": {
+                  "dob": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "required": [
+                  "address"
+                ],
+                "properties": {
+                  "address": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
             ]
           }
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "first_name": {
-            "type": "string",
-            "description": "First name of the individual. Leading and trailing whitespace is trimmed.",
-            "pattern": "\\S",
-            "example": "Jane"
-          },
-          "last_name": {
-            "type": "string",
-            "description": "Last name of the individual. Leading and trailing whitespace is trimmed.",
-            "pattern": "\\S",
-            "example": "Doe"
-          },
-          "phone": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Phone number of the individual in E.164 format. The leading `+` is optional.",
-            "pattern": "^\\+?[1-9]\\d{1,14}$",
-            "example": "+15125550123"
-          },
-          "email": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Email address of the individual.",
-            "format": "email",
-            "example": "jane@example.com"
-          },
-          "dob": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Date of birth of the individual (YYYY-MM-DD). Must be on or after `1880-01-01` and at least 17 years before the current date.",
-            "format": "date",
-            "example": "1990-05-21"
-          },
-          "address": {
-            "$ref": "#/components/schemas/CreateIntentAddress"
-          }
-        }
+        ]
       },
       "CreateIntentIndividualIdentity": {
         "type": "object",
